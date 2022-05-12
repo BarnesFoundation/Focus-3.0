@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es6",
+		"noImplicitAny": false,
+		"noEmitOnError": false,
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"outDir": "../dist/server",
+		"baseUrl": "../server",
+		"esModuleInterop": true
+	},
+	"compileOnSave": true,
+	"include": [
+		"**/*.ts"
+	],
+	"exclude": [
+		"../server/test",
+		"test"
+	]
+}
