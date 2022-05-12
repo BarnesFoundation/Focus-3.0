@@ -14,7 +14,7 @@
 			"console": "internalConsole",
 			"internalConsoleOptions": "neverOpen",
 			"outFiles": [
-				"${workspaceFolder}/dist/**/*.js"
+				"${workspaceFolder}/dist/server/**/*.js"
 			],
 		},
 		{
@@ -28,11 +28,12 @@
 			"name": "Attach to server",
 			"type": "node",
 			"request": "attach",
+			"restart": true,
 			"internalConsoleOptions": "neverOpen",
 			"outFiles": [
 				"${workspaceFolder}/dist/**/*.js"
 			],
-			"processId": "53426"
+			"processId": "${command:PickProcess}"
 		}
 	]
 }
