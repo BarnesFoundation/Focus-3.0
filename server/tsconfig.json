@@ -16,6 +16,7 @@
 	],
 	"exclude": [
 		"../server/test",
-		"test"
+		"test",
+		"node_modules"
 	]
 }
