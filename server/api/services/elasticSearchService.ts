@@ -90,12 +90,12 @@ class ElasticSearchService {
   }
 
   public static async getTotalCount(): Promise<number> {
-    const esResponse = esClient.count({
+    const esResponse = await esClient.count({
       index: applicationConfiguration.elasticSearch.collection,
     });
 
-    if (esResponse && esResponse.hasOwnProperty("count")) {
-      return esResponse["count"];
+    if (esResponse && esResponse.body.hasOwnProperty("count")) {
+      return esResponse.body["count"];
     } else {
       throw Error(
         "Could not retrieve total count of records in ElasticSearch collection"
