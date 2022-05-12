@@ -89,7 +89,7 @@ class ElasticSearchService {
     return results;
   }
 
-  public static async getTotalCount() {
+  public static async getTotalCount(): Promise<number> {
     const esResponse = esClient.count({
       index: applicationConfiguration.elasticSearch.collection,
     });
@@ -116,6 +116,46 @@ class ElasticSearchService {
     }
     return null;
   }
+
+  public static async getRoomObjects(roomId: number, viewedImageIds: number[]) {
+    const esResponse = esClient.search({
+      index: applicationConfiguration.elasticSearch.collection,
+      body: getRoomObjectQuery(roomId, viewedImageIds),
+    });
+
+    if (esResponse && esResponse["hits"]["hits"].length > 0) {
+      return esResponse["hits"]["hits"];
+    }
+    return [];
+  }
+}
+
+function getRoomObjectQuery(roomId: number, viewedImageIds: number[]) {
+  // The image id's we retrieve shouldn't match one's already seen
+  const shouldNotMatchList = viewedImageIds.map((imageId) => ({
+    match: { _id: imageId },
+  }));
+
+  const query = {
+    from: 0,
+    size: 3,
+    query: {
+      bool: {
+        filter: {
+          ...filterForImageSecret,
+          // The room must matched the provided room id
+          must: {
+            match: {
+              room: roomId,
+            },
+          },
+        },
+        must_not: shouldNotMatchList,
+      },
+    },
+  };
+
+  return query;
 }
 
 function fetchAllQuery(offset: number, limit: number) {
@@ -126,9 +166,7 @@ function fetchAllQuery(offset: number, limit: number) {
     query: {
       bool: {
         filter: {
-          exists: {
-            field: "imageSecret",
-          },
+          ...filterForImageSecret,
         },
       },
     },
@@ -143,9 +181,7 @@ function getObjectQuery(objectId: number) {
     query: {
       bool: {
         filter: {
-          exists: {
-            field: "imageSecret",
-          },
+          ...filterForImageSecret,
         },
         must: {
           match: {
@@ -156,3 +192,10 @@ function getObjectQuery(objectId: number) {
     },
   };
 }
+
+// Query part for filtering for records that have an image secret
+const filterForImageSecret = {
+  exists: {
+    field: "imageSecret",
+  },
+};
