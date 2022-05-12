@@ -199,3 +199,5 @@ const filterForImageSecret = {
     field: "imageSecret",
   },
 };
+
+export default ElasticSearchService;
