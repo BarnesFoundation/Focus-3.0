@@ -64,7 +64,8 @@ type ElasticSearchRecord = {
 };
 
 class ElasticSearchService {
-  public static async findAll(
+  /** Retrieves records from ElasticSearch with the provided offset and limit */
+  public static async getRecords(
     offset: number = 0,
     limit: number = 50
   ): Promise<Array<ElasticSearchRecord>> {
@@ -80,15 +81,16 @@ class ElasticSearchService {
       esResponse.body["hits"] &&
       esResponse.body["hits"]["hits"].length > 0
     ) {
-      const onlySourceFields = esResponse.body["hits"]["hits"].map(
+      const resulstWithOnlySourceFields = esResponse.body["hits"]["hits"].map(
         (result) => result._source
       );
-      results.concat(onlySourceFields);
+      results.concat(resulstWithOnlySourceFields);
     }
 
     return results;
   }
 
+  /** Retrieves the total count of records available in ElasticSearch */
   public static async getTotalCount(): Promise<number> {
     const esResponse = await esClient.count({
       index: applicationConfiguration.elasticSearch.collection,
@@ -103,6 +105,7 @@ class ElasticSearchService {
     }
   }
 
+  /** Retrieves a specific record from ElasticSearch as identified by the provided object id */
   public static async getObject(
     objectId: number
   ): Promise<ElasticSearchRecord> {
@@ -131,7 +134,7 @@ class ElasticSearchService {
 }
 
 function getRoomObjectQuery(roomId: number, viewedImageIds: number[]) {
-  // The image id's we retrieve shouldn't match one's already seen
+  // The image id's we retrieve shouldn't match ones already seen
   const shouldNotMatchList = viewedImageIds.map((imageId) => ({
     match: { _id: imageId },
   }));
