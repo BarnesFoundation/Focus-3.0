@@ -15,7 +15,7 @@ class ElasticSearchSyncJob {
 
     for (let i = 0; i < numberOfBatches; i++) {
       const offset = i * 500;
-      const records = await ElasticSearchService.findAll(
+      const records = await ElasticSearchService.getRecords(
         offset,
         recordBatchSize
       );
