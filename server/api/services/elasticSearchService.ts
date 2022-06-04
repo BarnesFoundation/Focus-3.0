@@ -63,7 +63,8 @@ type ElasticSearchRecord = {
   visualDescription;
 };
 
-class ElasticSearchService {
+/** Class responsible for interacting with an ElasticSearch cluster */
+export default class ElasticSearchService {
   /** Retrieves records from ElasticSearch with the provided offset and limit */
   public static async getRecords(
     offset: number = 0,
@@ -81,10 +82,9 @@ class ElasticSearchService {
       esResponse.body["hits"] &&
       esResponse.body["hits"]["hits"].length > 0
     ) {
-      const resulstWithOnlySourceFields = esResponse.body["hits"]["hits"].map(
-        (result) => result._source
+      esResponse.body["hits"]["hits"].forEach((result) =>
+        results.push(result._source)
       );
-      results.concat(resulstWithOnlySourceFields);
     }
 
     return results;
@@ -202,5 +202,3 @@ const filterForImageSecret = {
     field: "imageSecret",
   },
 };
-
-export default ElasticSearchService;
