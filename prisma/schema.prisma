@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model admin_users {
+  id                     BigInt    @id @default(autoincrement())
+  email                  String    @unique(map: "index_admin_users_on_email") @default("") @db.VarChar
+  encrypted_password     String    @default("") @db.VarChar
+  reset_password_token   String?   @unique(map: "index_admin_users_on_reset_password_token") @db.VarChar
+  reset_password_sent_at DateTime? @db.Timestamp(6)
+  remember_created_at    DateTime? @db.Timestamp(6)
+  sign_in_count          Int       @default(0)
+  current_sign_in_at     DateTime? @db.Timestamp(6)
+  last_sign_in_at        DateTime? @db.Timestamp(6)
+  current_sign_in_ip     String?   @db.Inet
+  last_sign_in_ip        String?   @db.Inet
+  created_at             DateTime  @db.Timestamp(6)
+  updated_at             DateTime  @db.Timestamp(6)
+}
+
+model albums {
+  id                BigInt   @id @default(autoincrement())
+  name              String   @default("") @db.VarChar
+  unique_identifier String   @db.VarChar
+  created_at        DateTime @db.Timestamp(6)
+  updated_at        DateTime @db.Timestamp(6)
+  session_id        Int?
+
+  @@index([session_id], map: "index_albums_on_session_id")
+  @@index([unique_identifier], map: "index_albums_on_unique_identifier")
+  @@index([unique_identifier, session_id], map: "index_albums_on_unique_identifier_and_session_id")
+}
+
+model ar_internal_metadata {
+  key        String   @id @db.VarChar
+  value      String?  @db.VarChar
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+}
+
+model bookmarks {
+  id              BigInt   @id @default(autoincrement())
+  email           String   @default("") @db.VarChar
+  image_id        String   @default("") @db.VarChar
+  mail_sent       Boolean? @default(false)
+  created_at      DateTime @db.Timestamp(6)
+  updated_at      DateTime @db.Timestamp(6)
+  language        String?  @db.VarChar
+  session_id      Int?
+  story_read      Boolean? @default(false)
+  story_mail_sent Boolean? @default(false)
+
+  @@index([email], map: "index_bookmarks_on_email")
+  @@index([image_id], map: "index_bookmarks_on_image_id")
+  @@index([language], map: "index_bookmarks_on_language")
+  @@index([mail_sent], map: "index_bookmarks_on_mail_sent")
+  @@index([session_id], map: "index_bookmarks_on_session_id")
+  @@index([session_id, email], map: "index_bookmarks_on_session_id_and_email")
+  @@index([story_read], map: "index_bookmarks_on_story_read")
+  @@index([story_read, story_mail_sent], map: "index_bookmarks_on_story_read_and_story_mail_sent")
+}
+
+model es_cached_records {
+  id                 BigInt    @id @default(autoincrement())
+  image_id           String    @db.VarChar
+  es_data            Json?
+  last_es_fetched_at DateTime? @db.Timestamp(6)
+  created_at         DateTime  @db.Timestamp(6)
+  updated_at         DateTime  @db.Timestamp(6)
+  old_es_data        String?
+
+  @@index([es_data], map: "index_es_cached_records_on_es_data")
+  @@index([image_id], map: "index_es_cached_records_on_image_id")
+  @@index([last_es_fetched_at], map: "index_es_cached_records_on_last_es_fetched_at")
+}
+
+model photos {
+  id                    BigInt   @id @default(autoincrement())
+  album_id              BigInt?
+  searched_image_blob   String?
+  searched_image_s3_url String?
+  es_response           String?  @db.VarChar
+  search_engine         String?  @db.VarChar
+  response_time         String?  @db.VarChar
+  created_at            DateTime @db.Timestamp(6)
+  updated_at            DateTime @db.Timestamp(6)
+  result_image_url      String?  @db.VarChar
+
+  @@index([album_id], map: "index_photos_on_album_id")
+}
+
+model schema_migrations {
+  version String @id @db.VarChar
+}
+
+model sessions {
+  id         BigInt   @id @default(autoincrement())
+  session_id String   @unique(map: "index_sessions_on_session_id") @db.VarChar
+  data       Json?    @db.Json
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+  lang_pref  String?  @db.VarChar
+  blob       Json     @default("{}")
+
+  @@index([blob], map: "index_sessions_on_blob")
+  @@index([updated_at], map: "index_sessions_on_updated_at")
+}
+
+model stories {
+  id         BigInt   @id @default(autoincrement())
+  title      String?  @db.VarChar
+  slug       String?  @db.VarChar
+  created_at DateTime @db.Timestamp(6)
+  updated_at DateTime @db.Timestamp(6)
+
+  @@index([slug], map: "index_stories_on_slug")
+  @@index([title], map: "index_stories_on_title")
+}
+
+model subscriptions {
+  id            BigInt   @id @default(autoincrement())
+  email         String   @default("") @db.VarChar
+  is_subscribed Boolean? @default(false)
+  created_at    DateTime @db.Timestamp(6)
+  updated_at    DateTime @db.Timestamp(6)
+
+  @@index([email], map: "index_subscriptions_on_email")
+  @@index([is_subscribed], map: "index_subscriptions_on_is_subscribed")
+}
+
+model translations {
+  id                   BigInt   @id @default(autoincrement())
+  parent_id            Int?
+  screen_text          String?  @default("")
+  english_translation  String?
+  chinese_translation  String?
+  french_translation   String?
+  german_translation   String?
+  italian_translation  String?
+  japanese_translation String?
+  korean_translation   String?
+  russian_translation  String?
+  spanish_translation  String?
+  created_at           DateTime @db.Timestamp(6)
+  updated_at           DateTime @db.Timestamp(6)
+  display_order        Int?
+  unique_identifier    String?  @db.VarChar
+
+  @@index([display_order], map: "index_translations_on_display_order")
+  @@index([parent_id], map: "index_translations_on_parent_id")
+  @@index([unique_identifier], map: "index_translations_on_unique_identifier")
+}
