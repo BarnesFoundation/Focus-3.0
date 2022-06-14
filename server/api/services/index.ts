@@ -1,3 +1,4 @@
 import ElasticSearchService from "./elasticSearchService";
+import ArtworkService from "./artworkService";
 
-export { ElasticSearchService };
+export { ElasticSearchService, ArtworkService };
