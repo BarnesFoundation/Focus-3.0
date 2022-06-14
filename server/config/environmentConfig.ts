@@ -30,6 +30,11 @@ export default {
     address: process.env.SENDGRID_ADDRESS,
   },
 
+  /** Configuration for GraphCMS when used as the story content provider */
+  graphCMS: {
+    endpoint: process.env.GRAPHCMS_ENDPOINT,
+  },
+
   /** Port used only for local development */
   port: process.env.PORT,
 
