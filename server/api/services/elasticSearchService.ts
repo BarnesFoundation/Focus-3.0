@@ -107,7 +107,7 @@ export default class ElasticSearchService {
 
   /** Retrieves a specific record from ElasticSearch as identified by the provided object id */
   public static async getObject(
-    objectId: number
+    objectId: string
   ): Promise<ElasticSearchRecord> {
     const esResponse = esClient.search({
       index: applicationConfiguration.elasticSearch.collection,
@@ -176,7 +176,7 @@ function fetchAllQuery(offset: number, limit: number) {
   };
 }
 
-function getObjectQuery(objectId: number) {
+function getObjectQuery(objectId: string) {
   return {
     from: 0,
     size: 25,
