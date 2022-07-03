@@ -16,17 +16,20 @@ export default class ArtworkService {
   public static async getInformation(artworkId: string) {
     const record = await prisma.es_cached_records.findFirst({
       where: { image_id: artworkId },
+      select: {
+        es_data: true,
+      },
     });
 
     // If there's a record for this id, we'll return it immediately
     if (record) {
-      return record;
+      return record.es_data;
     }
 
     // Otherwise, no record found for the id, so we'll pull it
     // from ElasticSearch and persist it in our local records cache
     console.info(
-      `No record found for "image_id": ${record.id}. Creating new record`
+      `No record found for "image_id": ${artworkId}. Attempting to create new record`
     );
 
     const now = new Date(Date.now()).toISOString();
@@ -34,59 +37,27 @@ export default class ArtworkService {
       artworkId
     );
 
-    const createdRecord = await prisma.es_cached_records.create({
-      data: {
-        es_data: recordFromElasticSearch,
-        image_id: artworkId,
+    if (recordFromElasticSearch) {
+      const artwork = await prisma.es_cached_records.create({
+        data: {
+          es_data: recordFromElasticSearch,
+          image_id: artworkId,
 
-        created_at: now,
-        updated_at: now,
-      },
-    });
+          created_at: now,
+          updated_at: now,
+        },
+      });
 
-    return createdRecord;
+      return artwork.es_data;
+    }
+
+    console.info(
+      `Could not find record for "image_id": ${artworkId} for creation`
+    );
+    return null;
   }
 
   public static async findStoryForArtwork(
     artworkId: string
-  ): Promise<{ storyId: null | number; hasStory: boolean }> {
-    const graphqlQuery = {
-      query: StoryForObjectIdQuery,
-      variables: { objectID: artworkId },
-    };
-
-    const response = await axios({
-      url: environmentConfiguration.graphCMS.endpoint,
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      data: graphqlQuery,
-    });
-
-    // Check these two parts of the response for the story
-    const retrievedStory = response.data.storiesForObjectIds[0]?.relatedStories;
-
-    if (retrievedStory) {
-      return {
-        storyId: retrievedStory[0].id,
-        hasStory: true,
-      };
-    }
-
-    return {
-      storyId: null,
-      hasStory: false,
-    };
-  }
+  ): Promise<{ storyId: null | number; hasStory: boolean }> {}
 }
-
-const StoryForObjectIdQuery = `query($objectID: Int) {
-	storiesForObjectIds(where: { objectID: $objectID }) {
-	  id
-	  objectID
-	  relatedStories {
-		id
-	  }
-	}
-  }`;
