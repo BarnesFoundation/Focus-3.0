@@ -3,17 +3,21 @@ import { join } from "path";
 import cookieParser from "cookie-parser";
 
 import Config, { EnvironmentStages } from "./config";
+import { ApplicationSessions } from "./utils";
 import ApiRouter from "./api/routes";
 
 const app = express();
 const build = join(__dirname, "../build");
 const index = join(build, "index.html");
 
+// Configure some of our server-wide middlewares
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(build, { index: false, etag: false }));
 
+// Configure Express to use our session store and API
+app.use(ApplicationSessions);
 app.use("/api", ApiRouter);
 
 // Serve index on all requests to server.
