@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import Config, { EnvironmentStages } from "./config";
 import { ApplicationSessions } from "./utils";
 import ApiRouter from "./api/routes";
+import { initializeSessionMiddlware } from "./api/middleware/initializeSessionMiddleware";
 
 const app = express();
 const build = join(__dirname, "../build");
@@ -18,7 +19,7 @@ app.use(express.static(build, { index: false, etag: false }));
 
 // Configure Express to use our session store and API
 app.use(ApplicationSessions);
-app.use("/api", ApiRouter);
+app.use("/api", initializeSessionMiddlware, ApiRouter);
 
 // Serve index on all requests to server.
 app.get("*", (request: express.Request, response: express.Response) => {
