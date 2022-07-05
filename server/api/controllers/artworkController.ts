@@ -40,10 +40,18 @@ class ArtworkController {
       .json(`No artwork found for provided id ${artworkId}`);
   }
 
-  public static async findAndTrackViewedStory(
+  public static async retrieveStories(
     request: express.Request,
     response: express.Response
-  ) {}
+  ) {
+    const session = request.session;
+    const artworkId = request.params.artworkId;
+
+    // const languagePreference = session.lang_pref;
+    const storiesData = await ArtworkService.findStoryForArtwork(artworkId);
+
+    return response.status(200).json(storiesData);
+  }
 }
 
 export default ArtworkController;
