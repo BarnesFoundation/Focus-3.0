@@ -4,8 +4,7 @@ export type GraphQLQuery = {
 };
 
 // Fragment definition for fields to pull from story
-const storiesFragment = `
-fragment on Stories {
+const storiesFragment = `on Stories {
 	id
 	storyTitle
 	alternativeHeroImageObjectID
@@ -85,7 +84,7 @@ export function relatedStoriesByObjectIdQuery(objectId: string): GraphQLQuery {
         }
       }`,
     variables: {
-      objectID: objectId,
+      objectID: parseInt(objectId),
     },
   };
 }
@@ -104,7 +103,7 @@ export function relatedStoriesByTitleQuery(objectId: string): GraphQLQuery {
       }
 	  `,
     variables: {
-      objectID: objectId,
+      objectID: parseInt(objectId),
     },
   };
 }

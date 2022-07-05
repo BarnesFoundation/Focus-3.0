@@ -13,6 +13,35 @@ const prisma = new PrismaClient();
 const isEmpty = (theObject: {}) => Object.keys(theObject).length === 0;
 const UNIQUE_SEPARATOR = "***";
 
+type StoryParagraph = {
+  html: string;
+} | null;
+type StoryObjectId = string | null;
+
+interface RelatedStory {
+  id: string;
+  storyTitle: string;
+  alternativeHeroImageObjectID: string;
+  objectID1: StoryObjectId;
+  shortParagraph1: StoryParagraph;
+  longParagraph1: StoryParagraph;
+  objectID2: StoryObjectId;
+  shortParagraph2: StoryParagraph;
+  longParagraph2: StoryParagraph;
+  objectID3: StoryObjectId;
+  shortParagraph3: StoryParagraph;
+  longParagraph3: StoryParagraph;
+  objectID4: StoryObjectId;
+  shortParagraph4: StoryParagraph;
+  longParagraph4: StoryParagraph;
+  objectID5: StoryObjectId;
+  shortParagraph5: StoryParagraph;
+  longParagraph5: StoryParagraph;
+  objectID6: StoryObjectId;
+  shortParagraph6: StoryParagraph;
+  longParagraph6: StoryParagraph;
+}
+
 /** Class responsible for interacting with an GraphCMS project */
 export default class GraphCMSService {
   private static async makeGraphQLRequest(query: GraphQLQuery) {
@@ -57,100 +86,23 @@ export default class GraphCMSService {
 
   /** Retrieves a specific record from ElasticSearch as identified by the provided object id */
   public static async findByObjectId(
-    objectId: string,
-    preferredLanguage: string = "en"
-  ) {
+    objectId: string
+  ): Promise<Array<RelatedStory>> {
     const query = relatedStoriesByObjectIdQuery(objectId);
-    const response = await this.makeGraphQLRequest(query);
-  }
-
-  private static parseAndFetchMetaData(
-    graphContent,
-    objectId: string,
-    language: string
-  ) {
-    let content = {};
-    let total = 0;
-    let uniqueIdentifier = null;
+    const graphContent = await GraphCMSService.makeGraphQLRequest(query);
 
     // Empty content means nothing available to translate and parse
     if (
       isEmpty(graphContent.data.storiesForObjectIds) ||
       isEmpty(graphContent.data.storiesForObjectIds[0].relatedStories)
     ) {
-      return {
-        unique_identifier: uniqueIdentifier,
-        total,
-        content,
-      };
+      return [];
     }
 
     const relatedStories =
       graphContent.data.storiesForObjectIds[0].relatedStories;
-    const storyFields =
-      relatedStories.length > 1
-        ? relatedStories[relatedStories.length - 1]
-        : relatedStories[0];
 
-    const stories = this.extractStories(storyFields, objectId);
-    const storyArtworkIds = stories.map((story) => story.image_id);
-    const artworks = prisma.es_cached_records.findMany({
-      select: { es_data: true },
-      where: {
-        image_id: { in: storyArtworkIds },
-      },
-    });
-
-    const storiesWithDetails = (content = {
-      story_title: storyFields["storyTitle"],
-      original_story_title: storyFields["storyTitle"],
-    });
-
-    /* 	  content["story_title"] = preferred_lang == "en" ? story_attrs["storyTitle"] : SnapTranslator.translate_story_title(story_attrs["storyTitle"], preferred_lang)
-	  content["original_story_title"] = story_attrs["storyTitle"]
-	  stories = get_stories(story_attrs, searched_object_id, translatable_content)
-	  arts = EsCachedRecord.fetch_all(stories.map{|s| s["image_id"]})
-	  content["stories"] = get_stories_details(stories, arts, translatable_content)
-  
-	  unique_identifier = story_attrs["id"]
-	  total = content["stories"].count
-  
-	  return {unique_identifier: unique_identifier, content: content, total: total} */
-  }
-
-  private static extractStories(storyFields, objectId: string) {
-    const stories = [];
-
-    new Array(6).forEach((_, index) => {
-      const identifier = `objectID${index}`;
-
-      if (!storyFields[identifier]) {
-        return;
-      }
-
-      const imageId =
-        "objectID1" === identifier && objectId === storyFields[identifier]
-          ? storyFields["alternativeHeroImageObjectID"]
-          : storyFields[identifier];
-      storyFields.push({
-        image_id: imageId,
-        short_paragraph: storyFields["shortParagraph"],
-        long_paragraph: storyFields["longParagraph"],
-        detail: null,
-      });
-    });
-
-    return stories;
-  }
-
-  private static getStoriesDetail(stories, artworks, translatableContent) {
-    const storiesWithDetail = stories.map((story) => {
-      const detail = artworks.find((art) => art.id === story.image_id);
-
-      if (detail) {
-        story["detail"] = detail;
-      }
-    });
+    return relatedStories;
   }
 
   private static getTranslatatableContent(
