@@ -114,7 +114,7 @@ export default class ElasticSearchService {
       body: getObjectQuery(objectId),
     });
 
-    if (esResponse && esResponse["hits"]["hits"].length > 0) {
+    if (esResponse && esResponse["hits"]?.hits.length > 0) {
       return esResponse["hits"]["hits"][0]["_source"];
     }
     return null;
