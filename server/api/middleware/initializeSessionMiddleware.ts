@@ -30,12 +30,14 @@ export const initializeSessionMiddlware = (
   next();
 };
 
-const determinePreferredLanguage = (request: express.Request) => {
+const determinePreferredLanguage = (
+  request: express.Request
+): string | null => {
   const acceptLanguageHeader = request.header["HTTP_ACCEPT_LANGUAGE"] as {
     locale: string;
   }[];
 
-  if (acceptLanguageHeader?.length > 1) {
+  if (acceptLanguageHeader && acceptLanguageHeader.length > 0) {
     // Modern browsers order language by preference, so first element would be the preferred language
     // and we'll strip the dash as we only accept the language code by itself
     const preferredLanguage = acceptLanguageHeader[0].locale as string;
