@@ -1,6 +1,6 @@
 import express from "express";
 
-import { ArtworkService, GraphCMSService } from "../services";
+import { ArtworkService, GraphCMSService, TranslateService } from "../services";
 
 export const fieldName = "storablePhoto";
 
@@ -11,9 +11,15 @@ class ArtworkController {
   ) {
     const artworkId = request.params.artworkId;
     const artworkInformation = await ArtworkService.getInformation(artworkId);
+    const preferredLanguage = request.session.lang_pref;
 
     if (artworkInformation) {
+      // Fetch the story and translate the content if needed
       const storyInformation = await GraphCMSService.hasStory(artworkId);
+      artworkInformation["shortDescription"] = await TranslateService.translate(
+        artworkInformation["shortDescription"],
+        preferredLanguage
+      );
 
       const responseObject = {
         data: {
