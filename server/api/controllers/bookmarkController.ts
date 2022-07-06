@@ -18,7 +18,7 @@ class BookmarkController {
     // Bookmark.where( session_id: session.id ).update_all( language: language )
 
     // Update the language for the user
-    request.session.lang_pref = languageToSet;
+    request.session.lang_pref = languageToSet.toLowerCase();
 
     return response
       .status(200)
