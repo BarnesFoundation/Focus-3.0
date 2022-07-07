@@ -1,6 +1,7 @@
 import express from "express";
 
 import { isEmpty } from "../utils/isEmpty";
+import { SessionObjectInterface } from "../types/sessionType";
 
 const SUPPORTED_LANGUAGES = [
   "En",
@@ -21,13 +22,23 @@ export const initializeSessionMiddlware = (
 ) => {
   // This means the session has not yet been initialized
   if (!request.session.initialized) {
-    const preferredLanguage = determinePreferredLanguage(request);
-
-    request.session.initialized = true;
-    request.session["user_scanned_history"] = [];
-    request.session["lang_pref"] = preferredLanguage;
+    const initializedSession = getInitializedSessionObject(request);
+    request.session = Object.assign(request.session, initializedSession);
   }
   next();
+};
+
+const getInitializedSessionObject = (
+  request: express.Request
+): SessionObjectInterface => {
+  const preferredLanguage = determinePreferredLanguage(request);
+
+  return {
+    initialized: true,
+    user_scanned_history: [],
+    lang_pref: preferredLanguage,
+    blob: {},
+  };
 };
 
 const determinePreferredLanguage = (
