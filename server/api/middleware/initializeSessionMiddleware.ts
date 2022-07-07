@@ -1,6 +1,5 @@
 import express from "express";
 
-import { isEmpty } from "../utils/isEmpty";
 import { SessionObjectInterface } from "../types/sessionType";
 
 const SUPPORTED_LANGUAGES = [
@@ -17,7 +16,7 @@ const SUPPORTED_LANGUAGES = [
 
 export const initializeSessionMiddlware = (
   request: express.Request,
-  response: express.Response,
+  _: express.Response,
   next: express.NextFunction
 ) => {
   // This means the session has not yet been initialized
