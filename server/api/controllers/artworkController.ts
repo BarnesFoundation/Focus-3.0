@@ -1,8 +1,10 @@
 import express from "express";
+import { PrismaClient } from "@prisma/client";
 
 import { ArtworkService, GraphCMSService, TranslateService } from "../services";
 
 export const fieldName = "storablePhoto";
+const prisma = new PrismaClient();
 
 class ArtworkController {
   public static async getInformation(
@@ -69,6 +71,14 @@ class ArtworkController {
     const storiesData = await ArtworkService.findStoryForArtwork(artworkId);
 
     return response.status(200).json(storiesData);
+  }
+
+  public static async markStoryAsRead(
+    request: express.Request,
+    response: express.Response
+  ) {
+    const artworkId = request.params.artworkId;
+    const storyId = request.params.storyId;
   }
 }
 
