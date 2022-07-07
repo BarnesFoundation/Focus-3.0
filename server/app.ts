@@ -5,7 +5,7 @@ import cookieParser from "cookie-parser";
 import Config, { EnvironmentStages } from "./config";
 import { ApplicationSessions } from "./utils";
 import ApiRouter from "./api/routes";
-import { initializeSessionMiddlware } from "./api/middleware/initializeSessionMiddleware";
+import { initializeSessionMiddlware } from "./api/middleware";
 
 const app = express();
 const build = join(__dirname, "../build");
