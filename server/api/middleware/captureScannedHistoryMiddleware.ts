@@ -10,14 +10,20 @@ export const captureScannedHistoryMiddleware = async (
 ) => {
   if (request.session.initialized) {
     const artworkId = request.params.artworkId;
-    const sessionId = parseInt(request.sessionID);
+    const sessionId = 123; // parseInt(request.sessionID);
 
     // Add the artwork id to the existing scanned history
     request.session.user_scanned_history.push(artworkId);
 
     // Check if this session has created a bookmark before
     // and if they have, attempt to get the email from there
-    const bookmarkThatHasEmail = await prisma.bookmarks.findFirst({
+    // TODO - `session_id` in the database is currently an auto-incremented integer
+    // but the `sessionId` in `request.session` is a string and so we can't
+    // search existing bookmarks with it nor create new bookmarks
+    // We need to perform a migration to convert the `session_id` field from
+    // auto-incremented integer into a text field
+    // Commenting out the code below for now
+    /* const bookmarkThatHasEmail = await prisma.bookmarks.findFirst({
       where: {
         session_id: sessionId,
         NOT: [{ email: undefined }],
@@ -32,10 +38,10 @@ export const captureScannedHistoryMiddleware = async (
         image_id: artworkId,
         created_at: now,
         updated_at: now,
-        email: bookmarkThatHasEmail ? bookmarkThatHasEmail.email : null,
+        email: bookmarkThatHasEmail ? bookmarkThatHasEmail.email : undefined,
         language: request.session.lang_pref,
       },
-    });
+    }); */
   }
   next();
 };
