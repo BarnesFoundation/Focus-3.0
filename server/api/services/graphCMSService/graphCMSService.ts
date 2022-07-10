@@ -7,10 +7,10 @@ import {
   storiesForObjectIdQuery,
   relatedStoriesByObjectIdQuery,
 } from "./queries";
+import { isEmpty } from "../../utils/isEmpty";
 
 const prisma = new PrismaClient();
 
-const isEmpty = (theObject: {}) => Object.keys(theObject).length === 0;
 const UNIQUE_SEPARATOR = "***";
 
 type StoryParagraph = {

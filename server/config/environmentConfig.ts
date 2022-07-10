@@ -45,4 +45,9 @@ export default {
   session: {
     secret: process.env.SESSION_SECRET,
   },
+
+  /** Configuration for Google related credentials */
+  google: {
+    projectId: process.env.GOOGLE_PROJECT_ID,
+  },
 };
