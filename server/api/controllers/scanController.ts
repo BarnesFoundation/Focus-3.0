@@ -4,9 +4,12 @@ import multer from "multer";
 export const uploadMiddleware = multer({ dest: "uploads/" });
 export const fieldName = "image";
 
+const TRUE = "true";
+const FALSE = "false";
+
 type NullString = "null";
-type TrueString = "true";
-type FalseString = "false";
+type TrueString = typeof TRUE;
+type FalseString = typeof FALSE;
 
 interface NoFoundImageScan {
   token: string;
@@ -37,7 +40,7 @@ class ScanController {
   ) {
     const queryImage = request.file;
 
-    if (request.body.searchSuccess === "true") {
+    if (request.body.searchSuccess === TRUE) {
       const requestBody = request.body;
     } else {
       const requestBody = request.body;
