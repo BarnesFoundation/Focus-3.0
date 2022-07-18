@@ -83,6 +83,8 @@ class ScanController {
       });
 
       // We'll queue the actual upload for this image to S3
+      // TODO - Implement the ImageUpload job
+      // ImageUploadJob.perform_later(@album.id, @photo.id)
 
       // Delete the Multer file from our local storage
       await unlinkAsync(queryImage.path);
