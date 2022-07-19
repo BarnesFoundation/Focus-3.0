@@ -5,6 +5,7 @@ import { promisify } from "util";
 import { PrismaClient } from "@prisma/client";
 
 import { environmentConfiguration } from "../../config";
+import { AsyncJob } from ".";
 
 const prisma = new PrismaClient();
 const s3Client = new S3({ region: environmentConfiguration.aws.region });
@@ -20,7 +21,11 @@ const generatePublicUrl = (photoKey: string) => {
   return publicUrl;
 };
 
-class ImageUploadJob {
+class ImageUploadJob extends AsyncJob {
+  public static performLater(albumId: number, photoId: number): Promise<void> {
+    return super.performLater(albumId, photoId);
+  }
+
   public static async main(albumId: number, photoId: number) {
     const foundAlbum = await prisma.albums.findUnique({
       where: {
