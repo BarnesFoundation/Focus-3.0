@@ -4,6 +4,8 @@ import { PrismaClient } from "@prisma/client";
 import fs from "fs";
 import { promisify } from "util";
 
+import { ImageUploadJob } from "../jobs";
+
 const prisma = new PrismaClient();
 
 export const uploadMiddleware = multer({ dest: "uploads/" });
@@ -83,8 +85,10 @@ class ScanController {
       });
 
       // We'll queue the actual upload for this image to S3
-      // TODO - Implement the ImageUpload job
-      // ImageUploadJob.perform_later(@album.id, @photo.id)
+      await ImageUploadJob.performLater(
+        parseInt(sessionAlbum.id.toString()),
+        parseInt(createdAlbumPhoto.id.toString())
+      );
 
       // Delete the Multer file from our local storage
       await unlinkAsync(queryImage.path);
