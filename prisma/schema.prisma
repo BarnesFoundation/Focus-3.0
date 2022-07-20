@@ -29,7 +29,7 @@ model albums {
   unique_identifier String   @db.VarChar
   created_at        DateTime @db.Timestamp(6)
   updated_at        DateTime @db.Timestamp(6)
-  session_id        Int?
+  session_id        String?  @db.VarChar
 
   @@index([session_id], map: "index_albums_on_session_id")
   @@index([unique_identifier], map: "index_albums_on_unique_identifier")
@@ -51,7 +51,7 @@ model bookmarks {
   created_at      DateTime @db.Timestamp(6)
   updated_at      DateTime @db.Timestamp(6)
   language        String?  @db.VarChar
-  session_id      Int?
+  session_id      String   @db.VarChar
   story_read      Boolean? @default(false)
   story_mail_sent Boolean? @default(false)
 
@@ -124,7 +124,7 @@ model stories {
 
 model subscriptions {
   id            BigInt   @id @default(autoincrement())
-  email         String   @default("") @db.VarChar
+  email         String   @unique(map: "subscriptions_un") @default("") @db.VarChar
   is_subscribed Boolean? @default(false)
   created_at    DateTime @db.Timestamp(6)
   updated_at    DateTime @db.Timestamp(6)
