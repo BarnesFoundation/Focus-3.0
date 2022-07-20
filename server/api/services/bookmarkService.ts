@@ -6,7 +6,6 @@ export default class BookmarkService {
   public static async subscribeUserNewsletter(emailToSubscribe: string) {
     const now = new Date(Date.now()).toISOString();
 
-    // TODO - Email needs to be a unique field in the database but currently is not
     const currentSubscription = await prisma.subscriptions.upsert({
       where: { email: emailToSubscribe },
       update: {},
