@@ -79,7 +79,7 @@ class ArtworkController {
   ) {
     const artworkId = request.params.artworkId;
     const storyId = request.params.storyId;
-    const sessionId = request.sessionID as any;
+    const sessionId = request.sessionID;
 
     // Look up the bookmark for this artwork for the user
     const bookmarks = await prisma.bookmarks.findMany({
