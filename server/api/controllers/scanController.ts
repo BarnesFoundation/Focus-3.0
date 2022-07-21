@@ -48,8 +48,9 @@ class ScanController {
     response: express.Response
   ) {
     const now = new Date(Date.now()).toISOString();
-    const sessionId = request.sessionID as any;
+    const sessionId = request.sessionID;
     const queryImage = request.file;
+
     const referenceImageUrl =
       request.body.searchSuccess === TRUE
         ? request.body.referenceImageUrl
