@@ -8,7 +8,7 @@ import { ImageUploadJob } from "../jobs";
 
 const prisma = new PrismaClient();
 
-export const uploadMiddleware = multer({ dest: "uploads/" });
+export const uploadMiddleware = multer({ storage: multer.memoryStorage() });
 export const fieldName = "image";
 
 const TRUE = "true";
@@ -89,6 +89,8 @@ class ScanController {
 
         updated_at: now,
         created_at: now,
+
+        album_id: sessionAlbum.id,
       },
     });
 
@@ -97,9 +99,6 @@ class ScanController {
       parseInt(sessionAlbum.id.toString()),
       parseInt(createdAlbumPhoto.id.toString())
     );
-
-    // Delete the Multer file from our local storage
-    await unlinkAsync(queryImage.path);
 
     response.status(200).json("Image was stored");
   }
