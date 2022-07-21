@@ -33,12 +33,20 @@ class AsyncJob {
    *    of the job, forwarding the arguments from the HTTP request to it
    */
   public static async performLater(...args) {
-    const response = await axios({
-      method: "POST",
-      data: [...args],
-    });
-
-    console.log(`Received response from "performLater" request`, response.data);
+    try {
+      axios({
+        method: "POST",
+        data: [...args],
+        url: `/api/job/${this.name}`,
+        // TODO - the base URL needs to be modified to the Lambda endpoint when running live
+        baseURL: "http://localhost:4006",
+      });
+    } catch (error) {
+      console.error(
+        `Error occurred sending to job endpoint "/api/jobs/${this.name}"`,
+        error
+      );
+    }
   }
 }
 

@@ -11,6 +11,7 @@ const prisma = new PrismaClient();
 const s3Client = new S3({ region: environmentConfiguration.aws.region });
 
 const writeFileAsync = promisify(fs.writeFile);
+const readFileAsync = promisify(fs.readFile);
 const TMP_PATH = "tmp";
 
 const generatePublicUrl = (photoKey: string) => {
@@ -44,10 +45,11 @@ class ImageUploadJob extends AsyncJob {
       // If we located the photo for this album, and it has image data
       // we'll perform the upload for the photo to S3
       if (photoInAlbum && photoInAlbum.searched_image_blob) {
-        // Write the image out to a temporary file so we can perform the upload
-        const bufferedImage = Buffer.from(photoInAlbum.searched_image_blob);
-        const fileName = `$${photoId}_${Date.now()}.png`;
-        // await writeFileAsync(fileName, bufferedImage);
+        const fileName = `${photoId}_${Date.now()}.png`;
+        const bufferedImage = Buffer.from(
+          photoInAlbum.searched_image_blob,
+          "base64"
+        );
 
         // Now we can upload the image to S3
         await s3Client.putObject({
