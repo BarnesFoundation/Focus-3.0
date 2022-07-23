@@ -9,6 +9,9 @@ const prisma = new PrismaClient();
 const projectId = environmentConfiguration.google.projectId;
 const Translator = new Translate({ projectId });
 
+// This maps the language shortcode to the name
+// of the corresponding column in the `translations` table
+// that holds the translation data for this language
 const LANGUAGE_SHORT_CODE_COLUMN_MAP = {
   en: "english_translation",
   zh: "chinese_translation",
@@ -45,6 +48,11 @@ export default class TranslateService {
     }
   }
 
+  /** Pulls the translations stored in our database for the provided language.
+   *
+   * These stored translations are for our static (and manually-entered) text
+   * used throughout the Focus UI, and not dynamic on-the-fly content
+   */
   public static async retrieveStoredTranslations(languageShortcode: string) {
     const translations = {};
     const languageColumnName =
