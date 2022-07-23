@@ -66,7 +66,7 @@ export default class TranslateService {
 
       // TODO - somehow, parentRecord.id is not applicable type
       // the parent_id of a childRecord, even though both show as Int in the table definition
-      const parentRecordId = parentRecord.id as any;
+      const parentRecordId = parseInt(parentRecord.id.toString());
       const childRecords = await prisma.translations.findMany({
         where: {
           parent_id: parentRecordId,
