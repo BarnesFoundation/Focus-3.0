@@ -155,3 +155,11 @@ model translations {
   @@index([parent_id], map: "index_translations_on_parent_id")
   @@index([unique_identifier], map: "index_translations_on_unique_identifier")
 }
+
+model user_sessions {
+  sid    String   @id(map: "session_pkey") @db.VarChar
+  sess   Json     @db.Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], map: "IDX_session_expire")
+}
