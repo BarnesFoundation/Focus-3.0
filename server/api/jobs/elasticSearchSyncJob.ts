@@ -50,7 +50,7 @@ class ElasticSearchSyncJob {
         }
 
         // Otherwise, we had a record for it, so let's just update the data
-        // The `updateMany` needs to be changed to `update` when we make `image_id` a unique field
+        // TODO - The `updateMany` needs to be changed to `update` when we make `image_id` a unique field
         else {
           console.info(
             `Existing record found for "image_id": ${record.id}. Updating record data`
