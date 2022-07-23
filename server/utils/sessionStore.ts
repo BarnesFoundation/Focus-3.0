@@ -11,8 +11,8 @@ export const Store = new PgSession({
   tableName: SESSION_STORE_TABLE_NAME,
   createTableIfMissing: true,
 
-  // We don't expired sessions to be pruned automatically
-  // at least for now. We'll do this manually
+  // We don't want expired sessions to be pruned automatically
+  // at least for now. We'll do this manually by triggering the job
   pruneSessionInterval: false,
 });
 
