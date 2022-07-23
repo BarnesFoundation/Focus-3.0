@@ -1,1 +1,1 @@
-export { ApplicationSessions } from "./sessionStore";
+export { ApplicationSessions, Store } from "./sessionStore";
