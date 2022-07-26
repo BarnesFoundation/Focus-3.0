@@ -81,11 +81,15 @@ class BookmarkDeliveryJob {
     );
   }
 
-  // Bookmarks that are ready for delivery must meet this criteria
-  // 1. Email for the bookmark must be defined and non-empty
-  // 2. The email for that bookmark must not have been sent already
-  // 3. The latest bookmark for the user must have occurred more than 3
-  // hours ago (which would indicate the user has likely finished their Focus session)
+  /**
+   * Identifies and returns the most recent bookmarks that should be delivered
+   *
+   * Bookmarks that are ready for delivery must meet this criteria
+   * 1. Email for the bookmark must be defined and non-empty
+   * 2. The email for that bookmark must not have been sent already
+   * 3. The latest bookmark for the user must have occurred more than 3
+   * hours ago (which would indicate the user has likely finished their Focus session)
+   */
   private static async getDeliverableBookmarks(): Promise<DeliverableBookmarks> {
     const threeHoursAgoTime =
       Date.now() - LATEST_BOOKMARK_ENTRY_THRESHOLD_SECONDS;
@@ -120,6 +124,9 @@ class BookmarkDeliveryJob {
     return identifiedDeliverableBookmarks;
   }
 
+  /** Fetches the artworks information from the database that are
+   * are associated with these bookmark entries
+   */
   private static async retrieveArtworksForBookmarks(
     deliverableBookmarks: DeliverableBookmarks
   ) {
