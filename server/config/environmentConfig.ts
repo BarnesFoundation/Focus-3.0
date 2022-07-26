@@ -24,6 +24,7 @@ export default {
 
   /** Configuration for SendGrid when used as the email provider */
   sendGrid: {
+    email: process.env.SENDGRID_EMAIL,
     username: process.env.SENDGRID_USERNAME,
     password: process.env.SENDGRID_PASSWORD,
     domain: process.env.SENDGRID_DOMAIN,
