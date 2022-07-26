@@ -5,7 +5,6 @@ import {
   es_cached_records,
 } from "@prisma/client";
 
-import { ElasticSearchService } from "../services";
 import { groupBy } from "../utils";
 
 const prisma = new PrismaClient();
@@ -21,7 +20,7 @@ type CollectedArtworks = { [artworkId: string]: es_cached_records };
 
 class BookmarkDeliveryJob {
   /** Job responsible for sending the email to Focus users containing all of the bookmarks
-   * that were saved for them during their Focus session
+   * that were saved for them during their Focus
    */
 
   public static async main() {
@@ -79,12 +78,11 @@ class BookmarkDeliveryJob {
   }
 
   // Bookmarks that are ready for delivery must meet this criteria
-  // 1. Email must be defined and non-empty
+  // 1. Email for the bookmark must be defined and non-empty
   // 2. The email for that bookmark must not have been sent already
   // 3. The latest bookmark for the user must have occurred more than 3
   // hours ago (which would indicate the user has likely finished their Focus session)
   private static async getDeliverableBookmarks(): Promise<DeliverableBookmarks> {
-    const identifiedDeliverableBookmarks = {};
     const threeHoursAgoTime =
       Date.now() - LATEST_BOOKMARK_ENTRY_THRESHOLD_SECONDS;
 
@@ -102,16 +100,18 @@ class BookmarkDeliveryJob {
     const distinctEmailList = Object.keys(bookmarksGroupedByEmail);
 
     // We'll identify bookmark sets that should be mailed out
-    for (const email of distinctEmailList) {
-      const bookmarkSet = bookmarksGroupedByEmail[email];
-      const latestBookmarkEntry = bookmarkSet[0];
+    const identifiedDeliverableBookmarks =
+      distinctEmailList.reduce<DeliverableBookmarks>((acc, email) => {
+        const bookmarkSet = bookmarksGroupedByEmail[email];
+        const latestBookmarkEntry = bookmarkSet[0];
 
-      // If the latest bookmark was created more than 3 hours ago
-      // then it's an applicable set of bookmarks we want to deliver in this job run
-      if (latestBookmarkEntry.created_at.getTime() < threeHoursAgoTime) {
-        identifiedDeliverableBookmarks[email] = bookmarkSet;
-      }
-    }
+        // If the latest bookmark was created more than 3 hours ago
+        // then it's an applicable set of bookmarks we want to deliver in this job run
+        if (latestBookmarkEntry.created_at.getTime() < threeHoursAgoTime) {
+          acc[email] = bookmarkSet;
+        }
+        return acc;
+      }, {});
 
     return identifiedDeliverableBookmarks;
   }
