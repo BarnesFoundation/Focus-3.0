@@ -26,10 +26,10 @@ class BookmarkDeliveryJob {
   public static async main() {
     const deliverableBookmarks =
       await BookmarkDeliveryJob.getDeliverableBookmarks();
+    const distinctEmailAddressCount = Object.keys(deliverableBookmarks).length;
+
     console.log(
-      `Identified ${
-        Object.keys(deliverableBookmarks).length
-      } email addresses that have bookmarks ready for delivery`
+      `Identified ${distinctEmailAddressCount} email addresses that have bookmarks ready for delivery`
     );
 
     // We'll pre-fetch all of the artworks associated with these bookmarks
@@ -75,6 +75,10 @@ class BookmarkDeliveryJob {
         },
       });
     }
+
+    console.log(
+      `Completed delivery of bookmark emails for ${distinctEmailAddressCount} email addresses`
+    );
   }
 
   // Bookmarks that are ready for delivery must meet this criteria
