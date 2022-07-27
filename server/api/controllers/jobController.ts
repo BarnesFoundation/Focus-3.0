@@ -5,6 +5,7 @@ import {
   StorySyncJob,
   ImageUploadJob,
   SessionClearJob,
+  BookmarkDeliveryJob,
 } from "../jobs";
 
 class JobController {
@@ -45,6 +46,16 @@ class JobController {
       .json(
         `SessionClearJob completed successfully. ${clearedSessionsCount} expired sessions cleared`
       );
+  }
+
+  public static async performBookmarkDeliveryJob(
+    request: express.Request,
+    response: express.Response
+  ) {
+    await BookmarkDeliveryJob.main();
+    return response
+      .status(200)
+      .json(`BookmarkDeliveryJob completed successfully.`);
   }
 }
 
