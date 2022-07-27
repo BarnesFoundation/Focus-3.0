@@ -12,8 +12,8 @@ const prisma = new PrismaClient();
 // When this bookmark delivery job runs, we will collect bookmarks for each
 // email that occurred more than 3 hours ago
 const LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS = 3;
-const LATEST_BOOKMARK_ENTRY_THRESHOLD_SECONDS =
-  LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS * 3600;
+const LATEST_BOOKMARK_ENTRY_THRESHOLD_MS =
+  LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS * 3600 * 1000;
 
 type DeliverableBookmarks = { [email: string]: bookmarks[] };
 type CollectedArtworks = { [artworkId: string]: es_cached_records };
@@ -91,8 +91,8 @@ class BookmarkDeliveryJob {
    * hours ago (which would indicate the user has likely finished their Focus session)
    */
   private static async getDeliverableBookmarks(): Promise<DeliverableBookmarks> {
-    const threeHoursAgoTime =
-      Date.now() - LATEST_BOOKMARK_ENTRY_THRESHOLD_SECONDS;
+    const bookmarkThresholdAgo =
+      Date.now() - LATEST_BOOKMARK_ENTRY_THRESHOLD_MS;
 
     const recentBookmarks = await prisma.bookmarks.findMany({
       where: {
@@ -115,7 +115,7 @@ class BookmarkDeliveryJob {
 
         // If the latest bookmark was created more than 3 hours ago
         // then it's an applicable set of bookmarks we want to deliver in this job run
-        if (latestBookmarkEntry.created_at.getTime() < threeHoursAgoTime) {
+        if (latestBookmarkEntry.created_at.getTime() < bookmarkThresholdAgo) {
           acc[email] = bookmarkSet;
         }
         return acc;
