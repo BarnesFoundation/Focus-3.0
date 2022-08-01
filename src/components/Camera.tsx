@@ -1,5 +1,6 @@
 import scan_button from "images/scan-button.svg";
 import React, { Component } from "react";
+// @ts-ignore
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import { isIOS } from "react-device-detect";
 import { compose } from "redux";
