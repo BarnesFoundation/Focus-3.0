@@ -1,8 +1,8 @@
-import check_email_icon from "images/check_email.svg";
-import close_icon from "images/cross.svg";
-import google_logo from "images/google_translate.svg";
-import scan_button from "images/scan-button.svg";
-import share from "images/share.svg";
+import check_email_icon from "../images/check_email.svg";
+import close_icon from "../images/cross.svg";
+import google_logo from "../images/google_translate.svg";
+import scan_button from "../images/scan-button.svg";
+import share from "../images/share.svg";
 import React, { Component } from "react";
 import posed from "react-pose";
 import ProgressiveImage from "react-progressive-image";

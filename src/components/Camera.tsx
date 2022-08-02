@@ -1,4 +1,4 @@
-import scan_button from "images/scan-button.svg";
+import scan_button from "../images/scan-button.svg";
 import React, { Component } from "react";
 // @ts-ignore
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";

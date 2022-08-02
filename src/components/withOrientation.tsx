@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import landscape_bg from "images/barnes-landscape-background.png";
+import landscape_bg from "../images/barnes-landscape-background.png";
 import { isIOS, isSafari } from "react-device-detect";
 import {
   UNSUPPORTED_ORIENTATION_ALERT_MESSAGE,

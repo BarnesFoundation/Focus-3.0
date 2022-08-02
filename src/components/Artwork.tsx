@@ -9,7 +9,7 @@ import withTranslation from "./withTranslation";
 import LanguageDropdown from "./LanguageDropdown";
 import EmailForm from "./EmailForm";
 
-import google_logo from "images/google_translate.svg";
+import google_logo from "../images/google_translate.svg";
 import { SearchRequestService } from "../services/SearchRequestService";
 import ProgressiveImage from "react-progressive-image";
 import { Controller, Scene } from "react-scrollmagic";
@@ -170,9 +170,9 @@ class Artwork extends Component {
         };
       }
       // Get the room records array
-      const rr = artworkResult["data"]["roomRecords"];
+      const rr = artworkResult["data"]["roomRecords"] || [];
 
-      if (rr.length > 0) {
+      if (rr?.length > 0) {
         roomRecords = rr;
       }
     }

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import { Popover, PopoverBody } from "reactstrap";
-import shareButton from "images/share-icon.svg";
+import shareButton from "../images/share-icon.svg";
 import * as constants from "./Constants";
 
 export class Share extends Component {

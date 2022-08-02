@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import scan_button from "images/scan-button.svg";
+import scan_button from "../images/scan-button.svg";
 
 class ScanButton extends Component {
   constructor(props) {

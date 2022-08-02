@@ -1,8 +1,8 @@
-import home_background from "images/barnes-v2-landing.png";
-import barnes_logo from "images/Barnes_logo.svg";
-import barnes_100_logo from "images/Barnes_100_logo.svg";
-import close_icon from "images/cross.svg";
-import kf_logo from "images/knight-foundation-logo.svg";
+import home_background from "../images/barnes-v2-landing.png";
+import barnes_logo from "../images/Barnes_logo.svg";
+import barnes_100_logo from "../images/Barnes_100_logo.svg";
+import close_icon from "../images/cross.svg";
+import kf_logo from "../images/knight-foundation-logo.svg";
 import React, { Component } from "react";
 import { isAndroid, isIOS, isSafari, osVersion } from "react-device-detect";
 import { withRouter } from "react-router-dom";
