@@ -1,0 +1,91 @@
+.camera-container {
+    position: fixed !important;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.camera {
+    width: 100%;
+    height: 100vh;
+    background: #fff;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+
+    .no-match-overlay {
+        position: fixed !important;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        width: 100vw;
+        z-index: 1;
+        overflow: hidden;
+        //transition: opacity .25s linear;
+
+        .hint {
+            position: absolute;
+            width: 265px;
+            height: 110px;
+            left: calc(50% - 132px);
+            top: 140px;
+            text-align: center;
+            span {
+                text-align: center;
+                color: #fff;
+            }
+        }
+    }
+
+    #video-preview {
+        position: absolute;
+        width: 72vw;
+        height: calc(245 / 295 * 72vw);
+        left: 14vw;
+        top: 10vh;
+    }
+}
+
+/* result not found animation */
+.fade-enter {
+    opacity: 0;
+}
+
+.fade-enter.fade-enter-active {
+    opacity: 1;
+    transition: opacity 500ms linear;
+}
+
+.fade-leave {
+    opacity: 1;
+}
+
+.fade-leave.fade-leave-active {
+    opacity: 0;
+    transition: opacity 100ms linear;
+}
+
+/* iPhone 6S and below. Smaller Devices (Portrait) */
+@media only screen and (min-device-width: 320px) and (max-device-height: 667px) and (orientation: portrait) {
+    /* Styles */
+}
+
+/* iPhone X */
+@media only screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) {
+}
+/* iPhone 8 Plus */
+@media only screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) {
+}
+/* iPhone 8  */
+@media only screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) {
+}
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+    /* Styles */
+}
