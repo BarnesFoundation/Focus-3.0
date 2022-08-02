@@ -1,0 +1,144 @@
+.home-wrapper {
+    position: fixed !important;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.landing-screen {
+    position: fixed !important;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.logo-center {
+    width: 148px;
+    height: 46px;
+    position: absolute;
+    left: 50%;
+    top: 10%;
+    margin-left: -74px;
+    margin-top: -23px;
+
+    &.centennial-logo {
+        height: unset;
+        width: 180px;
+        margin-left: -90px;
+    }
+}
+
+.user-loc-prompt {
+    position: absolute;
+    width: 325px;
+    height: 86px;
+    left: 50%;
+    top: 180px;
+    line-height: 40px;
+    font-size: 40px;
+    text-align: center;
+    margin-left: -163px;
+
+    color: #ffffff;
+}
+
+.home-action {
+    position: absolute;
+    top: 320px;
+    width: 280px;
+    left: 50%;
+    transform: translate(-50%);
+    display: flex;
+    justify-content: center;
+
+    .action-btn {
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        box-sizing: border-box;
+        color: #ffffff;
+        background: transparent;
+        margin: 0 30px;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .action-text {
+        width: 60px;
+        height: 30px;
+        left: -3px;
+        top: 14px;
+        text-align: center;
+        color: #ffffff;
+    }
+}
+
+.kf-logo {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    left: 12%;
+    bottom: 10.04%;
+}
+
+.kf-text {
+    position: absolute;
+    width: 256px;
+    height: 40px;
+    left: calc(12% + 51px);
+    bottom: 10.04%;
+    line-height: 15px;
+    color: #ffffff;
+}
+
+.app-usage-alert {
+    position: absolute;
+    width: 282px;
+    height: 125px;
+    left: calc(50% - 141px);
+    top: 124px;
+    text-align: center;
+    color: #ffffff;
+    z-index: 1;
+
+    .app-usage-msg {
+        margin-bottom: 40px;
+    }
+
+    .visit-online-link {
+        a {
+            color: #ffffff;
+            bottom: 0;
+            text-decoration: none;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #fff;
+        }
+    }
+}
+
+.browser-modal {
+    position: absolute;
+    width: 282px;
+    height: 125px;
+    left: calc(50% - 141px);
+    top: 124px;
+    text-align: center;
+    color: #ffffff;
+    z-index: 1;
+}
+
+.btn-close {
+    position: absolute;
+    bottom: 62px;
+    left: calc(50% - 22px);
+}

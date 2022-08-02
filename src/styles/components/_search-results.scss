@@ -1,0 +1,224 @@
+.search-container {
+    padding-left: 0;
+    padding-right: 0;
+    overflow-x: hidden;
+
+    .card {
+        border: none;
+        border-radius: 0;
+        text-align: center;
+
+        .card-top-container {
+            position: relative;
+            height: auto !important;
+            //overflow: hidden;
+            background-color: #fff;
+            z-index: 2;
+        }
+
+        .card-img-container {
+            position: absolute;
+            filter: blur(25px);
+            transform: scale(1.2);
+            min-height: 90vh;
+            height: calc(100% + 100px);
+            img {
+                height: 100%;
+                z-index: 100;
+            }
+        }
+
+        .card-img-overlay {
+            padding: 40px 40px 50px 40px;
+            height: auto;
+            position: relative;
+
+            .card-img-result {
+                position: relative;
+                z-index: 1;
+                pointer-events: none;
+                img {
+                    width: 100%;
+                }
+            }
+
+            .card-title {
+                position: relative;
+                padding-top: 30px;
+                margin: 0 -15px;
+                text-align: center;
+                color: #ffffff;
+            }
+        }
+
+        .card-body {
+            padding: 25px;
+            color: #282828;
+            text-align: left;
+            z-index: 2;
+            background: #fff;
+            .card-text {
+                padding-bottom: 30px;
+            }
+
+            .card-info {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 45px;
+            }
+
+            .detail-table {
+                width: 100%;
+
+                .item-label {
+                    font-family: "Calibre-Regular";
+                    line-height: 30px;
+                    font-size: 17px;
+                    letter-spacing: 0.01em;
+                    color: #6e6e6e;
+                    opacity: 0.8;
+                    vertical-align: top;
+                    width: 30%;
+                }
+
+                .item-info {
+                    font-family: "Calibre-Regular";
+                    line-height: 18px;
+                    padding-top: 6px;
+                    font-size: 17px;
+                    letter-spacing: 0.01em;
+                    color: #282828;
+                    vertical-align: top;
+                }
+            }
+
+            .share-wrapper {
+                margin-bottom: 60px;
+
+                .btn-share-result {
+                    min-width: 95px;
+                    width: fit-content;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    height: 45px;
+                    border: 2px solid rgba(0, 0, 0, 0.12);
+                    border-radius: 100px;
+                    margin: 0 auto;
+
+                    img {
+                        position: relative;
+                        left: 12px;
+                        top: 8px;
+                    }
+
+                    .text-share {
+                        line-height: 24px;
+                        font-size: 16px;
+                        color: #6e6e6e;
+                        top: 8px;
+                        left: 22px;
+                        position: relative;
+                    }
+                }
+            }
+
+            .text-left {
+                text-align: left;
+            }
+
+            .text-right {
+                text-align: right;
+            }
+        }
+
+        .card-footer {
+            background-color: #d4432a;
+            color: #fff;
+            padding: 2rem;
+
+            p {
+                color: #fff;
+                opacity: 0.8;
+            }
+        }
+
+        .btn-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 35px;
+            font-size: 24px;
+            line-height: 0.33;
+            position: relative;
+            top: -35px;
+            left: 75vw;
+            background-color: #000;
+            color: #fff;
+            -webkit-appearance: none;
+        }
+    }
+
+    .reset-experience {
+        color: #d4432a;
+        padding: 10px 0;
+        font-weight: bold;
+        font-size: 16px;
+    }
+}
+
+.search-error-container {
+    .error-container {
+        padding: 60px 30px;
+        height: 60vh;
+        text-align: center;
+    }
+}
+
+.notification {
+    border-top: 2px solid rgb(255, 0, 0) !important;
+    background-color: #000 !important;
+    color: #fff !important;
+    box-shadow: rgba(0, 0, 0, 0.9) 0px 0px 1px !important;
+    text-align: center;
+}
+
+.google-translate-disclaimer {
+    padding-top: 10px;
+    padding-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    font-family: "Calibre-Regular";
+    line-height: 19px;
+    font-size: 17px;
+    letter-spacing: 0.01em;
+    color: #b4b4b4;
+
+    span {
+        display: inline-block;
+        width: 110px;
+        margin-right: 4px;
+    }
+}
+
+.cross-fade-leave {
+    opacity: 1;
+}
+.cross-fade-leave.cross-fade-leave-active {
+    opacity: 0;
+    transition: opacity 1s ease-in;
+}
+
+.cross-fade-enter {
+    opacity: 0;
+}
+.cross-fade-enter.cross-fade-enter-active {
+    opacity: 1;
+    transition: opacity 1s ease-in;
+}
+
+.cross-fade-height {
+    transition: height 0.5s ease-in-out;
+}
+
+/* iPhone 6,7,8  */
+@media only screen and (min-device-width: 320px) and (max-device-height: 667px) and (orientation: portrait) {
+}

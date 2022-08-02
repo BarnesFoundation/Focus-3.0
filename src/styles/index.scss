@@ -1,0 +1,26 @@
+@font-face {
+	font-family: 'Calibre-Medium';
+	src: url('./fonts/CalibreWeb-Medium.woff2') format('woff2');
+	font-style: normal; 
+	font-weight: normal;
+  }
+  
+  @font-face {
+	font-family: 'Calibre-Regular';
+	src: url('./fonts/CalibreWeb-Regular.woff2') format('woff2');
+	font-style: normal;
+	font-weight: normal;
+  }
+  
+  @import "~normalize.css";
+  @import './components/base';
+  @import './components/home';
+  @import './components/camera-controls';
+  @import './components/search-results';
+  @import './components/focus-result';
+  @import './components/story-page';
+  @import './components/artwork';
+  @import './components/language-dropdown';
+  @import './components/slider';
+  @import './components/email-form';
+  @import './components/about';
