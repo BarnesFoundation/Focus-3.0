@@ -70,7 +70,7 @@ class ArtworkController {
     // const languagePreference = session.lang_pref;
     const storiesData = await ArtworkService.findStoryForArtwork(artworkId);
 
-    return response.status(200).json(storiesData);
+    return response.status(200).json({ data: storiesData });
   }
 
   public static async markStoryAsRead(
