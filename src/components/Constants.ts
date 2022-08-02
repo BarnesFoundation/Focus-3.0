@@ -7,14 +7,14 @@ export const CATCHOOM_REQUEST_URL = process.env.CATCHOOM_REQUEST_URL;
 export const APP_VERSION = process.env.APP_VERSION;
 export const UNSUPPORTED_ORIENTATION_ALERT_MESSAGE =
   "The digital guide is best viewed in Portrait mode.";
-export const ART_WORK_INFO_URL = "/api/snaps/getArtworkInformation?imageId=";
-export const STORIES_URL = "/api/snaps/find_stories_by_object_id?object_id=";
+export const ART_WORK_INFO_URL = "/api/artwork/";
+export const STORIES_URL = (artworkId) => `/api/artwork/${artworkId}/stories`;
 export const STORIES_EMAIL_PAGE_URL = "/api/stories/";
 export const STORIES_READ_URL = "/api/snaps/mark_story_as_read?image_id=";
 export const STORE_SEARCHED_RESULT_URL = "/api/snaps/storeSearchedResult";
 export const SUBMIT_BOOKMARKS_EMAIL_URL = "/api/bookmarks";
 export const SAVE_LANGUAGE_PREFERENCE_URL = "/api/bookmarks/set_language";
-export const APP_TRANSLATIONS_URL = "/api/translations";
+export const APP_TRANSLATIONS_URL = "/api/translation";
 export const VALIDATE_EMAIL_URL = "/api/snaps/validateEmail";
 export const KNIGHT_FOUNDATION_CREDIT_TEXT =
   "Barnes Focus was created by the Knight Center for Digital Innovation in Audience Engagement at the Barnes.";
