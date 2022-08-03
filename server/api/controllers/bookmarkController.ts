@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import express from "express";
+import * as EmailValidator from "email-validator";
 
 import { BookmarkService } from "../services";
 
@@ -75,6 +76,16 @@ class BookmarkController {
       data: { errors: ["Email can't be blank"] },
       message: "",
     });
+  }
+
+  public static async validateEmail(
+    request: express.Request,
+    response: express.Response
+  ) {
+    const email = request.body.email;
+    const emailIsValid = EmailValidator.validate(email);
+
+    return response.status(200).json(emailIsValid);
   }
 }
 
