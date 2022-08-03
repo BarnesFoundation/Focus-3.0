@@ -103,10 +103,10 @@ class SearchRequestService {
     }
   };
 
-  markStoryAsRead = async (imageId, storyId) => {
+  markStoryAsRead = async (imageId: string, storyId: string) => {
     try {
       let response = await axios.post(
-        constants.STORIES_READ_URL + imageId + "&unique_identifier=" + storyId
+        constants.STORIES_READ_URL(imageId, storyId)
       );
       return response.data;
     } catch (error) {
