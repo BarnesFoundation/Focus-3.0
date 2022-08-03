@@ -49,7 +49,7 @@ class StoryPage extends Component {
     };
   }
 
-  async componentWillMount() {
+  async UNSAFE_componentWillMount() {
     const slug = this.props.match.params.slug;
     const queryParams = queryString.parse(this.props.location.search);
 

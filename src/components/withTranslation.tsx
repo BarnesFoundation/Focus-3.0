@@ -14,7 +14,7 @@ const withTranslation = (WrappedComponent) => {
       };
     }
 
-    async componentWillMount() {
+    async UNSAFE_componentWillMount() {
       console.log(
         "WithTranslation >> componentWillMount. Load the translations here"
       );
