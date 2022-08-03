@@ -179,7 +179,7 @@ class Artwork extends Component {
     return { artwork, roomRecords };
   };
 
-  async componentWillMount() {
+  async UNSAFE_componentWillMount() {
     let imageId = this.state.result
       ? this.state.result.data.records[0].id
       : this.props.match.params.imageId;
@@ -215,7 +215,7 @@ class Artwork extends Component {
         storyId: storyId,
         storyTitle: storyTitle,
         result: artworkInfo,
-        showStory: artworkInfo.data.show_story,
+        showStory: artworkInfo.data.showStory,
         artwork: artwork,
         roomRecords: roomRecords,
         emailCaptured: emailCaptured,

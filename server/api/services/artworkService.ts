@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 import ElasticSearchService from "./elasticSearchService";
 import GraphCMSService from "./graphCMSService";
+import { generateImgixUrl } from "../utils/generateImgixUrl";
 
 const prisma = new PrismaClient();
 
@@ -81,14 +82,21 @@ export default class ArtworkService {
       artworkId
     );
     const storyArtworkIds = stories.map((story) => story.image_id);
+
+    // TODO - Figure out a cleaner way to automatically add
+    // the `art_url` whenever artworks are being fetched
+    // since it's almost always needed
     const artworks = (
       await prisma.es_cached_records.findMany({
-        select: { es_data: true },
+        select: { es_data: true, image_id: true },
         where: {
           image_id: { in: storyArtworkIds },
         },
       })
-    ).map((record) => record.es_data);
+    ).map(({ es_data, image_id }) => {
+      es_data["art_url"] = generateImgixUrl(image_id, es_data["imageSecret"]);
+      return es_data;
+    });
 
     content = {
       story_title: storyFields.storyTitle,
