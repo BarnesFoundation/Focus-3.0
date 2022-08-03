@@ -2,6 +2,7 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 
 import { ArtworkService, GraphCMSService, TranslateService } from "../services";
+import { generateImgixUrl } from "../utils/generateImgixUrl";
 
 export const fieldName = "storablePhoto";
 const prisma = new PrismaClient();
@@ -22,6 +23,10 @@ class ArtworkController {
         artworkInformation["shortDescription"],
         preferredLanguage
       ); */
+      artworkInformation["art_url"] = generateImgixUrl(
+        artworkId,
+        artworkInformation["imageSecret"]
+      );
 
       const responseObject = {
         data: {
