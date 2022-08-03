@@ -14,10 +14,10 @@ export const STORIES_EMAIL_PAGE_URL = "/api/stories/";
 export const STORIES_READ_URL = (artworkId: string, storyId: string) =>
   `/api/artwork/${artworkId}/stories/${storyId}/read`;
 export const STORE_SEARCHED_RESULT_URL = "/api/snaps/storeSearchedResult";
-export const SUBMIT_BOOKMARKS_EMAIL_URL = "/api/bookmarks";
-export const SAVE_LANGUAGE_PREFERENCE_URL = "/api/bookmarks/set_language";
+export const SUBMIT_BOOKMARKS_EMAIL_URL = "/api/bookmark/submit";
+export const SAVE_LANGUAGE_PREFERENCE_URL = "/api/bookmark/set_language";
 export const APP_TRANSLATIONS_URL = "/api/translation";
-export const VALIDATE_EMAIL_URL = "/api/snaps/validateEmail";
+export const VALIDATE_EMAIL_URL = "/api/bookmark/validate-email";
 export const KNIGHT_FOUNDATION_CREDIT_TEXT =
   "Barnes Focus was created by the Knight Center for Digital Innovation in Audience Engagement at the Barnes.";
 export const GET_USER_MEDIA_ERROR_IOS =
