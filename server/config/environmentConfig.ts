@@ -51,4 +51,8 @@ export default {
   google: {
     projectId: process.env.GOOGLE_PROJECT_ID,
   },
+
+  imgix: {
+    repo: process.env.IMGIX_REPO,
+  },
 };
