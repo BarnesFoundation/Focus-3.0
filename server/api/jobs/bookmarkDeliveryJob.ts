@@ -11,7 +11,7 @@ const prisma = new PrismaClient();
 
 // When this bookmark delivery job runs, we will collect bookmarks for each
 // email that occurred more than 3 hours ago
-const LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS = 3;
+const LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS = 0.01666666666;
 const LATEST_BOOKMARK_ENTRY_THRESHOLD_MS =
   LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS * 3600 * 1000;
 
@@ -45,7 +45,9 @@ class BookmarkDeliveryJob {
       // Get the artworks needed for this email's set of bookmarks
       const bookmarkArtworkList = Object.values(
         bookmarkSet.reduce<CollectedArtworks>((acc, bookmark) => {
-          acc[bookmark.image_id] = artworks[bookmark.image_id];
+          if (artworks[bookmark.image_id]) {
+            acc[bookmark.image_id] = artworks[bookmark.image_id];
+          }
           return acc;
         }, {})
       );
