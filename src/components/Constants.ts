@@ -2,8 +2,8 @@
  * snap v2 constants
  * ===== START =====
  */
-export const CATCHOOM_ACCESS_TOKEN = process.env.CATCHOOM_ACCESS_TOKEN;
-export const CATCHOOM_REQUEST_URL = process.env.CATCHOOM_REQUEST_URL;
+export const CATCHOOM_ACCESS_TOKEN = process.env.REACT_APP_CATCHOOM_ACCESS_TOKEN;
+export const CATCHOOM_REQUEST_URL = process.env.REACT_APP_CATCHOOM_REQUEST_URL;
 export const APP_VERSION = process.env.APP_VERSION;
 export const UNSUPPORTED_ORIENTATION_ALERT_MESSAGE =
   "The digital guide is best viewed in Portrait mode.";
@@ -13,7 +13,7 @@ export const STORIES_URL = (artworkId: string) =>
 export const STORIES_EMAIL_PAGE_URL = "/api/stories/";
 export const STORIES_READ_URL = (artworkId: string, storyId: string) =>
   `/api/artwork/${artworkId}/stories/${storyId}/read`;
-export const STORE_SEARCHED_RESULT_URL = "/api/snaps/storeSearchedResult";
+export const STORE_SEARCHED_RESULT_URL = "/api/scan/save";
 export const SUBMIT_BOOKMARKS_EMAIL_URL = "/api/bookmark/submit";
 export const SAVE_LANGUAGE_PREFERENCE_URL = "/api/bookmark/set_language";
 export const APP_TRANSLATIONS_URL = "/api/translation";

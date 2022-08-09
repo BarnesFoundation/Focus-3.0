@@ -1,5 +1,5 @@
 // TODO - figure out if we really want to bring in this whole lodash module
-import throttle from "lodash/throttle";
+import throttle from "lodash.throttle";
 import React, { Component } from "react";
 import { withRouter } from "react-router";
 import {

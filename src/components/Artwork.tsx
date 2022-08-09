@@ -758,7 +758,7 @@ class Artwork extends Component {
 
     // If the story should not be shown -- which occurs, only when no stories are available
     const peekOffsetValue = isAndroid ? 123 : 67;
-    const peekOffset = showStory ? "0" : `${peekOffsetValue}`;
+    const peekOffset = showStory ? 0 : peekOffsetValue;
 
     return (
       <div
@@ -766,7 +766,7 @@ class Artwork extends Component {
         className="panel-email"
         style={{
           pointerEvents: pointerSetting,
-          height: `calc(60vh - ${peekOffset}px)`,
+          height: `calc(60vh - ${peekOffset})px`,
         }}
         onClick={() => {
           this.handleClickScroll(null, false);

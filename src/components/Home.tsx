@@ -81,8 +81,8 @@ class HomeComponent extends Component {
         video: { facingMode: "environment", width: 1920, height: 1080 },
       });
 
-      // Log the permission grant time if it took more than 900 ms
-      shouldLogPermissionGrantTime(startTime);
+      // TODO - Log the permission grant time if it took more than 900 ms
+      // shouldLogPermissionGrantTime(startTime);
 
       // Navigate to the scan page
       this.props.history.push({ pathname: "/scan" });
