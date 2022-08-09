@@ -52,7 +52,7 @@ class Camera extends Component {
 
   /** Captures a single scan and returns blob of the scan */
   captureSingleScan = async () => {
-    this.captureCounter++;
+    this.captureCounter += 1;
 
     if (this.captureCounter < 10) {
       // Get image in canvas
@@ -126,7 +126,8 @@ class Camera extends Component {
       });
 
       // Log the permission grant time if it took more than 900 ms
-      shouldLogPermissionGrantTime(startTime);
+      // TODO - fix this
+      // shouldLogPermissionGrantTime(startTime);
 
       this.setState({ videoStream, cameraPermission: true }, () => {
         // When video is able to be captured
