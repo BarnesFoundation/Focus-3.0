@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import Email from "email-templates";
+import EmailTemplates from "email-templates";
 
 import { environmentConfiguration } from "../../config";
 import path from "path";
@@ -24,9 +24,9 @@ interface SendArguments {
   html: string;
 }
 
-const email = new Email({
+const Emailer = new EmailTemplates({
   message: {
-    from: "cjativa@barnesfoundation.org",
+    from: environmentConfiguration.sendGrid.email,
   },
   send: true,
   transport: transporter,
@@ -43,18 +43,10 @@ export default class MailService {
   /** Performs sending of the provided email contents to the desired address */
   public static async send({ subject, to, text, html }: SendArguments) {
     try {
-      /* const sendMailResponse = await transporter.sendMail({
-        // TODO - this email address will eventually have to be pulled from the tenant configuration
-        from: sendGrid.email,
-        to,
-        subject,
-        text,
-        html,
-      }); */
-      const sendEmailResponse = await email.send({
+      const sendEmailResponse = await Emailer.send({
         message: {
-          to: "cjativa@barnesfoundation.org",
-          subject: "Some subject",
+          to,
+          subject,
           html: "<p>Hello, a test!</p>",
           text: "Hello, a test!",
         },
