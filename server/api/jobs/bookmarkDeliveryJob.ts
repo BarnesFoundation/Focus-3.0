@@ -6,6 +6,9 @@ import {
 } from "@prisma/client";
 
 import { groupBy } from "../utils";
+import { MailService } from "../services";
+
+import ReactDOMServer from "react-dom/server";
 
 const prisma = new PrismaClient();
 
@@ -59,6 +62,12 @@ class BookmarkDeliveryJob {
         `For email ${email}, delivered the following artwork id's`,
         bookmarkArtworkList.map((item) => item.image_id)
       );
+      await MailService.send({
+        subject: "Your bookmarks at the Barnes",
+        to: email,
+        text: "",
+        html: "",
+      });
       /* BookmarkNotifierMailer.send_activity_email(mail, els_arr, language)
         .deliver_now; */
 
@@ -74,6 +83,7 @@ class BookmarkDeliveryJob {
         },
         data: {
           mail_sent: true,
+          updated_at: new Date(Date.now()).toISOString(),
         },
       });
     }
