@@ -1,10 +1,18 @@
 import nodemailer from "nodemailer";
 import EmailTemplates from "email-templates";
-
-import { environmentConfiguration } from "../../config";
 import path from "path";
 
+import { environmentConfiguration } from "../../config";
+
 const { sendGrid } = environmentConfiguration;
+const EMAIL_PREVIEWS_PATH = path.join(
+  __dirname,
+  "..",
+  "..",
+  "..",
+  "..",
+  "emailPreviews"
+);
 
 // create reusable transporter object using the default SMTP transport
 const transporter = nodemailer.createTransport({
@@ -26,7 +34,7 @@ interface SendArguments {
 
 const Emailer = new EmailTemplates({
   message: {
-    from: environmentConfiguration.sendGrid.email,
+    from: sendGrid.email,
   },
   send: true,
   transport: transporter,
@@ -35,7 +43,7 @@ const Emailer = new EmailTemplates({
       app: "chrome",
       wait: false,
     },
-    dir: path.join(__dirname, "..", "..", "..", "..", "emailPreviews"),
+    dir: EMAIL_PREVIEWS_PATH,
   },
 });
 
