@@ -1,14 +1,7 @@
-import {
-  Prisma,
-  PrismaClient,
-  bookmarks,
-  es_cached_records,
-} from "@prisma/client";
+import { PrismaClient, bookmarks, es_cached_records } from "@prisma/client";
 
 import { groupBy } from "../utils";
-import { MailService } from "../services";
-
-import ReactDOMServer from "react-dom/server";
+import { MailService, MailTemplates } from "../services";
 
 const prisma = new PrismaClient();
 
@@ -21,11 +14,10 @@ const LATEST_BOOKMARK_ENTRY_THRESHOLD_MS =
 type DeliverableBookmarks = { [email: string]: bookmarks[] };
 type CollectedArtworks = { [artworkId: string]: es_cached_records };
 
+/** Job responsible for sending the email to Focus users containing all of the bookmarks
+ * that were saved for them during their Focus
+ */
 class BookmarkDeliveryJob {
-  /** Job responsible for sending the email to Focus users containing all of the bookmarks
-   * that were saved for them during their Focus
-   */
-
   public static async main() {
     const deliverableBookmarks =
       await BookmarkDeliveryJob.getDeliverableBookmarks();
@@ -65,8 +57,8 @@ class BookmarkDeliveryJob {
       await MailService.send({
         subject: "Your bookmarks at the Barnes",
         to: email,
-        text: "",
-        html: "",
+        template: "TestEmail",
+        locals: null,
       });
       /* BookmarkNotifierMailer.send_activity_email(mail, els_arr, language)
         .deliver_now; */
