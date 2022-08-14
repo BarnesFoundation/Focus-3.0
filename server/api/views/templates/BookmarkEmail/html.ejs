@@ -56,8 +56,8 @@
 									<td width="50%" dir="ltr" class="w100 text-center logos__social-icons"
 										style="text-align: right;">
 										<a href="https://www.facebook.com/barnesfoundation/" target="_blank">
-											<img src="mailer/social_facebook.png" alt="facebook" , width="20px"
-												height="20px" , style="padding: 20px 10px; opacity: 0.8;">
+											<img src="mailer/social_facebook.png" alt="facebook" width="20px"
+												height="20px" style="padding: 20px 10px; opacity: 0.8;">
 										</a>
 										<a href="https://www.instagram.com/barnesfoundation/" target="_blank">
 											<img src="mailer/social_instagram.png" alt="instagram" width="20px"
@@ -72,7 +72,7 @@
 												height="20px" style="padding: 20px 10px; opacity: 0.8;">
 										</a>
 										<a href="https://www.youtube.com/user/BarnesFoundation" target="_blank">
-											<img src="m%ailer/social_youtube.png" , alt="Youtube" width="20px"
+											<img src="mailer/social_youtube.png" , alt="Youtube" width="20px"
 												height="20px" style="padding: 20px 10px; opacity: 0.8;">
 										</a>
 									</td>
@@ -135,12 +135,9 @@
 								class="bookmarks-table">
 								<% els_arr.forEach((els_elem)=> { %>
 									<tr>
-										<td width="30%" dir="ltr" class="w100 spacer"
-											style="color: #282828; vertical-align: top; padding: 40px 0;">
-											<% const
-												imageSource=`https://barnes-images.imgix.net/${els_elem['id'].toString()}_${els_elem['imageSecret']}_n.jpg?crop=faces,entropy&fit=crop&w=200&h=200`
-												%>
-												<% const imageAlt=els_elem['id'].toString() %>
+										<td width="30%" dir="ltr" class="w100 spacer" style="color: #282828; vertical-align: top; padding: 40px 0;">
+											<% const imageSource=`https://barnes-images.imgix.net/${els_elem['id'].toString()}_${els_elem['imageSecret']}_n.jpg?crop=faces,entropy&fit=crop&w=200&h=200` %>
+											<% const imageAlt=els_elem['id'].toString() %>
 													<img src=<%=imageSource %> alt=<%= imageAlt %>>
 										</td>
 
@@ -222,12 +219,12 @@
 									</td>
 									<td align="center">
 										<a href="https://www.facebook.com/barnesfoundation/" target="_blank">
-											<img src="mailer/social_facebook.png" , alt="facebook" width="20px"
+											<img src="mailer/social_facebook.png" alt="facebook" width="20px"
 												height="20px" style="padding: 20px 10px; opacity: 0.8;">
 										</a>
 										<a href="https://www.instagram.com/barnesfoundation/" target="_blank">
 											<img src="mailer/social_instagram.png" alt="instagram" width="20px"
-												height="20px" , style="padding: 20px 10px; opacity: 0.8;">
+												height="20px" style="padding: 20px 10px; opacity: 0.8;">
 										</a>
 										<a href="https://www.linkedin.com/company/barnes-foundation" target="_blank">
 											<img src="mailer/social_linkedin.png" alt="linkedin" width="20px"
