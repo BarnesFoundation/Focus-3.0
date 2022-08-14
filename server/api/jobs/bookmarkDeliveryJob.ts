@@ -12,7 +12,12 @@ const LATEST_BOOKMARK_ENTRY_THRESHOLD_MS =
   LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS * 3600 * 1000;
 
 type DeliverableBookmarks = { [email: string]: bookmarks[] };
-type CollectedArtworks = { [artworkId: string]: es_cached_records };
+type CollectedArtworks = {
+  [artworkId: string]: {
+    id: string;
+    image_id: number;
+  } & es_cached_records["es_data"];
+};
 
 /** Job responsible for sending the email to Focus users containing all of the bookmarks
  * that were saved for them during their Focus
@@ -164,7 +169,17 @@ class BookmarkDeliveryJob {
 
     // Convert the artworks to a hash list for easier artwork picking
     const artworkHash = artworks.reduce<CollectedArtworks>((acc, artwork) => {
-      acc[artwork.image_id] = artwork;
+      artwork.id = artwork.image_id as any;
+      const spreadArtwork = {
+        id: artwork.id,
+        image_id: artwork.image_id,
+        // TODO - es_data is always an object
+        // In the Prisma definition, it needs to be converted
+        // from JSONValue to object type
+        // @ts-ignore
+        ...artwork.es_data,
+      };
+      acc[artwork.image_id] = spreadArtwork;
       return acc;
     }, {});
 
