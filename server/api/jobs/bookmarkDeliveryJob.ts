@@ -1,7 +1,7 @@
 import { PrismaClient, bookmarks, es_cached_records } from "@prisma/client";
 
 import { groupBy } from "../utils";
-import { MailService, MailTemplates } from "../services";
+import { MailService, MailTemplates, TranslateService } from "../services";
 
 const prisma = new PrismaClient();
 
@@ -35,7 +35,13 @@ class BookmarkDeliveryJob {
 
     for (const email in deliverableBookmarks) {
       const bookmarkSet = deliverableBookmarks[email];
+
+      // Identify the preferred language for this user
+      // and pull translations for them in that language
       const preferredLanguage = bookmarkSet[0].language?.toLowerCase() || "en";
+      const translations = await TranslateService.retrieveStoredTranslations(
+        preferredLanguage
+      );
 
       // Get the artworks needed for this email's set of bookmarks
       const bookmarkArtworkList = Object.values(
@@ -51,17 +57,17 @@ class BookmarkDeliveryJob {
       // from the Focus Ruby on Rails implementation. That logic involves
       // bringing in templating logic and the HTML for the email that's sent
       console.log(
-        `For email ${email}, delivered the following artwork id's`,
+        `For email ${email}, we will deliver the following artwork id's`,
         bookmarkArtworkList.map((item) => item.image_id)
       );
       await MailService.send({
-        subject: "Your bookmarks at the Barnes",
         to: email,
-        template: "TestEmail",
-        locals: null,
+        template: "BookmarkEmail",
+        locals: {
+          translations,
+          els_arr: bookmarkArtworkList,
+        },
       });
-      /* BookmarkNotifierMailer.send_activity_email(mail, els_arr, language)
-        .deliver_now; */
 
       // We'll update these bookmarks in the database to indicate the email for
       // these bookmarks have now been processed and sent out to the user
