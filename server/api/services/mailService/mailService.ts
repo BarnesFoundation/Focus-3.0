@@ -2,25 +2,22 @@ import { Emailer } from "./config";
 import { TemplatesType } from "./types";
 
 interface SendArguments {
-  subject: string;
+  subject?: string;
   to: string;
   template: TemplatesType;
-  locals: JSON;
+  locals: JSON | any;
 }
 
 export default class MailService {
   /** Performs sending of the provided email contents to the desired address */
-  public static async send({ subject, to, template }: SendArguments) {
+  public static async send({ subject, to, template, locals }: SendArguments) {
     try {
       const sendEmailResponse = await Emailer.send({
         template,
         message: {
           to,
-          subject,
         },
-        locals: {
-          name: "Christopher",
-        },
+        locals,
       });
 
       console.log("Successfully sent email ", sendEmailResponse);
