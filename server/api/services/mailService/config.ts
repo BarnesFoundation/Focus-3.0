@@ -1,12 +1,15 @@
 import nodemailer from "nodemailer";
-import EmailTemplates from "email-templates";
+import Email from "email-templates";
 import path from "path";
 
 import { environmentConfiguration } from "../../../config";
 
 const { sendGrid } = environmentConfiguration;
 
-const EMAIL_PREVIEW_PATH = path.join(
+const EMAIL_VIEWS_PATH = path.join(__dirname, "..", "..", "views");
+const EMAIL_VIEWS_TEMPLATES_PATH = path.join(EMAIL_VIEWS_PATH, "templates");
+const EMAIL_VIEWS_ASSETS_PATH = path.join(EMAIL_VIEWS_PATH, "assets");
+const EMAIL_PREVIEW_OUTPUT_PATH = path.join(
   __dirname,
   "..",
   "..",
@@ -15,7 +18,6 @@ const EMAIL_PREVIEW_PATH = path.join(
   "..",
   "emailPreviews"
 );
-const EMAIL_VIEWS_PATH = path.join(__dirname, "..", "..", "views");
 
 // create reusable transporter object using the SendGrid SMTP transport
 const transporter = nodemailer.createTransport({
@@ -27,8 +29,8 @@ const transporter = nodemailer.createTransport({
     pass: sendGrid.password,
   },
 });
-console.log("the email path", EMAIL_VIEWS_PATH);
-export const Emailer = new EmailTemplates({
+
+export const Emailer = new Email({
   message: {
     from: sendGrid.email,
   },
@@ -39,12 +41,21 @@ export const Emailer = new EmailTemplates({
       app: "chrome",
       wait: false,
     },
-    dir: EMAIL_PREVIEW_PATH,
+    dir: EMAIL_PREVIEW_OUTPUT_PATH,
   },
   views: {
-    root: EMAIL_VIEWS_PATH,
+    root: EMAIL_VIEWS_TEMPLATES_PATH,
     options: {
       extension: "ejs",
+    },
+  },
+
+  // Settings related to assets configuration
+  juice: true,
+  juiceResources: {
+    webResources: {
+      relativeTo: EMAIL_VIEWS_ASSETS_PATH,
+      images: true,
     },
   },
 });
