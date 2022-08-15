@@ -1,11 +1,7 @@
-import {
-  Prisma,
-  PrismaClient,
-  bookmarks,
-  es_cached_records,
-} from "@prisma/client";
+import { PrismaClient, bookmarks, es_cached_records } from "@prisma/client";
 
 import { groupBy } from "../utils";
+import { MailService, MailTemplates, TranslateService } from "../services";
 
 const prisma = new PrismaClient();
 
@@ -16,13 +12,17 @@ const LATEST_BOOKMARK_ENTRY_THRESHOLD_MS =
   LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS * 3600 * 1000;
 
 type DeliverableBookmarks = { [email: string]: bookmarks[] };
-type CollectedArtworks = { [artworkId: string]: es_cached_records };
+type CollectedArtworks = {
+  [artworkId: string]: {
+    id: string;
+    image_id: number;
+  } & es_cached_records["es_data"];
+};
 
+/** Job responsible for sending the email to Focus users containing all of the bookmarks
+ * that were saved for them during their Focus
+ */
 class BookmarkDeliveryJob {
-  /** Job responsible for sending the email to Focus users containing all of the bookmarks
-   * that were saved for them during their Focus
-   */
-
   public static async main() {
     const deliverableBookmarks =
       await BookmarkDeliveryJob.getDeliverableBookmarks();
@@ -40,7 +40,13 @@ class BookmarkDeliveryJob {
 
     for (const email in deliverableBookmarks) {
       const bookmarkSet = deliverableBookmarks[email];
+
+      // Identify the preferred language for this user
+      // and pull translations for them in that language
       const preferredLanguage = bookmarkSet[0].language?.toLowerCase() || "en";
+      const translations = await TranslateService.retrieveStoredTranslations(
+        preferredLanguage
+      );
 
       // Get the artworks needed for this email's set of bookmarks
       const bookmarkArtworkList = Object.values(
@@ -56,11 +62,17 @@ class BookmarkDeliveryJob {
       // from the Focus Ruby on Rails implementation. That logic involves
       // bringing in templating logic and the HTML for the email that's sent
       console.log(
-        `For email ${email}, delivered the following artwork id's`,
+        `For email ${email}, we will deliver the following artwork id's`,
         bookmarkArtworkList.map((item) => item.image_id)
       );
-      /* BookmarkNotifierMailer.send_activity_email(mail, els_arr, language)
-        .deliver_now; */
+      await MailService.send({
+        to: email,
+        template: "BookmarkEmail",
+        locals: {
+          translations,
+          els_arr: bookmarkArtworkList,
+        },
+      });
 
       // We'll update these bookmarks in the database to indicate the email for
       // these bookmarks have now been processed and sent out to the user
@@ -74,6 +86,7 @@ class BookmarkDeliveryJob {
         },
         data: {
           mail_sent: true,
+          updated_at: new Date(Date.now()).toISOString(),
         },
       });
     }
@@ -156,7 +169,17 @@ class BookmarkDeliveryJob {
 
     // Convert the artworks to a hash list for easier artwork picking
     const artworkHash = artworks.reduce<CollectedArtworks>((acc, artwork) => {
-      acc[artwork.image_id] = artwork;
+      artwork.id = artwork.image_id as any;
+      const spreadArtwork = {
+        id: artwork.id,
+        image_id: artwork.image_id,
+        // TODO - es_data is always an object
+        // In the Prisma definition, it needs to be converted
+        // from JSONValue to object type
+        // @ts-ignore
+        ...artwork.es_data,
+      };
+      acc[artwork.image_id] = spreadArtwork;
       return acc;
     }, {});
 
