@@ -10,3 +10,13 @@ ngrok:
 # then the source files should immediately be copied over to `dist`
 views:
 	cp -r ./server/api/views dist/server/api
+
+init: 
+	echo "Compiling backend server code 🔨"
+	npm run build-server
+	echo "Populating database schema 💾"
+	npx prisma migrate dev
+	echo "Seeding database with stored language translations 🌐"
+	npx prisma db seed
+	echo "Running ElasticSearch Sync Job to pull artwork records 🎨"
+	node -e 'require("./dist/server/api/jobs/elasticSearchSyncJob.js").main()'

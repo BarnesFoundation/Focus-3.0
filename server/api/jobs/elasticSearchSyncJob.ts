@@ -73,3 +73,4 @@ class ElasticSearchSyncJob {
 }
 
 export default ElasticSearchSyncJob;
+export const main = ElasticSearchSyncJob.main;
