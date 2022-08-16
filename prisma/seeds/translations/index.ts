@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   try {
-    const sqlPath = path.join(__dirname, "translations.sql");
+    const sqlPath = path.join(__dirname, "data.sql");
 
     const rawSql = await fs.promises.readFile(sqlPath, { encoding: "utf-8" });
     const sqlStatements = rawSql.split(";");
