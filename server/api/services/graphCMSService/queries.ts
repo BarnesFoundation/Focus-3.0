@@ -1,7 +1,4 @@
-export type GraphQLQuery = {
-  query: string;
-  variables: { [key: string]: string | number };
-};
+import { GraphQLQuery } from "./types";
 
 // Fragment definition for fields to pull from story
 const storiesFragment = `on Stories {
@@ -68,6 +65,25 @@ export function storiesForObjectIdQuery(objectId: string): GraphQLQuery {
 		  `,
     variables: {
       objectID: parseInt(objectId),
+    },
+  };
+}
+
+export function storiesForObjectIdsQuery(objectIds: string[]): GraphQLQuery {
+  return {
+    query: `
+		  query($objectID: Int) {
+			  storiesForObjectIds(where: { objectID_in: [$objectIDs] }) {
+				id
+				objectID
+				relatedStories {
+				  id
+				}
+			  }
+			}
+			`,
+    variables: {
+      objectIDs: objectIds.map((objectId) => parseInt(objectId)),
     },
   };
 }
