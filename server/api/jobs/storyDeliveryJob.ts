@@ -1,7 +1,12 @@
 import { PrismaClient, bookmarks } from "@prisma/client";
 
 import { groupBy, batchify } from "../utils";
-import { GraphCMSService, RelatedStory } from "../services";
+import {
+  GraphCMSService,
+  RelatedStory,
+  TranslateService,
+  MailService,
+} from "../services";
 
 const prisma = new PrismaClient();
 
@@ -15,6 +20,7 @@ type DeliverableStoryBookmarks = { [email: string]: bookmarks[] };
 type CollectedStories = {
   [artworkId: string]: RelatedStory;
 };
+
 class StoryDeliveryJob {
   public static async main() {
     const deliverableStoryBookmarks =
@@ -31,6 +37,60 @@ class StoryDeliveryJob {
     // in one big batch, rather than pulling them individually later
     const stories = await StoryDeliveryJob.retrieveStoriesForBookmarks(
       deliverableStoryBookmarks
+    );
+
+    for (const email in deliverableStoryBookmarks) {
+      const bookmarkSet = deliverableStoryBookmarks[email];
+
+      // Identify the preferred language for this user
+      // and pull translations for them in that language
+      const preferredLanguage = bookmarkSet[0].language?.toLowerCase() || "en";
+      const translations = await TranslateService.retrieveStoredTranslations(
+        preferredLanguage
+      );
+
+      // Get the artworks needed for this email's set of bookmarks
+      const bookmarkStoryList = Object.values(
+        bookmarkSet.reduce<CollectedStories>((acc, bookmark) => {
+          if (stories[bookmark.image_id]) {
+            acc[bookmark.image_id] = stories[bookmark.image_id];
+          }
+          return acc;
+        }, {})
+      );
+
+      console.log(
+        `For email ${email}, we will deliver the following story id's`,
+        bookmarkStoryList.map((item) => item.id)
+      );
+      /* await MailService.send({
+        to: email,
+        template: "StoryEmail",
+        locals: {
+          translations,
+          els_arr: bookmarkStoryList,
+        },
+      }); */
+
+      // We'll update these bookmarks in the database to indicate the email for
+      // these bookmarks have now been processed and sent out to the user
+      const mailedStoryBookmarkIds = bookmarkSet.map((bookmark) => bookmark.id);
+      await prisma.bookmarks.updateMany({
+        where: {
+          id: {
+            in: mailedStoryBookmarkIds,
+          },
+          email,
+        },
+        data: {
+          story_mail_sent: true,
+          updated_at: new Date(Date.now()).toISOString(),
+        },
+      });
+    }
+
+    console.log(
+      `Completed delivery of story emails for ${distinctEmailAddressCount} email addresses`
     );
   }
 
