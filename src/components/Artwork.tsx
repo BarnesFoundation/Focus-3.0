@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
 import { compose } from "redux";
+import $ from 'jquery'; 
 
 import * as constants from "./Constants";
 import withOrientation from "./withOrientation";
