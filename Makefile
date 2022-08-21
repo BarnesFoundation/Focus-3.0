@@ -24,7 +24,7 @@ init:
 	echo "Seeding database with stored language translations 🌐"
 	npx prisma db seed
 	echo "Running ElasticSearch Sync Job to pull artwork records 🎨"
-	elastic-sync
+	make elastic-sync
 
 elastic-sync:
 	node -e 'require("./dist/server/api/jobs/elasticSearchSyncJob.js").main()'
