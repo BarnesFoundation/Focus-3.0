@@ -6,6 +6,7 @@ import {
   ImageUploadJob,
   SessionClearJob,
   BookmarkDeliveryJob,
+  StoryDeliveryJob,
 } from "../jobs";
 
 class JobController {
@@ -56,6 +57,16 @@ class JobController {
     return response
       .status(200)
       .json(`BookmarkDeliveryJob completed successfully.`);
+  }
+
+  public static async performStoryDeliveryJob(
+    request: express.Request,
+    response: express.Response
+  ) {
+    await StoryDeliveryJob.main();
+    return response
+      .status(200)
+      .json(`StoryDeliveryJob completed successfully.`);
   }
 }
 

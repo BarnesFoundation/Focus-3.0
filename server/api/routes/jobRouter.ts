@@ -11,5 +11,6 @@ JobRouter.post(
   "/BookmarkDeliveryJob",
   JobController.performBookmarkDeliveryJob
 );
+JobRouter.post("/StoryDeliveryJob", JobController.performStoryDeliveryJob);
 
 export default JobRouter;
