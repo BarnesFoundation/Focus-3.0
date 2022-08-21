@@ -8,7 +8,7 @@ export const batchify = async <T>(
     `There will be ${numberOfBatches} batches of ${parallelExecutionLimit} executions each`
   );
 
-  const responses = [];
+  let responses = [];
   for (let i = 0; i <= numberOfBatches; i++) {
     // Setup this batch
     const batchStart = i * parallelExecutionLimit;
@@ -17,13 +17,13 @@ export const batchify = async <T>(
       batchStart + parallelExecutionLimit
     );
 
-    const batchRequests = batchArguments.map((args) => {
-      return operationToBatch.apply(args);
+    const batchRequests = batchArguments.map((batchArg) => {
+      return operationToBatch.apply(null, [batchArg]);
     });
 
     // Execute the batches of promises
     const responseSet = await Promise.all(batchRequests);
-    responses.concat(responseSet);
+    responses = responses.concat(responseSet);
   }
 
   return responses;
