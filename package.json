@@ -26,7 +26,9 @@
     },
     "scripts": {
         "start": "PORT=3006 react-scripts start",
-        "build": "react-scripts build",
+        "client-build": "TSC_COMPILE_ON_ERROR=true react-scripts build",
+        "build": "npm run client-build && rm -rf dist && npm run build-server",
+		"postbuild": "cp -r build dist && rm -rf build",
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "build-server": "tsc -p server/",
