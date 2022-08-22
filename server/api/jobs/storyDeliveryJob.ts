@@ -12,7 +12,7 @@ const prisma = new PrismaClient();
 
 // When this story delivery job runs, we will collect stories for each
 // set of bookmarks that occurred more than 22 hours ago
-const LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS = 22;
+const LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS = 0.017; // 22;
 const LATEST_BOOKMARK_ENTRY_THRESHOLD_MS =
   LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS * 3600 * 1000;
 
@@ -63,19 +63,19 @@ class StoryDeliveryJob {
         `For email ${email}, we will deliver the following story id's`,
         bookmarkStoryList.map((item) => item.id)
       );
-      /* await MailService.send({
+      await MailService.send({
         to: email,
         template: "StoryEmail",
         locals: {
           translations,
-          els_arr: bookmarkStoryList,
+          stories: bookmarkStoryList,
         },
-      }); */
+      });
 
       // We'll update these bookmarks in the database to indicate the email for
       // these bookmarks have now been processed and sent out to the user
       const mailedStoryBookmarkIds = bookmarkSet.map((bookmark) => bookmark.id);
-      await prisma.bookmarks.updateMany({
+      /* await prisma.bookmarks.updateMany({
         where: {
           id: {
             in: mailedStoryBookmarkIds,
@@ -86,7 +86,7 @@ class StoryDeliveryJob {
           story_mail_sent: true,
           updated_at: new Date(Date.now()).toISOString(),
         },
-      });
+      }); */
     }
 
     console.log(
