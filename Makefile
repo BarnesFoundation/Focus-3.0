@@ -1,7 +1,12 @@
 # Starts a local ngrok tunnel
 # connected to the React FE on localhost:3006
-ngrok:
+ngrok-client:
 	npx ngrok http 3006 --host-header=localhost:3006
+
+# Starts a local ngrok tunnel
+# connected to the Node BE on localhost:4006
+ngrok-server:
+	npx ngrok http 4006 --host-header=localhost:4006
 
 # Manually copy email views to the dist folder
 # TODO - this should be more automated if possible
@@ -19,4 +24,7 @@ init:
 	echo "Seeding database with stored language translations 🌐"
 	npx prisma db seed
 	echo "Running ElasticSearch Sync Job to pull artwork records 🎨"
+	make elastic-sync
+
+elastic-sync:
 	node -e 'require("./dist/server/api/jobs/elasticSearchSyncJob.js").main()'

@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 // When this bookmark delivery job runs, we will collect bookmarks for each
 // email that occurred more than 3 hours ago
-const LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS = 0.01666666666;
+const LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS = 3;
 const LATEST_BOOKMARK_ENTRY_THRESHOLD_MS =
   LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS * 3600 * 1000;
 
@@ -58,13 +58,6 @@ class BookmarkDeliveryJob {
         }, {})
       );
 
-      // TODO - implement the BookmarkNotifierMailer.send_activity_email method
-      // from the Focus Ruby on Rails implementation. That logic involves
-      // bringing in templating logic and the HTML for the email that's sent
-      console.log(
-        `For email ${email}, we will deliver the following artwork id's`,
-        bookmarkArtworkList.map((item) => item.image_id)
-      );
       await MailService.send({
         to: email,
         template: "BookmarkEmail",
