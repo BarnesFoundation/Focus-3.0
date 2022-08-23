@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 
 import ElasticSearchService from "./elasticSearchService";
-import GraphCMSService from "./graphCMSService";
+import GraphCMSService, { RelatedStory } from "./graphCMSService";
+
 import { generateImgixUrl } from "../utils/generateImgixUrl";
 
 const prisma = new PrismaClient();
@@ -58,60 +59,8 @@ export default class ArtworkService {
   }
 
   public static async findStoryForArtwork(artworkId: string): Promise<any> {
-    let content = {};
-    let total = 0;
-    let uniqueIdentifier = null;
-
     const relatedStories = await GraphCMSService.findByObjectId(artworkId);
-
-    if (relatedStories.length === 0) {
-      return {
-        content,
-        total,
-        unique_identifier: uniqueIdentifier,
-      };
-    }
-
-    const storyFields =
-      relatedStories.length > 1
-        ? relatedStories[relatedStories.length - 1]
-        : relatedStories[0];
-
-    const stories = ArtworkService.extractStoryInformation(
-      storyFields,
-      artworkId
-    );
-    const storyArtworkIds = stories.map((story) => story.image_id);
-
-    // TODO - Figure out a cleaner way to automatically add
-    // the `art_url` whenever artworks are being fetched
-    // since it's almost always needed
-    const artworks = (
-      await prisma.es_cached_records.findMany({
-        select: { es_data: true, image_id: true },
-        where: {
-          image_id: { in: storyArtworkIds },
-        },
-      })
-    ).map(({ es_data, image_id }) => {
-      es_data["art_url"] = generateImgixUrl(image_id, es_data["imageSecret"]);
-      return es_data;
-    });
-
-    content = {
-      story_title: storyFields.storyTitle,
-      original_story_title: storyFields.storyTitle,
-      stories: ArtworkService.getStoriesDetail(stories, artworks, {}),
-    };
-
-    uniqueIdentifier = storyFields.id;
-    total = stories.length;
-
-    return {
-      content,
-      unique_identifier: uniqueIdentifier,
-      total,
-    };
+    return relatedStories;
   }
 
   private static extractStoryInformation(storyFields, objectId: string) {
@@ -156,4 +105,60 @@ export default class ArtworkService {
 
     return storiesWithDetail;
   }
+
+  public static async parseRelatedStory(
+    relatedStories: Array<RelatedStory>,
+    artworkId: string
+  ): Promise<ParsedRelatedStory> {
+    if (relatedStories.length === 0) {
+      return {
+        content: {},
+        total: 0,
+        unique_identifier: null,
+      };
+    }
+
+    const storyFields =
+      relatedStories.length > 1
+        ? relatedStories[relatedStories.length - 1]
+        : relatedStories[0];
+    const stories = ArtworkService.extractStoryInformation(
+      storyFields,
+      artworkId
+    );
+    const storyArtworkIds = stories.map((story) => story.image_id);
+    const artworks = (
+      await prisma.es_cached_records.findMany({
+        select: { es_data: true, image_id: true },
+        where: {
+          image_id: { in: storyArtworkIds },
+        },
+      })
+    ).map(({ es_data, image_id }) => {
+      es_data["art_url"] = generateImgixUrl(image_id, es_data["imageSecret"]);
+      return es_data;
+    });
+
+    return {
+      content: {
+        story_title: storyFields.storyTitle,
+        original_story_title: storyFields.storyTitle,
+        stories: ArtworkService.getStoriesDetail(stories, artworks, {}),
+      },
+      unique_identifier: storyFields.id,
+      total: stories.length,
+    };
+  }
+}
+
+export interface ParsedRelatedStory {
+  content:
+    | {
+        story_title: string;
+        original_story_title: string;
+        stories: any;
+      }
+    | {};
+  unique_identifier: string;
+  total: number;
 }
