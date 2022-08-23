@@ -1,5 +1,5 @@
 import ElasticSearchService from "./elasticSearchService";
-import ArtworkService from "./artworkService";
+import ArtworkService, { ParsedRelatedStory } from "./artworkService";
 import GraphCMSService, { RelatedStory } from "./graphCMSService";
 import TranslateService from "./translateService";
 import BookmarkService from "./bookmarkService";
@@ -13,5 +13,8 @@ export {
   TranslateService,
   BookmarkService,
   MailService,
+
+  // Types related to services
   MailTemplates,
+  ParsedRelatedStory,
 };
