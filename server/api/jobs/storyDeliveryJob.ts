@@ -1,11 +1,12 @@
 import { PrismaClient, bookmarks } from "@prisma/client";
 
-import { groupBy, batchify } from "../utils";
+import Config from "../../config";
+import { groupBy, batchify, slugify } from "../utils";
 import {
   GraphCMSService,
-  RelatedStory,
   TranslateService,
   MailService,
+  ParsedRelatedStory,
 } from "../services";
 
 const prisma = new PrismaClient();
@@ -18,7 +19,10 @@ const LATEST_BOOKMARK_ENTRY_THRESHOLD_MS =
 
 type DeliverableStoryBookmarks = { [email: string]: bookmarks[] };
 type CollectedStories = {
-  [artworkId: string]: RelatedStory;
+  [artworkId: string]: ParsedRelatedStory & {
+    translated_title: string;
+    link: string;
+  };
 };
 
 class StoryDeliveryJob {
@@ -60,8 +64,8 @@ class StoryDeliveryJob {
       );
 
       console.log(
-        `For email ${email}, we will deliver the following story id's`,
-        bookmarkStoryList.map((item) => item.id)
+        `For session id ${bookmarkSet[0].session_id}, we will deliver the following story id's`,
+        bookmarkStoryList.map((item) => item.unique_identifier)
       );
       await MailService.send({
         to: email,
@@ -69,6 +73,7 @@ class StoryDeliveryJob {
         locals: {
           translations,
           stories: bookmarkStoryList,
+          lang: preferredLanguage,
         },
       });
 
@@ -136,7 +141,7 @@ class StoryDeliveryJob {
    */
   private static async retrieveStoriesForBookmarks(
     deliverableStoryBookmarks: DeliverableStoryBookmarks
-  ) {
+  ): Promise<CollectedStories> {
     const distinctStoryArtworkIds = Object.values(deliverableStoryBookmarks)
       .flat()
       .reduce((acc: string[], deliverableStoryBookmark) => {
@@ -161,7 +166,14 @@ class StoryDeliveryJob {
     // Convert the artworks to a hash list for easier artwork picking
     const storyHash = storiesForArtworks.reduce<CollectedStories>(
       (acc, story, index) => {
-        acc[distinctStoryArtworkIds[index]] = story;
+        const currentArtworkId = distinctStoryArtworkIds[index];
+        const titleSlug = slugify(story.content["original_story_title"]);
+
+        acc[currentArtworkId] = {
+          ...story,
+          translated_title: story.content["story_title"],
+          link: `${Config.assetHost}/story/${titleSlug}`,
+        };
         return acc;
       },
       {}

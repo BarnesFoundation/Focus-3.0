@@ -8,7 +8,7 @@
 			"name": "Launch server.js via nodemon",
 			"type": "node",
 			"request": "launch",
-			"runtimeExecutable": "nodemon",
+			"runtimeExecutable": "${workspaceFolder}/node_modules/nodemon/bin/nodemon.js",
 			"program": "${workspaceFolder}/dist/server/app.js",
 			"restart": true,
 			"console": "internalConsole",
@@ -21,7 +21,7 @@
 			"type": "chrome",
 			"request": "launch",
 			"name": "Launch Chrome against localhost",
-			"url": "http://localhost:3001",
+			"url": "http://localhost:3006",
 			"webRoot": "${workspaceFolder}"
 		},
 		{

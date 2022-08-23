@@ -7,6 +7,7 @@ import {
 } from "./queries";
 import { GraphQLQuery, RelatedStory } from "./types";
 import { isEmpty } from "../../utils/isEmpty";
+import ArtworkService, { ParsedRelatedStory } from "../artworkService";
 
 const UNIQUE_SEPARATOR = "***";
 
@@ -55,22 +56,14 @@ export default class GraphCMSService {
   /** Retrieves a specific record from ElasticSearch as identified by the provided object id */
   public static async findByObjectId(
     objectId: string
-  ): Promise<Array<RelatedStory>> {
+  ): Promise<ParsedRelatedStory> {
     const query = relatedStoriesByObjectIdQuery(objectId);
     const graphContent = await GraphCMSService.makeGraphQLRequest(query);
 
-    // Empty content means nothing available to translate and parse
-    if (
-      isEmpty(graphContent.data.storiesForObjectIds) ||
-      isEmpty(graphContent.data.storiesForObjectIds[0].relatedStories)
-    ) {
-      return [];
-    }
+    const relatedStories = graphContent.data.storiesForObjectIds[0]
+      .relatedStories as Array<RelatedStory>;
 
-    const relatedStories =
-      graphContent.data.storiesForObjectIds[0].relatedStories;
-
-    return relatedStories;
+    return await ArtworkService.parseRelatedStory(relatedStories, objectId);
   }
 
   private static getTranslatatableContent(
