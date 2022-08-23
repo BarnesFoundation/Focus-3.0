@@ -42,6 +42,9 @@ export default {
   /** Environment indicating stage for the application */
   nodeEnv: process.env.NODE_ENV!!.toUpperCase() as EnvironmentStages,
 
+  /** URL of the server */
+  assetHost: process.env.ASSET_HOST!!,
+
   /** Configuration regarding the user sessions */
   session: {
     secret: process.env.SESSION_SECRET,
