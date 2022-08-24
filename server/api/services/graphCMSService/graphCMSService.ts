@@ -4,6 +4,7 @@ import Config from "../../../config";
 import {
   storiesForObjectIdQuery,
   relatedStoriesByObjectIdQuery,
+  relatedStoriesByTitleQuery,
 } from "./queries";
 import { GraphQLQuery, RelatedStory } from "./types";
 import { isEmpty } from "../../utils/isEmpty";
@@ -53,11 +54,24 @@ export default class GraphCMSService {
     };
   }
 
-  /** Retrieves a specific record from ElasticSearch as identified by the provided object id */
+  /** Retrieves a specific story from Graph CMS as identified by the provided object id */
   public static async findByObjectId(
     objectId: string
   ): Promise<ParsedRelatedStory> {
     const query = relatedStoriesByObjectIdQuery(objectId);
+    const graphContent = await GraphCMSService.makeGraphQLRequest(query);
+
+    const relatedStories = graphContent.data.storiesForObjectIds[0]
+      .relatedStories as Array<RelatedStory>;
+
+    return await ArtworkService.parseRelatedStory(relatedStories, objectId);
+  }
+
+  /** Retrieves a specific story from Graph CMS as identified by the provided story title */
+  public static async findByTitle(
+    storyTitle: string
+  ): Promise<ParsedRelatedStory> {
+    const query = relatedStoriesByTitleQuery(storyTitle);
     const graphContent = await GraphCMSService.makeGraphQLRequest(query);
 
     const relatedStories = graphContent.data.storiesForObjectIds[0]
