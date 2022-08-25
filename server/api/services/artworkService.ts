@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 import ElasticSearchService from "./elasticSearchService";
-import GraphCMSService, { RelatedStory } from "./graphCMSService";
+import GraphCMSService, { RelatedStory, ObjectID } from "./graphCMSService";
 
 import { generateImgixUrl } from "../utils/generateImgixUrl";
 
@@ -63,41 +63,48 @@ export default class ArtworkService {
     return relatedStories;
   }
 
-  private static extractStoryInformation(storyFields, objectId: string) {
-    const stories = [];
+  private static extractStoryInformation(
+    storyFields: RelatedStory,
+    objectId: string
+  ): Array<ExtractedStoryInformation> {
+    const stories = [...Array(6)]
+      .map((_, i) => {
+        const index = i + 1;
+        const identifier = `objectID${index}` as ObjectID;
 
-    [...Array(6)].forEach((_, i) => {
-      const index = i + 1;
-      const identifier = `objectID${index}`;
+        if (!storyFields[identifier]) {
+          return null;
+        }
 
-      if (!storyFields[identifier]) {
-        return;
-      }
+        const imageId =
+          "objectID1" === identifier && objectId === storyFields[identifier]
+            ? storyFields["alternativeHeroImageObjectID"]
+            : storyFields[identifier];
 
-      const imageId =
-        "objectID1" === identifier && objectId === storyFields[identifier]
-          ? storyFields["alternativeHeroImageObjectID"]
-          : storyFields[identifier];
-
-      stories.push({
-        image_id: imageId,
-        short_paragraph: storyFields[`shortParagraph${index}`],
-        long_paragraph: storyFields[`longParagraph${index}`],
-        detail: null,
-      });
-    });
+        return {
+          image_id: imageId,
+          short_paragraph: storyFields[`shortParagraph${index}`],
+          long_paragraph: storyFields[`longParagraph${index}`],
+          detail: null,
+        };
+      })
+      .filter((el) => el);
 
     return stories;
   }
 
-  private static getStoriesDetail(stories, artworks, translatableContent) {
+  private static getStoriesDetail(
+    stories: Array<ExtractedStoryInformation>,
+    artworks: any,
+    translatableContent: {}
+  ) {
     const storiesWithDetail = stories.map((story) => {
-      const detail = artworks.find((art) => {
-        return art.id == story.image_id;
+      const detailForStory = artworks.find((art: any) => {
+        art.id == story.image_id;
       });
 
-      if (detail) {
-        story["detail"] = detail;
+      if (detailForStory) {
+        story["detail"] = detailForStory;
       }
 
       return story;
@@ -108,13 +115,13 @@ export default class ArtworkService {
 
   public static async parseRelatedStory(
     relatedStories: Array<RelatedStory>,
-    artworkId: string
+    artworkId: string | null
   ): Promise<ParsedRelatedStory> {
     if (relatedStories.length === 0) {
       return {
         content: {},
         total: 0,
-        unique_identifier: null,
+        unique_identifier: "",
       };
     }
 
@@ -156,9 +163,16 @@ export interface ParsedRelatedStory {
     | {
         story_title: string;
         original_story_title: string;
-        stories: any;
+        stories: Array<ExtractedStoryInformation>;
       }
     | {};
   unique_identifier: string;
   total: number;
+}
+
+export interface ExtractedStoryInformation {
+  image_id: string;
+  short_paragraph: string;
+  long_paragraph: string;
+  detail: null;
 }
