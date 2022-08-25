@@ -117,6 +117,7 @@ model stories {
   slug       String?  @db.VarChar
   created_at DateTime @db.Timestamp(6)
   updated_at DateTime @db.Timestamp(6)
+  story_uid  String   @unique(map: "stories_un") @db.VarChar
 
   @@index([slug], map: "index_stories_on_slug")
   @@index([title], map: "index_stories_on_title")
