@@ -142,3 +142,18 @@ export function relatedStoriesByRoomIdQuery(objectId: string): GraphQLQuery {
     },
   };
 }
+
+export function allStoriesQuery(): GraphQLQuery {
+  return {
+    query: `
+		query {
+			storieses{
+			  id
+			  storyTitle
+			  stage
+			}
+		  }
+		`,
+    variables: {},
+  };
+}

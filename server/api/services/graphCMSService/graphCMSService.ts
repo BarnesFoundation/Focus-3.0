@@ -5,6 +5,7 @@ import {
   storiesForObjectIdQuery,
   relatedStoriesByObjectIdQuery,
   relatedStoriesByTitleQuery,
+  allStoriesQuery,
 } from "./queries";
 import { GraphQLQuery, RelatedStory } from "./types";
 import { isEmpty } from "../../utils/isEmpty";
@@ -78,6 +79,20 @@ export default class GraphCMSService {
       .relatedStories as Array<RelatedStory>;
 
     return await ArtworkService.parseRelatedStory(relatedStories, null);
+  }
+
+  /** Retrieves the general story data for every published story in Graph CMS */
+  public static async fetchAllStories(): Promise<
+    Array<{
+      id: string;
+      storyTitle: string;
+      stage: string;
+    }>
+  > {
+    const query = allStoriesQuery();
+    const response = await GraphCMSService.makeGraphQLRequest(query);
+
+    return response.data.storieses;
   }
 
   private static getTranslatatableContent(
