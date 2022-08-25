@@ -1,10 +1,11 @@
 import { PrismaClient } from "@prisma/client";
+import { ArtworkService, GraphCMSService } from "../services";
 import express from "express";
 
 const prisma = new PrismaClient();
 
 class StoryController {
-  public static async getCannedTranslations(
+  public static async getStoryContent(
     request: express.Request,
     response: express.Response
   ) {
@@ -17,13 +18,18 @@ class StoryController {
       },
     });
 
-    if (foundStory) {
+    const parsedStoryContent = await GraphCMSService.findByTitle(
+      // TODO - remove this hard-coding when foundStory works correctly
+      "Why so many Renoirs?" // foundStory.title
+    );
+
+    if (parsedStoryContent) {
       return response.status(200).json({
         data: {
           success: true,
-          total: 0,
-          unique_identifier: null,
-          content: {},
+          total: parsedStoryContent.total,
+          unique_identifier: parsedStoryContent.unique_identifier,
+          content: parsedStoryContent.content,
         },
         message: "Ok",
       });
