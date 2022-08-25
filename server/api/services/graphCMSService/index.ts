@@ -1,4 +1,4 @@
 import GraphCMSService from "./graphCMSService";
-import { RelatedStory } from "./types";
-export { RelatedStory };
+import { RelatedStory, ObjectID } from "./types";
+export { RelatedStory, ObjectID };
 export default GraphCMSService;

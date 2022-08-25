@@ -77,7 +77,7 @@ export default class GraphCMSService {
     const relatedStories = graphContent.data.storiesForObjectIds[0]
       .relatedStories as Array<RelatedStory>;
 
-    return await ArtworkService.parseRelatedStory(relatedStories, objectId);
+    return await ArtworkService.parseRelatedStory(relatedStories, null);
   }
 
   private static getTranslatatableContent(
