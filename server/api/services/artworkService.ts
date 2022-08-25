@@ -100,7 +100,7 @@ export default class ArtworkService {
   ) {
     const storiesWithDetail = stories.map((story) => {
       const detailForStory = artworks.find((art: any) => {
-        art.id == story.image_id;
+        return parseInt(art.id) === parseInt(story.image_id);
       });
 
       if (detailForStory) {
