@@ -19,8 +19,7 @@ class StoryController {
     });
 
     const parsedStoryContent = await GraphCMSService.findByTitle(
-      // TODO - remove this hard-coding when foundStory works correctly
-      "Why so many Renoirs?" // foundStory.title
+      foundStory.title
     );
 
     if (parsedStoryContent) {
