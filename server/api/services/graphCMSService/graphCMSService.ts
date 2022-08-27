@@ -60,10 +60,11 @@ export default class GraphCMSService {
     objectId: string
   ): Promise<ParsedRelatedStory> {
     const query = relatedStoriesByObjectIdQuery(objectId);
-    const graphContent = await GraphCMSService.makeGraphQLRequest(query);
+    const { data } = await GraphCMSService.makeGraphQLRequest(query);
 
-    const relatedStories = graphContent.data.storiesForObjectIds[0]
-      .relatedStories as Array<RelatedStory>;
+    const relatedStories: Array<RelatedStory> = data.storiesForObjectIds[0]
+      ? data.storiesForObjectIds[0].relatedStories
+      : [];
 
     return await ArtworkService.parseRelatedStory(relatedStories, objectId);
   }
