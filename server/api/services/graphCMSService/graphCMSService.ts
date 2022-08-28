@@ -4,6 +4,8 @@ import Config from "../../../config";
 import {
   storiesForObjectIdQuery,
   relatedStoriesByObjectIdQuery,
+  relatedStoriesByTitleQuery,
+  allStoriesQuery,
 } from "./queries";
 import { GraphQLQuery, RelatedStory } from "./types";
 import { isEmpty } from "../../utils/isEmpty";
@@ -53,17 +55,45 @@ export default class GraphCMSService {
     };
   }
 
-  /** Retrieves a specific record from ElasticSearch as identified by the provided object id */
+  /** Retrieves a specific story from Graph CMS as identified by the provided object id */
   public static async findByObjectId(
     objectId: string
   ): Promise<ParsedRelatedStory> {
     const query = relatedStoriesByObjectIdQuery(objectId);
+    const { data } = await GraphCMSService.makeGraphQLRequest(query);
+
+    const relatedStories: Array<RelatedStory> = data.storiesForObjectIds[0]
+      ? data.storiesForObjectIds[0].relatedStories
+      : [];
+
+    return await ArtworkService.parseRelatedStory(relatedStories, objectId);
+  }
+
+  /** Retrieves a specific story from Graph CMS as identified by the provided story title */
+  public static async findByTitle(
+    storyTitle: string
+  ): Promise<ParsedRelatedStory> {
+    const query = relatedStoriesByTitleQuery(storyTitle);
     const graphContent = await GraphCMSService.makeGraphQLRequest(query);
 
     const relatedStories = graphContent.data.storiesForObjectIds[0]
       .relatedStories as Array<RelatedStory>;
 
-    return await ArtworkService.parseRelatedStory(relatedStories, objectId);
+    return await ArtworkService.parseRelatedStory(relatedStories, null);
+  }
+
+  /** Retrieves the general story data for every published story in Graph CMS */
+  public static async fetchAllStories(): Promise<
+    Array<{
+      id: string;
+      storyTitle: string;
+      stage: string;
+    }>
+  > {
+    const query = allStoriesQuery();
+    const response = await GraphCMSService.makeGraphQLRequest(query);
+
+    return response.data.storieses;
   }
 
   private static getTranslatatableContent(

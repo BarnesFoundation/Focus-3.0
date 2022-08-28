@@ -352,7 +352,7 @@ class StoryItem extends React.Component {
                   {/** Captures when the story paragraph is in view to notify the parent component */}
                   <VizSensor
                     onChange={(isVisible) => {
-                      onVisChange(isVisible, storyIndex);
+                      onVisChange && onVisChange(isVisible, storyIndex);
                     }}
                   >
                     <div

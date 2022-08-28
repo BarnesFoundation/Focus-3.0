@@ -72,7 +72,8 @@ class ArtworkController {
     const session = request.session;
     const artworkId = request.params.artworkId;
 
-    // const languagePreference = session.lang_pref;
+    // TODO - uncomment this once translation is working
+    const languagePreference = session.lang_pref;
     const storiesData = await ArtworkService.findStoryForArtwork(artworkId);
 
     return response.status(200).json({ data: storiesData });

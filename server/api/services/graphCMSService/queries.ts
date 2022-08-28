@@ -105,7 +105,7 @@ export function relatedStoriesByObjectIdQuery(objectId: string): GraphQLQuery {
   };
 }
 
-export function relatedStoriesByTitleQuery(objectId: string): GraphQLQuery {
+export function relatedStoriesByTitleQuery(title: string): GraphQLQuery {
   return {
     query: `
 	query($storyTitle: String) {
@@ -119,7 +119,7 @@ export function relatedStoriesByTitleQuery(objectId: string): GraphQLQuery {
       }
 	  `,
     variables: {
-      objectID: parseInt(objectId),
+      storyTitle: title,
     },
   };
 }
@@ -140,5 +140,20 @@ export function relatedStoriesByRoomIdQuery(objectId: string): GraphQLQuery {
     variables: {
       objectID: objectId,
     },
+  };
+}
+
+export function allStoriesQuery(): GraphQLQuery {
+  return {
+    query: `
+		query {
+			storieses{
+			  id
+			  storyTitle
+			  stage
+			}
+		  }
+		`,
+    variables: {},
   };
 }

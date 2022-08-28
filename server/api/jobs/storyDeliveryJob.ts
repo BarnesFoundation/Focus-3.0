@@ -80,7 +80,7 @@ class StoryDeliveryJob {
       // We'll update these bookmarks in the database to indicate the email for
       // these bookmarks have now been processed and sent out to the user
       const mailedStoryBookmarkIds = bookmarkSet.map((bookmark) => bookmark.id);
-      /* await prisma.bookmarks.updateMany({
+      await prisma.bookmarks.updateMany({
         where: {
           id: {
             in: mailedStoryBookmarkIds,
@@ -91,7 +91,7 @@ class StoryDeliveryJob {
           story_mail_sent: true,
           updated_at: new Date(Date.now()).toISOString(),
         },
-      }); */
+      });
     }
 
     console.log(

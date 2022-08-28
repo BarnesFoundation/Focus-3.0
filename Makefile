@@ -25,6 +25,8 @@ init:
 	npx prisma db seed
 	echo "Running ElasticSearch Sync Job to pull artwork records 🎨"
 	make elastic-sync
+	echo "Copying over email templates to the server directory 📧"
+	make views
 
 elastic-sync:
 	node -e 'require("./dist/server/api/jobs/elasticSearchSyncJob.js").main()'

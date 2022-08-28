@@ -31,3 +31,11 @@ export interface RelatedStory {
   shortParagraph6: StoryParagraph;
   longParagraph6: StoryParagraph;
 }
+
+export type ObjectID =
+  | "objectID1"
+  | "objectID2"
+  | "objectID3"
+  | "objectID4"
+  | "objectID5"
+  | "objectID6";
