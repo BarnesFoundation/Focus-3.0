@@ -58,11 +58,6 @@ export default class ArtworkService {
     return null;
   }
 
-  public static async findStoryForArtwork(artworkId: string): Promise<any> {
-    const relatedStories = await GraphCMSService.findByObjectId(artworkId);
-    return relatedStories;
-  }
-
   private static extractStoryInformation(
     storyFields: RelatedStory,
     objectId: string
