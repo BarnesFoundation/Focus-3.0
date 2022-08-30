@@ -1,13 +1,18 @@
 import { v2 } from "@google-cloud/translate";
+import {
+  TranslateClient,
+  TranslateTextCommand,
+} from "@aws-sdk/client-translate";
 import { PrismaClient } from "@prisma/client";
 
 import { environmentConfiguration } from "../../config";
 
-const { Translate } = v2;
 const prisma = new PrismaClient();
 
 const projectId = environmentConfiguration.google.projectId;
-const Translator = new Translate({ projectId });
+const translateClient = new TranslateClient({
+  region: environmentConfiguration.aws.region,
+});
 
 // This maps the language shortcode to the name
 // of the corresponding column in the `translations` table
@@ -26,25 +31,30 @@ const LANGUAGE_SHORT_CODE_COLUMN_MAP = {
 
 export default class TranslateService {
   public static async translate(
-    text: string,
-    targetLanguage: string | null,
-    cacheKey?: string
+    originalText: string,
+    targetLanguage: string | null
   ) {
     // No need to translate content if the language is English
     // since the context is already in English
     if (targetLanguage === "en" || !targetLanguage) {
-      return text;
+      return originalText;
     }
 
     try {
-      const translatedText = await Translator.translate(text, targetLanguage);
-      return translatedText;
+      const { TranslatedText } = await translateClient.send(
+        new TranslateTextCommand({
+          SourceLanguageCode: "en",
+          Text: originalText,
+          TargetLanguageCode: targetLanguage,
+        })
+      );
+      return TranslatedText;
     } catch (error) {
       console.error(
-        `Failed to translate context "${text}" to language "${targetLanguage}`,
+        `Failed to translate context "${originalText}" to language "${targetLanguage}`,
         error
       );
-      return text;
+      return originalText;
     }
   }
 
@@ -72,8 +82,6 @@ export default class TranslateService {
       const header = stripTab(parentRecord.screen_text);
       translations[header] = {};
 
-      // TODO - somehow, parentRecord.id is not applicable type
-      // the parent_id of a childRecord, even though both show as Int in the table definition
       const parentRecordId = parseInt(parentRecord.id.toString());
       const childRecords = await prisma.translations.findMany({
         where: {
