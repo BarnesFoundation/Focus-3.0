@@ -1,4 +1,3 @@
-import { v2 } from "@google-cloud/translate";
 import {
   TranslateClient,
   TranslateTextCommand,
@@ -9,7 +8,6 @@ import { environmentConfiguration } from "../../config";
 
 const prisma = new PrismaClient();
 
-const projectId = environmentConfiguration.google.projectId;
 const translateClient = new TranslateClient({
   region: environmentConfiguration.aws.region,
 });
