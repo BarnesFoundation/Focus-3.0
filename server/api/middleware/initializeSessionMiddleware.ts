@@ -40,9 +40,7 @@ const getInitializedSessionObject = (
   };
 };
 
-const determinePreferredLanguage = (
-  request: express.Request
-): string | null => {
+const determinePreferredLanguage = (request: express.Request): string => {
   const acceptLanguageHeader = request.header["HTTP_ACCEPT_LANGUAGE"] as {
     locale: string;
   }[];
@@ -65,5 +63,5 @@ const determinePreferredLanguage = (
     return determinedPreferredLanguage;
   }
 
-  return null;
+  return "en";
 };
