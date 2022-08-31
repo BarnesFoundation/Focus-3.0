@@ -11,10 +11,11 @@ type UseLocalStorage = {
 
 /** Generic fn to store in localStorage by key
  * @param {string} key Name of the key to set in local storage
- * @param {string} value Value of the item to be stored
+ * @param {string} val Value of the item to be stored
  */
-const setLocalStorage: SetLocalStorage = (key, value) => {
-  localStorage.setItem(key, JSON.stringify(value));
+const setLocalStorage: SetLocalStorage = (key, val) => {
+  const value = typeof val === "string" ? val : JSON.stringify(val);
+  localStorage.setItem(key, value);
 };
 
 /** Generic fn to fetch from localStorage by key

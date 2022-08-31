@@ -151,7 +151,7 @@ class SearchRequestService {
     return new IdentifiedImagePayload(esResponse, referenceImageUrl);
   };
 
-  validteEmail = async (email) => {
+  validateEmail = async (email) => {
     try {
       let response = await axios.post(constants.VALIDATE_EMAIL_URL, {
         email: email,

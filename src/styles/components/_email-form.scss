@@ -130,6 +130,10 @@
         line-height: 19px;
         width: 138px;
         margin-bottom: 16px;
+
+        &.with-story {
+            color: #F74E32;
+        }
     }
 
     .email-head {
