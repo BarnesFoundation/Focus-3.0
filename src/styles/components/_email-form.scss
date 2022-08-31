@@ -146,6 +146,10 @@
         line-height: 24px;
         font-weight: 600;
         font-family: "Calibre-Regular", sans-serif;
+
+        &.small-text {
+            font-size: 18px;
+        }
     }
 
     .email-input {
@@ -193,6 +197,10 @@
             padding: 10px 20px 11px;
             color: #ffffff;
             background-color: #f74d31;
+
+            &.small-text {
+                font-size: 12px;
+            }
         }
     }
 

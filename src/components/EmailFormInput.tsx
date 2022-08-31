@@ -1,4 +1,5 @@
 import React from "react";
+import classnames from "classnames";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 
 // TODO: Fix types
@@ -7,10 +8,10 @@ type EmailFormInputProps = {
   isEmailScreen: any;
   withStory: any;
   error: boolean;
-  email: any;
-  handleEmailInput: (event: any) => void;
-  saveEmail: () => any;
-  verificationPending: any;
+  email: string;
+  handleEmailInput: (event) => void;
+  saveEmail: () => void;
+  verificationPending: boolean;
 };
 
 export const EmailFormInput: React.FC<EmailFormInputProps> = ({
@@ -24,6 +25,7 @@ export const EmailFormInput: React.FC<EmailFormInputProps> = ({
   verificationPending,
 }) => {
   const { getLanguagePreference } = useLocalStorage();
+  const useSmallText = getLanguagePreference() === "Ru";
 
   const disclaimerTop =
     isEmailScreen && error
@@ -32,20 +34,12 @@ export const EmailFormInput: React.FC<EmailFormInputProps> = ({
       ? "300px"
       : "0px";
 
-  const emailErrorFontStyle =
-    getLanguagePreference() === "Ru" ? { fontSize: `12px` } : {};
-
-  const emailHeadFontStyle =
-    getLanguagePreference() === "Ru" ? { fontSize: `18px` } : {};
-
-  const intentStyle = withStory ? { color: `#F74E32` } : {};
-
   return (
     <div>
-      <div className="email-intent" style={intentStyle}>
+      <div className={classnames("email-intent", { "with-story": withStory })}>
         {getTranslation("Bookmark_capture", "text_8")}
       </div>
-      <div className="email-head" style={emailHeadFontStyle}>
+      <div className={classnames("email-head", { "small-text": useSmallText })}>
         {getTranslation("Bookmark_capture", "text_1")}
       </div>
       <div className="email-input">
@@ -68,7 +62,7 @@ export const EmailFormInput: React.FC<EmailFormInputProps> = ({
                 onClick={() => saveEmail()}
               >
                 {getTranslation("Bookmark_capture", "text_7")}
-                {verificationPending === true && (
+                {verificationPending && (
                   <div className="loader-container">
                     <div className="loader"></div>
                   </div>
@@ -78,8 +72,9 @@ export const EmailFormInput: React.FC<EmailFormInputProps> = ({
           </div>
           {error && (
             <div
-              className="email-input-error caption"
-              style={emailErrorFontStyle}
+              className={classnames("email-input-error", "caption", {
+                "small-text": useSmallText,
+              })}
             >
               {getTranslation("Bookmark_capture", "text_5")} <br />
               {getTranslation("Bookmark_capture", "text_6")}

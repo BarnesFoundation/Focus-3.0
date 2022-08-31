@@ -1001,7 +1001,7 @@ class Artwork extends Component {
         {emailCaptured ? (
           <div>
             {" "}
-            <ScanButton history={history} />{" "}
+            <ScanButton />{" "}
           </div>
         ) : (
           this.renderEmailScreen()

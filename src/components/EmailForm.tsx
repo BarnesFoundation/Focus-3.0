@@ -1,7 +1,6 @@
 // TODO - figure out if we really want to bring in this whole lodash module
 import throttle from "lodash.throttle";
 import React, { useEffect, useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
 import classnames from "classnames";
 import { SNAP_USER_EMAIL, TOP_OFFSET, VIEWPORT_HEIGHT } from "./Constants";
 import { SearchRequestService } from "../services/SearchRequestService";
@@ -34,10 +33,9 @@ export const EmailForm: React.FC<EmailFormProps> = ({
   const [email, setEmail] = useState("");
   const [floatScanBtn, setFloatScanBtn] = useState(false);
   const [emailCaptured, setEmailCaptured] = useState(false);
-  const [verificationPending, setVerificationPending] = useState(null);
-  const [errors, setErrors] = useState({ email: false });
+  const [verificationPending, setVerificationPending] = useState(false);
+  const [error, setError] = useState(false);
   const [scrollInProgress, setScrollInProgress] = useState(false);
-  const { history } = useHistory();
   const { setLocalStorage } = useLocalStorage();
   const emailRef: React.Ref<HTMLDivElement> = useRef(null);
   const peekOffset = isAndroid ? 123 : 67;
@@ -51,7 +49,7 @@ export const EmailForm: React.FC<EmailFormProps> = ({
     return function cleanup() {
       window.removeEventListener("scroll", onScroll);
     };
-  });
+  }, []);
 
   useEffect(() => {
     if (emailRef.current) {
@@ -93,10 +91,15 @@ export const EmailForm: React.FC<EmailFormProps> = ({
   };
 
   const validateEmail = async () => {
-    const valid = await sr.validateEmail(email);
-    setVerificationPending(false);
+    try {
+      const valid = await sr.validateEmail(email);
+      setVerificationPending(false);
 
-    return email.length > 0 && valid;
+      return email.length > 0 && valid;
+    } catch (e) {
+      console.log("Error validating email:", e);
+      return false;
+    }
   };
 
   const saveEmail = async () => {
@@ -108,7 +111,7 @@ export const EmailForm: React.FC<EmailFormProps> = ({
 
       // If email is not valid
       if (!emailIsValid) {
-        setErrors({ ...errors, email: true });
+        setError(true);
       }
       // Otherwise, it is valid
       else {
@@ -121,7 +124,7 @@ export const EmailForm: React.FC<EmailFormProps> = ({
       }
     } catch (e) {
       console.log("Error saving email:", e);
-      throw e;
+      setError(true);
     } finally {
       setVerificationPending(false);
     }
@@ -135,7 +138,7 @@ export const EmailForm: React.FC<EmailFormProps> = ({
       ref={emailRef}
     >
       {/* Render the scan button and whether or not it should float */}
-      <ScanButton history={history} float={floatScanBtn} />
+      <ScanButton float={floatScanBtn} />
 
       {/* Render the email form based on whether or not captured/success */}
       {!emailCaptured && (
@@ -143,7 +146,7 @@ export const EmailForm: React.FC<EmailFormProps> = ({
           getTranslation={getTranslation}
           isEmailScreen={isEmailScreen}
           withStory={withStory}
-          error={errors.email}
+          error={error}
           email={email}
           handleEmailInput={handleEmailInput}
           saveEmail={saveEmail}

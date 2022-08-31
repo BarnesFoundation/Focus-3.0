@@ -1,20 +1,21 @@
 import React from "react";
+import classnames from "classnames";
+import { useHistory } from "react-router-dom";
 import scan_button from "../images/scan-button.svg";
 
-// TODO: Fix types
 type ScanButtonProps = {
-  history: any;
-  float: any;
+  float?: boolean;
 };
 
-export const ScanButton: React.FC<ScanButtonProps> = ({ history, float }) => {
+export const ScanButton: React.FC<ScanButtonProps> = ({ float }) => {
+  const history = useHistory();
   const handleScan = () => history.push({ pathname: "/scan" });
 
   return (
     <div className="scan-wrapper">
       <div
         id="camera-btn"
-        className={`scan-button ${float ? "floating" : ""}`}
+        className={classnames("scan-button", { floating: float })}
         onClick={handleScan}
         role="button"
         aria-roledescription="camera button"
