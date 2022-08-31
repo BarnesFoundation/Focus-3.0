@@ -49,7 +49,7 @@ export default class TranslateService {
       return TranslatedText;
     } catch (error) {
       console.error(
-        `Failed to translate context "${originalText}" to language "${targetLanguage}`,
+        `Failed to translate content "${originalText}" to language "${targetLanguage}`,
         error
       );
       return originalText;
