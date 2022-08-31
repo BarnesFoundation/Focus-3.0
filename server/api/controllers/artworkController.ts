@@ -19,10 +19,14 @@ class ArtworkController {
     if (artworkInformation) {
       // Fetch the story and translate the content if needed
       const storyInformation = await GraphCMSService.hasStory(artworkId);
-      /* artworkInformation["shortDescription"] = await TranslateService.translate(
+
+      // Translate the short description
+      artworkInformation["shortDescription"] = await TranslateService.translate(
         artworkInformation["shortDescription"],
         preferredLanguage
-      ); */
+      );
+
+      // Add the Imgix URL for the artwork
       artworkInformation["art_url"] = generateImgixUrl(
         artworkId,
         artworkInformation["imageSecret"]
@@ -72,11 +76,13 @@ class ArtworkController {
     const session = request.session;
     const artworkId = request.params.artworkId;
 
-    // TODO - uncomment this once translation is working
-    const languagePreference = session.lang_pref;
-    const storiesData = await ArtworkService.findStoryForArtwork(artworkId);
+    const languagePreference = session.lang_pref || "en";
+    const relatedStories = await GraphCMSService.findByObjectId(
+      artworkId,
+      languagePreference
+    );
 
-    return response.status(200).json({ data: storiesData });
+    return response.status(200).json({ data: relatedStories });
   }
 
   public static async markStoryAsRead(
