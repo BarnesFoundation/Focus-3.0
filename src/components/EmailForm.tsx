@@ -9,8 +9,9 @@ import {
   VIEWPORT_HEIGHT,
 } from "./Constants";
 import { SearchRequestService } from "../services/SearchRequestService";
-import ScanButton from "./ScanButton";
+import { ScanButton } from "./ScanButton";
 import { isAndroid } from "react-device-detect";
+import { EmailFormInput } from "./EmailFormInput";
 
 const withStoryStyles = {
   backgroundColor: "#fff",
@@ -72,6 +73,7 @@ class EmailForm extends Component {
   };
 
   handleEmailInput = (event) => {
+    event.preventDefault();
     const target = event.target;
     const value = target.value;
     const name = target.name;
@@ -133,82 +135,6 @@ class EmailForm extends Component {
     );
   };
 
-  renderEmailForm = () => {
-    const disclaimerTop = this.props.isEmailScreen
-      ? this.state.errors.email
-        ? "365px"
-        : "300px"
-      : "0px";
-    const emailErrorFontStyle =
-      localStorage.getItem(SNAP_LANGUAGE_PREFERENCE) === "Ru"
-        ? { fontSize: `12px` }
-        : {};
-    const emailHeadFontStyle =
-      localStorage.getItem(SNAP_LANGUAGE_PREFERENCE) === "Ru"
-        ? { fontSize: `18px` }
-        : {};
-    const intentStyle = this.props.withStory ? { color: `#F74E32` } : {};
-
-    return (
-      <div>
-        <div className="email-intent" style={intentStyle}>
-          {this.props.getTranslation("Bookmark_capture", "text_8")}
-        </div>
-        <div className="email-head" style={emailHeadFontStyle}>
-          {this.props.getTranslation("Bookmark_capture", "text_1")}
-        </div>
-        <div className="email-input">
-          <form>
-            <div className="input-group">
-              <input
-                type="email"
-                placeholder={this.props.getTranslation(
-                  "Bookmark_capture",
-                  "text_2"
-                )}
-                className="form-control"
-                name="email"
-                value={this.state.email}
-                onChange={this.handleEmailInput}
-                aria-label="email"
-              />
-              <div className="input-group-append">
-                <button
-                  className="btn btn-outline-secondary"
-                  id="bookmark-submit"
-                  type="button"
-                  onClick={() => this._saveEmail()}
-                >
-                  {this.props.getTranslation("Bookmark_capture", "text_7")}
-                  {this.state.varificationPending === true && (
-                    <div className="loader-container">
-                      <div className="loader"></div>
-                    </div>
-                  )}
-                </button>
-              </div>
-            </div>
-            {this.state.errors.email === true && (
-              <div
-                className="email-input-error caption"
-                style={emailErrorFontStyle}
-              >
-                {this.props.getTranslation("Bookmark_capture", "text_5")} <br />
-                {this.props.getTranslation("Bookmark_capture", "text_6")}
-              </div>
-            )}
-          </form>
-        </div>
-        <div
-          className="email-disclaimer small-paragraph"
-          style={{ top: disclaimerTop }}
-        >
-          {this.props.getTranslation("Bookmark_capture", "text_3")}
-        </div>
-      </div>
-    );
-  };
-
   render() {
     const { floatScanBtn, emailCaptured } = this.state;
     const { history } = this.props;
@@ -227,7 +153,18 @@ class EmailForm extends Component {
         <ScanButton history={history} float={floatScanBtn} />
 
         {/* Render the email form based on whether or not captured/success */}
-        {!emailCaptured && this.renderEmailForm()}
+        {!emailCaptured && (
+          <EmailFormInput
+            getTranslation={this.props.getTranslation}
+            isEmailScreen={this.props.isEmailScreen}
+            withStory={this.props.withStory}
+            error={this.state.errors.email}
+            email={this.state.email}
+            handleEmailInput={this.handleEmailInput}
+            saveEmail={this._saveEmail}
+            verificationPending={this.state.varificationPending}
+          />
+        )}
         {emailCaptured && this.renderEmailSuccess()}
       </div>
     );
