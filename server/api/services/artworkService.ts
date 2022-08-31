@@ -4,8 +4,12 @@ import ElasticSearchService from "./elasticSearchService";
 import GraphCMSService, { RelatedStory, ObjectID } from "./graphCMSService";
 
 import { generateImgixUrl } from "../utils/generateImgixUrl";
+import TranslateService from "./translateService";
 
 const prisma = new PrismaClient();
+
+// Unique separator to separate strings of content to be translated
+const UNIQUE_SEPARATOR = "***";
 
 /** Class responsible for performing functions related to an artwork
  * such as
@@ -88,15 +92,17 @@ export default class ArtworkService {
     return stories;
   }
 
-  private static getStoriesDetail(
+  private static async getStoriesDetail(
     stories: Array<ExtractedStoryInformation>,
-    artworks: any,
-    translatableContent: {}
+    artworks: Array<Artwork>,
+    languagePreference: string
   ) {
+    // For each story, we want to grab the artwork detail for it
     const storiesWithDetail = stories.map((story) => {
-      const detailForStory = artworks.find((art: any) => {
-        return parseInt(art.id) === parseInt(story.image_id);
-      });
+      const detailForStory = artworks.find(
+        (artwork) =>
+          parseInt(artwork.id.toString()) === parseInt(story.image_id)
+      );
 
       if (detailForStory) {
         story["detail"] = detailForStory;
@@ -105,12 +111,37 @@ export default class ArtworkService {
       return story;
     });
 
+    // We also want to translate the paragraph content for the story
+    // We'll iterate through the stories and collect the content
+    // and merge it into a single string (so as to do a single translate call)
+    const contentForTranslation = storiesWithDetail.reduce((acc, el) => {
+      const { short_paragraph } = el;
+      const translatableString = short_paragraph["html"];
+
+      return acc + UNIQUE_SEPARATOR + translatableString;
+    }, "");
+
+    const translatedContent = await TranslateService.translate(
+      contentForTranslation,
+      languagePreference
+    );
+
+    // Now that we have the translated story content
+    // we should map it back to the story it came from
+    translatedContent
+      .split(UNIQUE_SEPARATOR)
+      .filter((el) => el)
+      .forEach((content, index) => {
+        storiesWithDetail[index].short_paragraph.html = content;
+      });
+
     return storiesWithDetail;
   }
 
   public static async parseRelatedStory(
     relatedStories: Array<RelatedStory>,
-    artworkId: string | null
+    artworkId: string | null,
+    languagePreference: string
   ): Promise<ParsedRelatedStory> {
     if (relatedStories.length === 0) {
       return {
@@ -136,16 +167,28 @@ export default class ArtworkService {
           image_id: { in: storyArtworkIds },
         },
       })
-    ).map(({ es_data, image_id }) => {
-      es_data["art_url"] = generateImgixUrl(image_id, es_data["imageSecret"]);
-      return es_data;
-    });
+    ).map<Artwork>(
+      ({ es_data, image_id }: { es_data: unknown; image_id: string }) => {
+        const artworkInformation = es_data as Artwork;
+        return {
+          ...artworkInformation,
+          art_url: generateImgixUrl(image_id, es_data["imageSecret"]),
+        };
+      }
+    );
 
     return {
       content: {
-        story_title: storyFields.storyTitle,
+        story_title: await TranslateService.translate(
+          storyFields.storyTitle,
+          languagePreference
+        ),
         original_story_title: storyFields.storyTitle,
-        stories: ArtworkService.getStoriesDetail(stories, artworks, {}),
+        stories: await ArtworkService.getStoriesDetail(
+          stories,
+          artworks,
+          languagePreference
+        ),
       },
       unique_identifier: storyFields.id,
       total: stories.length,
@@ -167,7 +210,31 @@ export interface ParsedRelatedStory {
 
 export interface ExtractedStoryInformation {
   image_id: string;
-  short_paragraph: string;
-  long_paragraph: string;
-  detail: null;
+  short_paragraph: { html: string };
+  long_paragraph: { html: string };
+  detail: null | Artwork;
+}
+
+export interface Artwork {
+  id: number;
+  room: string;
+  invno: string;
+  title: string;
+  medium: string;
+  people: string;
+  culture: string;
+  birthDate: string;
+  deathDate: string;
+  locations: string;
+  creditLine: string;
+  dimensions: string;
+  displayDate: string;
+  imageSecret: string;
+  nationality: string;
+  ensembleIndex: string;
+  classification: string;
+  shortDescription: string;
+  visualDescription: string;
+  curatorialApproval: string;
+  art_url: string;
 }
