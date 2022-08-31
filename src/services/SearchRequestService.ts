@@ -132,7 +132,7 @@ class SearchRequestService {
 
       // Else, this image search was not successful
       else {
-        return new ImageSearchResponse(false, response, searchTIme);
+        return new ImageSearchResponse(false, response, searchTime);
       }
     } catch (error) {
       return new ImageSearchResponse(false, null, null);

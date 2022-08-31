@@ -51,6 +51,7 @@ const database = {
 /** Returns the iPhone model being used */
 const getIPhoneModel = () => {
   // Determine if iPhone is being used
+  // @ts-ignore
   if (/iPhone/.test(navigator.userAgent) && !window.MSStream) {
     // Get details about the current device
     const currentDeviceInfo = JSON.stringify({
@@ -83,12 +84,13 @@ export const logiPhoneModel = () => {
   // If the iPhone model was determined
   if (iPhoneModel) {
     // Log it to Google Analytics
-    ga("send", {
-      hitType: "event",
-      eventCategory: GA_EVENT_CATEGORY.CAMERA,
-      eventAction: GA_EVENT_ACTION.DEVICE_INFO,
-      eventLabel: iPhoneModel,
-    });
+    // Commenting out for now because this is causing an error because `ga` is not defined
+    // ga("send", {
+    //   hitType: "event",
+    //   eventCategory: GA_EVENT_CATEGORY.CAMERA,
+    //   eventAction: GA_EVENT_ACTION.DEVICE_INFO,
+    //   eventLabel: iPhoneModel,
+    // });
   }
 };
 
@@ -100,11 +102,12 @@ export const shouldLogPermissionGrantTime = (startTime) => {
 
   if (permissionGrantTime > 900) {
     // Camera permission dialog was shown
-    ga("send", {
-      hitType: "event",
-      eventCategory: GA_EVENT_CATEGORY.CAMERA,
-      eventAction: GA_EVENT_ACTION.CAMERA_PERMISSION,
-      eventLabel: GA_EVENT_LABEL.PERMISSION_GRANTED,
-    });
+    // Commenting out for now because this is causing an error because `ga` is not defined
+    // ga("send", {
+    //   hitType: "event",
+    //   eventCategory: GA_EVENT_CATEGORY.CAMERA,
+    //   eventAction: GA_EVENT_ACTION.CAMERA_PERMISSION,
+    //   eventLabel: GA_EVENT_LABEL.PERMISSION_GRANTED,
+    // });
   }
 };
