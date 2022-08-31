@@ -17,7 +17,7 @@ To develop this application locally, follow these steps
 1. Switch to the correct version of Node with `nvm use` or `nvm use 14.15.4`.
 2. Run `npm ci` to install the needed node modules
 3. Create a `.env` file and populate with values as specified by [.env-template](.env-template)
-4. Run `make init` to initialize your local environment. This will  
+4. Run `make init-dev` to initialize your local environment. This will  
   a. Compile the server code
   b. Create the required tables for your local database schema
   c. Seed your local translations table with our stored translations data

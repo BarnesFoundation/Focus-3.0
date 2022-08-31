@@ -16,7 +16,7 @@ ngrok-server:
 views:
 	cp -r ./server/api/views dist/server/api
 
-init: 
+init-dev: 
 	echo "Compiling backend server code 🔨"
 	npm run build-server
 	echo "Populating database schema 💾"
