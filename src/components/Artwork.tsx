@@ -22,7 +22,7 @@ import { isTablet } from "react-device-detect";
 import ScrollMagic from "scrollmagic";
 import { isAndroid, isIOS } from "react-device-detect";
 
-import ScanButton from "./ScanButton";
+import { ScanButton } from "./ScanButton";
 import { Share } from "./Share";
 
 /**
