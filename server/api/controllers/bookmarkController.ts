@@ -30,7 +30,7 @@ class BookmarkController {
         session_id: sessionId,
       },
       data: {
-        language: languageToSet,
+        language: languageToSet.toLowerCase(),
       },
     });
 
