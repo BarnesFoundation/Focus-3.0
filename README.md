@@ -17,9 +17,10 @@ To develop this application locally, follow these steps
 1. Switch to the correct version of Node with `nvm use` or `nvm use 14.15.4`.
 2. Run `npm ci` to install the needed node modules
 3. Create a `.env` file and populate with values as specified by [.env-template](.env-template)
+  a. Make sure to populate the DATABASE_URL with the correct database credentials
 4. Run `make init-dev` to initialize your local environment. This will  
   a. Compile the server code
-  b. Create the required tables for your local database schema
+  b. Create the required tables for your local database schema and create the database if one does not already exist
   c. Seed your local translations table with our stored translations data
   d. Run the ElasticSearch sync to retrieve artworks information and cache it locally
 5. Run `npm run dev` to start the server. This will also compile and reload the server code following any changes to the code in the [server](server) directory

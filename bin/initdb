@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ ! $DATABASE_NAME ]; then
+  export $(echo $(cat .env | sed 's/#.*//g'| xargs) | envsubst)
+fi
+
+createdb $DATABASE_NAME -O $DATABASE_USER $DATABASE_PASSWORD
