@@ -33,6 +33,7 @@
         "eject": "react-scripts eject",
         "build-server": "tsc -p server/",
         "local-server": "NODE_DEBUG=email-templates nodemon dist/server/app.js",
+        "run-dev-server": "nodemon dist/server/app.js",
         "watch-server": "tsc -w -p server",
         "dev": " concurrently \"npm run watch-server\" \"npm run run-dev-server\""
     },
