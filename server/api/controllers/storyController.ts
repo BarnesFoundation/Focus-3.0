@@ -10,7 +10,8 @@ class StoryController {
     response: express.Response
   ) {
     const storyTitleSlug = request.params.storyTitleSlug;
-    const language = request.params.lang || request.session.lang_pref || "en";
+    const languagePreference =
+      request.params.lang || request.session.lang_pref || "en";
 
     const foundStory = await prisma.stories.findFirst({
       where: {
@@ -19,7 +20,8 @@ class StoryController {
     });
 
     const parsedStoryContent = await GraphCMSService.findByTitle(
-      foundStory.title
+      foundStory.title,
+      languagePreference
     );
 
     if (parsedStoryContent) {
