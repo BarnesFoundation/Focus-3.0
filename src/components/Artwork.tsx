@@ -180,7 +180,7 @@ class Artwork extends Component {
     return { artwork, roomRecords };
   };
 
-  async UNSAFE_componentWillMount() {
+  async componentWillMount() {
     let imageId = this.state.result
       ? this.state.result.data.records[0].id
       : this.props.match.params.imageId;
