@@ -46,7 +46,7 @@ class StoryItem extends React.Component {
     this.overlayTimelineGSAP = this.overlayTimeline.getGSAP();
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     // Handles marking this story as being read by the user
     if (nextProps.sceneStatus.type === "start" && nextProps.storyIndex === 2) {
       if (!this.state.storyRead) {

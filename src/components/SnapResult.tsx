@@ -162,7 +162,7 @@ class SnapResults extends Component {
     }
   };
 
-  async UNSAFE_componentWillMount() {
+  async componentWillMount() {
     console.log("SnapResults >> componentWillMount");
     let imageId = this.props.match.params.imageId;
     if (this.state.result) {
