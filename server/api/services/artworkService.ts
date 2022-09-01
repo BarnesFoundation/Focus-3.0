@@ -1,7 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 
 import ElasticSearchService from "./elasticSearchService";
-import GraphCMSService, { RelatedStory, ObjectID } from "./graphCMSService";
+import { RelatedStory, ObjectID } from "./graphCMSService";
+import Config from "../../config";
+import { slugify } from "../utils";
 
 import { generateImgixUrl } from "../utils/generateImgixUrl";
 import TranslateService from "./translateService";
@@ -177,13 +179,19 @@ export default class ArtworkService {
       }
     );
 
+    const translatedTitle = await TranslateService.translate(
+      storyFields.storyTitle,
+      languagePreference
+    );
+
+    const titleSlug = slugify(storyFields.storyTitle);
+
     return {
       content: {
-        story_title: await TranslateService.translate(
-          storyFields.storyTitle,
-          languagePreference
-        ),
+        story_title: translatedTitle,
+
         original_story_title: storyFields.storyTitle,
+
         stories: await ArtworkService.getStoriesDetail(
           stories,
           artworks,
@@ -192,21 +200,30 @@ export default class ArtworkService {
       },
       unique_identifier: storyFields.id,
       total: stories.length,
+
+      translated_title: translatedTitle,
+      link: `${Config.assetHost}/story/${titleSlug}`,
     };
   }
 }
 
-export interface ParsedRelatedStory {
-  content:
-    | {
+export type ParsedRelatedStory =
+  | {
+      content: {
         story_title: string;
         original_story_title: string;
         stories: Array<ExtractedStoryInformation>;
-      }
-    | {};
-  unique_identifier: string;
-  total: number;
-}
+      };
+      unique_identifier: string;
+      total: number;
+      translated_title: string;
+      link: string;
+    }
+  | {
+      content: {};
+      total: number;
+      unique_identifier: string;
+    };
 
 export interface ExtractedStoryInformation {
   image_id: string;
