@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
 import { compose } from "redux";
-import $ from 'jquery'; 
+import $ from 'jquery';
+import classnames from "classnames";
 
 import * as constants from "./Constants";
 import withOrientation from "./withOrientation";
@@ -752,38 +753,6 @@ class Artwork extends Component {
     );
   };
 
-  /* Renders the email screen. withStory flag determines whether the email screen is displayed along with story parts */
-  renderEmailScreen = () => {
-    const { showStory, emailCardClickable } = this.state;
-    const pointerSetting = emailCardClickable ? "auto" : "none";
-
-    // If the story should not be shown -- which occurs, only when no stories are available
-    const peekOffsetValue = isAndroid ? 123 : 67;
-    const peekOffset = showStory ? 0 : peekOffsetValue;
-
-    return (
-      <div
-        id="email-panel"
-        className="panel-email"
-        style={{
-          pointerEvents: pointerSetting,
-          height: `calc(60vh - ${peekOffset})px`,
-        }}
-        onClick={() => {
-          this.handleClickScroll(null, false);
-        }}
-      >
-        <EmailForm
-          withStory={showStory}
-          isEmailScreen={false}
-          onSubmitEmail={this.onSubmitEmail}
-          getTranslation={this.props.getTranslation}
-          getSize={this.onEmailHeightReady}
-        />
-      </div>
-    );
-  };
-
   /** Renders the title bar with language dropdown */
   renderTitleBar = () => {
     return (
@@ -1004,7 +973,15 @@ class Artwork extends Component {
             <ScanButton />{" "}
           </div>
         ) : (
-          this.renderEmailScreen()
+          <EmailForm
+            withStory={showStory}
+            isEmailScreen={false}
+            onSubmitEmail={this.onSubmitEmail}
+            getTranslation={this.props.getTranslation}
+            getSize={this.onEmailHeightReady}
+            pointerEvents={this.state.emailCardClickable ? "auto" : "none"}
+            handleClickScroll={this.handleClickScroll}
+          />
         )}
       </SectionWipesStyled>
     );
