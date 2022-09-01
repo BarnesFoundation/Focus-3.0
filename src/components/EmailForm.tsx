@@ -142,7 +142,7 @@ export const EmailForm: React.FC<EmailFormProps> = ({
       className="panel-email"
       style={{
         pointerEvents,
-        height: `calc(60vh - ${peekOffset})px`,
+        height: `calc(60vh - ${peekOffset}px)`,
       }}
       onClick={() => {
         handleClickScroll(null, false);
