@@ -73,14 +73,9 @@ export const EmailForm: React.FC<EmailFormProps> = ({
       return;
     }
     const emailFormTop = emailRef.current.getBoundingClientRect().top;
-
-    const floating =
-      emailFormTop <= TOP_OFFSET * VIEWPORT_HEIGHT ? true : false;
-
-    if (floatScanBtn !== floating) {
-      setFloatScanBtn(floating);
-    }
-
+    setFloatScanBtn(
+      emailFormTop <= TOP_OFFSET * VIEWPORT_HEIGHT ? true : false
+    );
     setScrollInProgress(false);
   };
 
@@ -151,7 +146,7 @@ export const EmailForm: React.FC<EmailFormProps> = ({
       <div
         id="email-form"
         className="email-container"
-        style={withStory ? withStoryStyles : { top: `-${peekOffsetValue}px` }}
+        style={withStory ? withStoryStyles : emailCaptured ? {} : { top: `-${peekOffsetValue}px` }}
         ref={emailRef}
       >
         {/* Render the scan button and whether or not it should float */}

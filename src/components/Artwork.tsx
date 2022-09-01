@@ -82,6 +82,7 @@ class Artwork extends Component {
       ...props.location.state,
       showEmailScreen: false,
       emailCaptured: false,
+      showEmailForm: true,
       emailCaptureAck: false,
       imgLoaded: false,
       alsoInRoomResults: [],
@@ -221,6 +222,7 @@ class Artwork extends Component {
         artwork: artwork,
         roomRecords: roomRecords,
         emailCaptured: emailCaptured,
+        showEmailForm: !emailCaptured,
         emailCaptureAck: emailCaptured,
         storyDurationsCurrent: durationCurArr,
         storyOffsets: offsetArr,
@@ -247,6 +249,7 @@ class Artwork extends Component {
         artwork: artwork,
         roomRecords: roomRecords,
         emailCaptured: emailCaptured,
+        showEmailForm: !emailCaptured,
         emailCaptureAck: emailCaptured,
         storyDurationsCurrent: durationCurArr,
         storyOffsets: offsetArr,
@@ -771,7 +774,7 @@ class Artwork extends Component {
 
   /** Renders each of the story cards */
   renderStory = () => {
-    const { stories, storyTitle, emailCaptured } = this.state;
+    const { stories, storyTitle, showEmailForm } = this.state;
 
     // Iterate through the available stories
     return stories.map((story, index) => {
@@ -794,9 +797,9 @@ class Artwork extends Component {
         pointerEvents: pointerEvent,
       };
 
-      // After email is captured, set padding botttom to 200px on the last story card
+      // When email form is not visible, set padding botttom to 200px on the last story card
       const emailCapturedBottomStyle =
-        stories.length === index + 1 && emailCaptured
+        stories.length === index + 1 && !showEmailForm
           ? { paddingBottom: `200px` }
           : { paddingBottom: `0` };
 
@@ -926,8 +929,8 @@ class Artwork extends Component {
 
   /** For Android, scroll within the fixed container .sm-container because of card peek issue */
   renderStoryContainer = () => {
-    const { showTitleBar, showStory, emailCaptured } = this.state;
-    const showEmailPin = !showStory && !emailCaptured ? true : false;
+    const { showTitleBar, showStory, showEmailForm } = this.state;
+    const showEmailPin = !showStory && showEmailForm ? true : false;
 
     // Props for the controller, add container prop for Android
     const controllerProps = { refreshInterval: 250 };
@@ -948,9 +951,13 @@ class Artwork extends Component {
 
   /** Responsible for rendering the entirety of the page */
   renderResult = () => {
-    const { showStory, emailCaptureAck, emailCaptured } = this.state;
+    const {
+      showStory,
+      emailCaptureAck,
+      showEmailForm,
+      emailCardClickable
+    } = this.state;
     const hasChildCards = showStory || !emailCaptureAck;
-    const { history } = this.props;
 
     return (
       <SectionWipesStyled hasChildCards={hasChildCards}>
@@ -959,7 +966,7 @@ class Artwork extends Component {
         {this.renderStoryContainer()}
 
         {/** Placeholder element to control email card enter when no stories are available. Only show when email has not been captured */}
-        {!emailCaptured && (
+        {showEmailForm && (
           <div
             id="email-trigger-enter"
             style={{ visibility: `hidden`, bottom: 0 }}
@@ -967,21 +974,21 @@ class Artwork extends Component {
         )}
 
         {/** If email was captured, show just the scan button. Otherwise, render the email screen */}
-        {emailCaptured ? (
-          <div>
-            {" "}
-            <ScanButton />{" "}
-          </div>
-        ) : (
+        {showEmailForm ? (
           <EmailForm
             withStory={showStory}
             isEmailScreen={false}
             onSubmitEmail={this.onSubmitEmail}
             getTranslation={this.props.getTranslation}
             getSize={this.onEmailHeightReady}
-            pointerEvents={this.state.emailCardClickable ? "auto" : "none"}
+            pointerEvents={emailCardClickable ? "auto" : "none"}
             handleClickScroll={this.handleClickScroll}
           />
+        ) : (
+          <div>
+            {" "}
+            <ScanButton />{" "}
+          </div>
         )}
       </SectionWipesStyled>
     );
