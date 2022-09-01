@@ -40,7 +40,7 @@ class HomeComponent extends Component {
     };
   }
 
-  UNSAFE_componentWillMount() {
+  componentWillMount() {
     resetApplication();
   }
 
