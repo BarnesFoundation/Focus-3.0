@@ -1,237 +1,183 @@
 // TODO - figure out if we really want to bring in this whole lodash module
+import React, { useEffect, useRef, useState } from "react";
 import throttle from "lodash.throttle";
-import React, { Component } from "react";
-import { withRouter } from "react-router";
-import {
-  SNAP_LANGUAGE_PREFERENCE,
-  SNAP_USER_EMAIL,
-  TOP_OFFSET,
-  VIEWPORT_HEIGHT,
-} from "./Constants";
-import { SearchRequestService } from "../services/SearchRequestService";
-import ScanButton from "./ScanButton";
+import classnames from "classnames";
 import { isAndroid } from "react-device-detect";
+
+import { SNAP_USER_EMAIL, TOP_OFFSET, VIEWPORT_HEIGHT } from "./Constants";
+import { SearchRequestService } from "../services/SearchRequestService";
+import { ScanButton } from "./ScanButton";
+import { EmailFormInput } from "./EmailFormInput";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 const withStoryStyles = {
   backgroundColor: "#fff",
   color: "#353535",
 };
 
-class EmailForm extends Component {
-  constructor(props) {
-    super(props);
-    this.sr = new SearchRequestService();
-    this.state = {
-      email: "",
-      floatScanBtn: false,
-      emailCaptured: false,
-      varificationPending: null,
-      errors: {
-        email: false,
-      },
-    };
-  }
+// TODO: Fix types once we figure out what they should be!
+type EmailFormProps = {
+  withStory: any;
+  onSubmitEmail: (email: any) => void;
+  getSize: (height: any) => any;
+  getTranslation: any;
+  isEmailScreen: any;
+  pointerEvents: "auto" | "none";
+  handleClickScroll: (storyIndex: any, isStoryCard: boolean) => void;
+};
 
-  componentDidMount() {
-    //console.log('EmailForm >> componentDidMount');
-    this.scrollInProgress = false;
+export const EmailForm: React.FC<EmailFormProps> = ({
+  withStory,
+  onSubmitEmail,
+  getSize,
+  getTranslation,
+  isEmailScreen,
+  pointerEvents,
+  handleClickScroll,
+}) => {
+  const sr = new SearchRequestService();
+  const [email, setEmail] = useState("");
+  const [floatScanBtn, setFloatScanBtn] = useState(false);
+  const [emailCaptured, setEmailCaptured] = useState(false);
+  const [verificationPending, setVerificationPending] = useState(false);
+  const [error, setError] = useState(false);
+  const [scrollInProgress, setScrollInProgress] = useState(false);
+  const { setLocalStorage } = useLocalStorage();
+  const emailRef: React.Ref<HTMLDivElement> = useRef(null);
+  const peekOffsetValue = isAndroid ? 123 : 67;
+  const peekOffset = withStory ? 0 : peekOffsetValue;
+
+  useEffect(() => {
+    console.log("EmailForm >> componentDidMount");
     // Register scroll listener
-    window.addEventListener("scroll", this._onScroll, true);
-  }
+    window.addEventListener("scroll", onScroll, true);
 
-  componentWillUnmount() {
     // Un-register scroll listener
-    window.removeEventListener("scroll", this._onScroll);
-  }
+    return function cleanup() {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (emailRef.current) {
+      const emailFormHeight = emailRef.current.getBoundingClientRect().height;
+      getSize(emailFormHeight);
+    }
+  }, [emailRef, getSize]);
 
   /**
    * All the fancy scroll animation goes here.
    */
-  handleScroll = () => {
-    if (!this.emailRef) {
-      this.scrollInProgress = false;
+  const handleScroll = () => {
+    if (!emailRef.current) {
+      setScrollInProgress(false);
       return;
     }
-    const emailFormTop = this.emailRef.getBoundingClientRect().top;
-
-    const floating =
-      emailFormTop <= TOP_OFFSET * VIEWPORT_HEIGHT ? true : false;
-
-    if (this.state.floatScanBtn !== floating) {
-      this.setState({ floatScanBtn: floating });
-    }
-
-    this.scrollInProgress = false;
-  };
-
-  _onScroll = (event) => {
-    if (!this.scrollInProgress) {
-      requestAnimationFrame(throttle(this.handleScroll, 100));
-      this.scrollInProgress = true;
-    }
-  };
-
-  handleEmailInput = (event) => {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value,
-    });
-  };
-
-  validateEmail = async () => {
-    const validated = await this.sr.validteEmail(this.state.email);
-
-    this.setState({ varificationPending: false });
-    return this.state.email.length > 0 && validated === true;
-  };
-
-  _saveEmail = async () => {
-    this.setState({ varificationPending: true });
-    // Get whether or not the email is valid
-    const emailIsValid = await this.validateEmail();
-
-    // If email is not valid
-    if (!emailIsValid) {
-      this.setState({ varificationPending: false });
-      this.setState({ errors: { email: true } });
-    }
-
-    // Otherwise, it is valid
-    else {
-      console.log("Valid email. Call backend API to save email.");
-      this.setState({ varificationPending: false });
-      const userEmail = this.state.email;
-      this.setState({ email: "", emailCaptured: true });
-      localStorage.setItem(SNAP_USER_EMAIL, userEmail);
-      this.props.onSubmitEmail(userEmail);
-    }
-  };
-
-  setEmailRef = (elem) => {
-    if (elem) {
-      this.emailRef = elem;
-      //console.log('Email Form height = ' + this.emailRef.getBoundingClientRect().height);
-      const emailFormHeight = this.emailRef.getBoundingClientRect().height;
-      this.props.getSize(emailFormHeight);
-    }
-  };
-
-  renderEmailSuccess = () => {
-    const intentStyle = this.props.withStory ? { color: `#F74E32` } : {};
-    return (
-      <div>
-        <div className="email-intent" style={intentStyle}>
-          Thank You
-        </div>
-        <div className="email-head">
-          {this.props.getTranslation("Bookmark_capture", "text_4")}
-        </div>
-      </div>
+    const emailFormTop = emailRef.current.getBoundingClientRect().top;
+    setFloatScanBtn(
+      emailFormTop <= TOP_OFFSET * VIEWPORT_HEIGHT ? true : false
     );
+    setScrollInProgress(false);
   };
 
-  renderEmailForm = () => {
-    const disclaimerTop = this.props.isEmailScreen
-      ? this.state.errors.email
-        ? "365px"
-        : "300px"
-      : "0px";
-    const emailErrorFontStyle =
-      localStorage.getItem(SNAP_LANGUAGE_PREFERENCE) === "Ru"
-        ? { fontSize: `12px` }
-        : {};
-    const emailHeadFontStyle =
-      localStorage.getItem(SNAP_LANGUAGE_PREFERENCE) === "Ru"
-        ? { fontSize: `18px` }
-        : {};
-    const intentStyle = this.props.withStory ? { color: `#F74E32` } : {};
-
-    return (
-      <div>
-        <div className="email-intent" style={intentStyle}>
-          {this.props.getTranslation("Bookmark_capture", "text_8")}
-        </div>
-        <div className="email-head" style={emailHeadFontStyle}>
-          {this.props.getTranslation("Bookmark_capture", "text_1")}
-        </div>
-        <div className="email-input">
-          <form>
-            <div className="input-group">
-              <input
-                type="email"
-                placeholder={this.props.getTranslation(
-                  "Bookmark_capture",
-                  "text_2"
-                )}
-                className="form-control"
-                name="email"
-                value={this.state.email}
-                onChange={this.handleEmailInput}
-                aria-label="email"
-              />
-              <div className="input-group-append">
-                <button
-                  className="btn btn-outline-secondary"
-                  id="bookmark-submit"
-                  type="button"
-                  onClick={() => this._saveEmail()}
-                >
-                  {this.props.getTranslation("Bookmark_capture", "text_7")}
-                  {this.state.varificationPending === true && (
-                    <div className="loader-container">
-                      <div className="loader"></div>
-                    </div>
-                  )}
-                </button>
-              </div>
-            </div>
-            {this.state.errors.email === true && (
-              <div
-                className="email-input-error caption"
-                style={emailErrorFontStyle}
-              >
-                {this.props.getTranslation("Bookmark_capture", "text_5")} <br />
-                {this.props.getTranslation("Bookmark_capture", "text_6")}
-              </div>
-            )}
-          </form>
-        </div>
-        <div
-          className="email-disclaimer small-paragraph"
-          style={{ top: disclaimerTop }}
-        >
-          {this.props.getTranslation("Bookmark_capture", "text_3")}
-        </div>
-      </div>
-    );
+  const onScroll = (event) => {
+    if (!scrollInProgress) {
+      requestAnimationFrame(throttle(handleScroll, 100));
+      setScrollInProgress(true);
+    }
   };
 
-  render() {
-    const { floatScanBtn, emailCaptured } = this.state;
-    const { history } = this.props;
-    const peekOffset = isAndroid ? 123 : 67;
+  const handleEmailInput = (event) => {
+    event.preventDefault();
+    setEmail(event.target.value);
+  };
 
-    return (
+  const validateEmail = async () => {
+    try {
+      const valid = await sr.validateEmail(email);
+      setVerificationPending(false);
+
+      return email.length > 0 && valid;
+    } catch (e) {
+      console.log("Error validating email:", e);
+      return false;
+    }
+  };
+
+  const saveEmail = async () => {
+    setVerificationPending(true);
+
+    try {
+      // Get whether or not the email is valid
+      const emailIsValid = await validateEmail();
+
+      // If email is not valid
+      if (!emailIsValid) {
+        setError(true);
+      }
+      // Otherwise, it is valid
+      else {
+        setEmailCaptured(true);
+        setLocalStorage(SNAP_USER_EMAIL, email);
+        onSubmitEmail(email);
+      }
+    } catch (e) {
+      console.log("Error saving email:", e);
+      setError(true);
+    } finally {
+      setVerificationPending(false);
+    }
+  };
+
+  return (
+    <div
+      id="email-panel"
+      className="panel-email"
+      style={{
+        pointerEvents,
+        height: `calc(60vh - ${peekOffset}px)`,
+      }}
+      onClick={() => {
+        handleClickScroll(null, false);
+      }}
+    >
       <div
         id="email-form"
         className="email-container"
-        style={
-          this.props.withStory ? withStoryStyles : { top: `-${peekOffset}px` }
-        }
-        ref={this.setEmailRef}
+        style={withStory ? withStoryStyles : emailCaptured ? {} : { top: `-${peekOffsetValue}px` }}
+        ref={emailRef}
       >
         {/* Render the scan button and whether or not it should float */}
-        <ScanButton history={history} float={floatScanBtn} />
+        <ScanButton float={floatScanBtn} />
 
         {/* Render the email form based on whether or not captured/success */}
-        {!emailCaptured && this.renderEmailForm()}
-        {emailCaptured && this.renderEmailSuccess()}
+        {!emailCaptured && (
+          <EmailFormInput
+            getTranslation={getTranslation}
+            isEmailScreen={isEmailScreen}
+            withStory={withStory}
+            error={error}
+            email={email}
+            handleEmailInput={handleEmailInput}
+            saveEmail={saveEmail}
+            verificationPending={verificationPending}
+          />
+        )}
+        {emailCaptured && (
+          <div>
+            <div
+              className={classnames("email-intent", {
+                "with-story": withStory,
+              })}
+            >
+              Thank You
+            </div>
+            <div className="email-head">
+              {getTranslation("Bookmark_capture", "text_4")}
+            </div>
+          </div>
+        )}
       </div>
-    );
-  }
-}
-
-export default withRouter(EmailForm);
+    </div>
+  );
+};

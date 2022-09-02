@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ScanButton should match the snapshot when float is false 1`] = `
+<div
+  className="scan-wrapper"
+>
+  <div
+    aria-roledescription="camera button"
+    className="scan-button"
+    id="camera-btn"
+    onClick={[Function]}
+    role="button"
+  >
+    <img
+      alt="scan"
+      aria-labelledby="camera-btn"
+      src="scan-button.svg"
+    />
+  </div>
+</div>
+`;
+
+exports[`ScanButton should match the snapshot when float is true 1`] = `
+<div
+  className="scan-wrapper"
+>
+  <div
+    aria-roledescription="camera button"
+    className="scan-button floating"
+    id="camera-btn"
+    onClick={[Function]}
+    role="button"
+  >
+    <img
+      alt="scan"
+      aria-labelledby="camera-btn"
+      src="scan-button.svg"
+    />
+  </div>
+</div>
+`;

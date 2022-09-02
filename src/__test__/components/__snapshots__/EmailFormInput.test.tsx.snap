@@ -1,0 +1,207 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EmailFormInput should match the snapshot when error is true 1`] = `
+<div>
+  <div
+    className="email-intent"
+  />
+  <div
+    className="email-head"
+  />
+  <div
+    className="email-input"
+  >
+    <form>
+      <div
+        className="input-group"
+      >
+        <input
+          aria-label="email"
+          className="form-control"
+          name="email"
+          onChange={[Function]}
+          placeholder={null}
+          type="email"
+          value="test@example.com"
+        />
+        <div
+          className="input-group-append"
+        >
+          <button
+            className="btn btn-outline-secondary"
+            id="bookmark-submit"
+            onClick={[Function]}
+            type="button"
+          />
+        </div>
+      </div>
+      <div
+        className="email-input-error caption"
+      >
+         
+        <br />
+      </div>
+    </form>
+  </div>
+  <div
+    className="email-disclaimer small-paragraph"
+    style={
+      Object {
+        "top": "0px",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`EmailFormInput should match the snapshot when isEmailScreen is false and withStory is false 1`] = `
+<div>
+  <div
+    className="email-intent"
+  />
+  <div
+    className="email-head"
+  />
+  <div
+    className="email-input"
+  >
+    <form>
+      <div
+        className="input-group"
+      >
+        <input
+          aria-label="email"
+          className="form-control"
+          name="email"
+          onChange={[Function]}
+          placeholder={null}
+          type="email"
+          value="test@example.com"
+        />
+        <div
+          className="input-group-append"
+        >
+          <button
+            className="btn btn-outline-secondary"
+            id="bookmark-submit"
+            onClick={[Function]}
+            type="button"
+          />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div
+    className="email-disclaimer small-paragraph"
+    style={
+      Object {
+        "top": "0px",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`EmailFormInput should match the snapshot when isEmailScreen is true and withStory is true 1`] = `
+<div>
+  <div
+    className="email-intent with-story"
+  />
+  <div
+    className="email-head"
+  />
+  <div
+    className="email-input"
+  >
+    <form>
+      <div
+        className="input-group"
+      >
+        <input
+          aria-label="email"
+          className="form-control"
+          name="email"
+          onChange={[Function]}
+          placeholder={null}
+          type="email"
+          value="test@example.com"
+        />
+        <div
+          className="input-group-append"
+        >
+          <button
+            className="btn btn-outline-secondary"
+            id="bookmark-submit"
+            onClick={[Function]}
+            type="button"
+          />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div
+    className="email-disclaimer small-paragraph"
+    style={
+      Object {
+        "top": "300px",
+      }
+    }
+  />
+</div>
+`;
+
+exports[`EmailFormInput should match the snapshot when verificationPending is true 1`] = `
+<div>
+  <div
+    className="email-intent"
+  />
+  <div
+    className="email-head"
+  />
+  <div
+    className="email-input"
+  >
+    <form>
+      <div
+        className="input-group"
+      >
+        <input
+          aria-label="email"
+          className="form-control"
+          name="email"
+          onChange={[Function]}
+          placeholder={null}
+          type="email"
+          value="test@example.com"
+        />
+        <div
+          className="input-group-append"
+        >
+          <button
+            className="btn btn-outline-secondary"
+            id="bookmark-submit"
+            onClick={[Function]}
+            type="button"
+          >
+            <div
+              className="loader-container"
+            >
+              <div
+                className="loader"
+              />
+            </div>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div
+    className="email-disclaimer small-paragraph"
+    style={
+      Object {
+        "top": "0px",
+      }
+    }
+  />
+</div>
+`;
