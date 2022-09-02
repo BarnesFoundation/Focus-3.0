@@ -1,5 +1,7 @@
-import React, { createContext } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import { SNAP_LANGUAGE_TRANSLATION } from "../constants";
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { SearchRequestService } from "../services/SearchRequestService";
 
 type TranslationContextType = {
   translations: object;
@@ -14,8 +16,10 @@ export const TranslationContext = createContext<TranslationContextType>({
 export const TranslationContextProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
-  const { getTranslations } = useLocalStorage();
-  const translations = getTranslations();
+  const { getTranslations, setLocalStorage } = useLocalStorage();
+  const [translations, setTranslations] = useState(getTranslations());
+  const [loaded, setLoaded] = useState(false);
+  const sr = new SearchRequestService();
 
   const getTranslation = (screen: string, textId: string): string => {
     return (
@@ -24,14 +28,34 @@ export const TranslationContextProvider: React.FC<{
     );
   };
 
+  const updateTranslations = async () => {
+    try {
+      setLoaded(false);
+      const tempTranslations = await sr.getAppTranslations();
+      setTranslations(tempTranslations)
+      setLocalStorage(SNAP_LANGUAGE_TRANSLATION, tempTranslations);
+    } catch (e) {
+      console.log("Error fetching translations:", e);
+      throw e;
+    } finally {
+      setLoaded(true);
+    }
+  };
+
   const providerValue: TranslationContextType = {
     translations,
     getTranslation,
   };
 
+  useEffect(() => {
+    updateTranslations();
+  }, []);
+
   return (
-    <TranslationContext.Provider value={providerValue}>
-      {children}
-    </TranslationContext.Provider>
+    loaded && (
+      <TranslationContext.Provider value={providerValue}>
+        {children}
+      </TranslationContext.Provider>
+    )
   );
 };
