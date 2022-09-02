@@ -4,7 +4,7 @@ import { compose } from "redux";
 
 import posed from "react-pose";
 
-import Camera from "./Camera";
+import { Camera } from "./Camera";
 import { StorableSearch, ImageSearchResponse } from "../classes/searchResponse";
 import { SearchRequestService } from "../services/SearchRequestService";
 import { loadImage } from "./CameraHelper";

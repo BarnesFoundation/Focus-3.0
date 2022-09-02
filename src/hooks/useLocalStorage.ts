@@ -13,6 +13,7 @@ type GetLocalStorage = (key: string) => any;
 type UseLocalStorage = {
   setLocalStorage: SetLocalStorage;
   getLocalStorage: GetLocalStorage;
+  removeLocalStorage: (key: string) => void;
   getLanguagePreference: () => any;
   getTranslations: () => object;
   resetLocalStorage: () => void;
@@ -39,6 +40,14 @@ const getLocalStorage: GetLocalStorage = (key) => {
   } catch {
     return item;
   }
+};
+
+/** Generic fn to remove an item from local storage by key
+ * @param {string} key Name of item to be removed from local storage
+ * @returns {void}
+ */
+const removeLocalStorage = (key: string): void => {
+  localStorage.removeItem(key);
 };
 
 /**
@@ -82,6 +91,7 @@ export const useLocalStorage = (): UseLocalStorage => {
   return {
     setLocalStorage,
     getLocalStorage,
+    removeLocalStorage,
     getLanguagePreference,
     getTranslations,
     resetLocalStorage,
