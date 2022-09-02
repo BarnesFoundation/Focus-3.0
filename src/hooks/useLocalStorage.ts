@@ -1,6 +1,10 @@
 import {
+  SNAP_APP_RESET_INTERVAL,
+  SNAP_ATTEMPTS,
   SNAP_LANGUAGE_PREFERENCE,
-  SNAP_LANGUAGE_TRANSLATION
+  SNAP_LANGUAGE_TRANSLATION,
+  SNAP_LAST_TIMESTAMP,
+  SNAP_USER_EMAIL,
 } from "../components/Constants";
 
 type SetLocalStorage = (key: string, value: any) => void;
@@ -11,6 +15,7 @@ type UseLocalStorage = {
   getLocalStorage: GetLocalStorage;
   getLanguagePreference: () => any;
   getTranslations: () => object;
+  resetLocalStorage: () => void;
 };
 
 /** Generic fn to store in localStorage by key
@@ -50,6 +55,28 @@ const getTranslations = () => {
   return getLocalStorage(SNAP_LANGUAGE_TRANSLATION);
 };
 
+/**
+ * @returns {void} Resets local storage to initial values
+ */
+const resetLocalStorage = (): void => {
+  // Get last snap timestamp from local storage
+  let lastSnapTimestamp = parseInt(getLocalStorage(SNAP_LAST_TIMESTAMP));
+
+  if (lastSnapTimestamp) {
+    // Check if the last snap timestamp was more than the interval time ago
+    let ttl = lastSnapTimestamp + SNAP_APP_RESET_INTERVAL - Date.now();
+
+    // Reset the application if so
+    if (ttl <= 0) {
+      setLocalStorage(SNAP_LAST_TIMESTAMP, Date.now());
+
+      localStorage.removeItem(SNAP_LANGUAGE_PREFERENCE);
+      localStorage.removeItem(SNAP_USER_EMAIL);
+      localStorage.removeItem(SNAP_ATTEMPTS);
+    }
+  }
+};
+
 // hook to use in components
 export const useLocalStorage = (): UseLocalStorage => {
   return {
@@ -57,5 +84,6 @@ export const useLocalStorage = (): UseLocalStorage => {
     getLocalStorage,
     getLanguagePreference,
     getTranslations,
+    resetLocalStorage,
   };
 };
