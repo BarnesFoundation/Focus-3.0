@@ -1,10 +1,11 @@
 import React from "react";
 import { unmountComponentAtNode } from "react-dom";
-import { create } from "react-test-renderer";
+import ShallowRenderer from "react-test-renderer/shallow";
 import { configure } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 
-import Home from "../../components/Home";
+import { Home } from "../../components/Home";
+import { TranslationContextProvider } from "../../contexts/TranslationContext";
 
 let container;
 configure({ adapter: new Adapter() }); //enzyme - react 16 hooks support
@@ -24,8 +25,23 @@ afterEach(() => {
 
 describe("Home", () => {
   it("should match the snapshot", () => {
-    const renderer = create(<Home />);
+    const renderer = new ShallowRenderer();
 
-    expect(renderer.toJSON()).toMatchSnapshot();
+    renderer.render(
+      <TranslationContextProvider
+      // @ts-ignore
+        value={{
+          translations: {},
+          getTranslations: (screen: string, textId: string) =>
+            "Test Translation!",
+        }}
+      >
+        <Home />
+      </TranslationContextProvider>,
+      container
+    );
+    const result = renderer.getRenderOutput();
+
+    expect(result).toMatchSnapshot();
   });
 });
