@@ -78,7 +78,7 @@ class AppRouter extends Component {
   };
 
   componentDidMount() {
-    var intervalId = setInterval(
+    const intervalId = setInterval(
       this.defaultResetIfSessionAlive,
       SNAP_APP_RESET_INTERVAL
     );
