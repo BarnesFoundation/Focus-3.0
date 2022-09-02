@@ -9,7 +9,8 @@ import { withRouter } from "react-router-dom";
 // @ts-ignore
 import { Textfit } from "react-textfit";
 import { compose } from "redux";
-import UnsupportedDialog from "./UnsupportedDialog";
+
+import { UnsupportedDialogue } from "./UnsupportedDialogue";
 import withOrientation from "./withOrientation";
 import withTranslation from "./withTranslation";
 import * as constants from "./Constants";
@@ -125,12 +126,12 @@ class HomeComponent extends Component {
       >
         {/* Show the unsupported browser dialog if the browser is not supported */}
         {unsupportedIOSBrowser ? (
-          <UnsupportedDialog unsupportedIOSBrowser={true} />
+          <UnsupportedDialogue unsupportedIOSBrowser={true} />
         ) : null}
 
         {/* Show the unsupported iOS version dialog if the iOS version is not supported */}
         {unsupportedIOSVersion ? (
-          <UnsupportedDialog unsupportedIOSVersion={true} />
+          <UnsupportedDialogue unsupportedIOSVersion={true} />
         ) : null}
 
         <img

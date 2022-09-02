@@ -6,7 +6,14 @@ import Home from "../components/Home";
 import CameraContainer from "../components/CameraContainer";
 import Artwork from "../components/Artwork";
 import StoryPage from "../components/StoryPage";
-import * as constants from "../components/Constants";
+import { TranslationContextProvider } from "../contexts/TranslationContext";
+import {
+  ROUTES,
+  SNAP_APP_RESET_INTERVAL,
+  SNAP_ATTEMPTS,
+  SNAP_LANGUAGE_PREFERENCE,
+  SNAP_USER_EMAIL,
+} from "../components/Constants";
 
 const RouteContainer = posed.div({
   enter: { opacity: 1, delay: 0, beforeChildren: true },
@@ -14,34 +21,41 @@ const RouteContainer = posed.div({
 });
 
 const Routes = () => (
-  <Route
-    render={({ location }) => (
-      <PoseGroup>
-        <RouteContainer key={location.pathname}>
-          <Switch location={location}>
-            <Route path="/" component={Home} exact={true} key="home" />
-            <Route
-              path="/scan"
-              component={CameraContainer}
-              exact={true}
-              key="scan"
-            />
-            <Route
-              path="/artwork/:imageId?"
-              component={Artwork}
-              key="artwork"
-            />
-            <Route
-              path="/story/:slug"
-              component={StoryPage}
-              exact={false}
-              key="story"
-            />
-          </Switch>
-        </RouteContainer>
-      </PoseGroup>
-    )}
-  />
+  <TranslationContextProvider>
+    <Route
+      render={({ location }) => (
+        <PoseGroup>
+          <RouteContainer key={location.pathname}>
+            <Switch location={location}>
+              <Route
+                path={ROUTES.HOME}
+                component={Home}
+                exact={true}
+                key="home"
+              />
+              <Route
+                path={ROUTES.SCAN}
+                component={CameraContainer}
+                exact={true}
+                key="scan"
+              />
+              <Route
+                path={`${ROUTES.ARTWORK}/:imageId?`}
+                component={Artwork}
+                key="artwork"
+              />
+              <Route
+                path={`${ROUTES.STORY}/:slug`}
+                component={StoryPage}
+                exact={false}
+                key="story"
+              />
+            </Switch>
+          </RouteContainer>
+        </PoseGroup>
+      )}
+    />
+  </TranslationContextProvider>
 );
 
 class AppRouter extends Component {
@@ -55,15 +69,15 @@ class AppRouter extends Component {
 
   defaultResetIfSessionAlive = () => {
     console.log("App reset interval lapsed. App will now reset.");
-    localStorage.removeItem(constants.SNAP_LANGUAGE_PREFERENCE);
-    localStorage.removeItem(constants.SNAP_USER_EMAIL);
-    localStorage.removeItem(constants.SNAP_ATTEMPTS);
+    localStorage.removeItem(SNAP_LANGUAGE_PREFERENCE);
+    localStorage.removeItem(SNAP_USER_EMAIL);
+    localStorage.removeItem(SNAP_ATTEMPTS);
   };
 
   componentDidMount() {
     var intervalId = setInterval(
       this.defaultResetIfSessionAlive,
-      constants.SNAP_APP_RESET_INTERVAL
+      SNAP_APP_RESET_INTERVAL
     );
     // store intervalId in the state so it can be accessed later:
     this.setState({ intervalId: intervalId });

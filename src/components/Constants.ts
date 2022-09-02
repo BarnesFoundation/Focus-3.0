@@ -83,3 +83,10 @@ export const GA_EVENT_LABEL = {
   SCANNER_MOUNT_FAILURE: "scanner load failed",
   PERMISSION_GRANTED: "camera permission granted",
 };
+
+export const ROUTES = {
+  HOME: "/",
+  SCAN: "/scan",
+  ARTWORK: "/artwork",
+  STORY: "/story",
+};

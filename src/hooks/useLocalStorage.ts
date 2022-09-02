@@ -1,4 +1,7 @@
-import { SNAP_LANGUAGE_PREFERENCE } from "../components/Constants";
+import {
+  SNAP_LANGUAGE_PREFERENCE,
+  SNAP_LANGUAGE_TRANSLATION
+} from "../components/Constants";
 
 type SetLocalStorage = (key: string, value: any) => void;
 type GetLocalStorage = (key: string) => any;
@@ -7,6 +10,7 @@ type UseLocalStorage = {
   setLocalStorage: SetLocalStorage;
   getLocalStorage: GetLocalStorage;
   getLanguagePreference: () => any;
+  getTranslations: () => object;
 };
 
 /** Generic fn to store in localStorage by key
@@ -39,11 +43,19 @@ const getLanguagePreference = (): any => {
   return getLocalStorage(SNAP_LANGUAGE_PREFERENCE);
 };
 
+/**
+ * @returns {object} JSON object of translation content
+ */
+const getTranslations = () => {
+  return getLocalStorage(SNAP_LANGUAGE_TRANSLATION);
+};
+
 // hook to use in components
 export const useLocalStorage = (): UseLocalStorage => {
   return {
     setLocalStorage,
     getLocalStorage,
     getLanguagePreference,
+    getTranslations,
   };
 };
