@@ -83,8 +83,8 @@ export const logiPhoneModel = () => {
 
   // If the iPhone model was determined
   if (iPhoneModel) {
+    // TODO: Uncomment this when GA bug is fixed: https://barnesfoundation.atlassian.net/browse/FOC-26
     // Log it to Google Analytics
-    // Commenting out for now because this is causing an error because `ga` is not defined
     // ga("send", {
     //   hitType: "event",
     //   eventCategory: GA_EVENT_CATEGORY.CAMERA,
@@ -101,8 +101,8 @@ export const shouldLogPermissionGrantTime = (startTime) => {
   const permissionGrantTime = Date.now() - startTime;
 
   if (permissionGrantTime > 900) {
+    // TODO: Uncomment this when GA bug is fixed: https://barnesfoundation.atlassian.net/browse/FOC-26
     // Camera permission dialog was shown
-    // Commenting out for now because this is causing an error because `ga` is not defined
     // ga("send", {
     //   hitType: "event",
     //   eventCategory: GA_EVENT_CATEGORY.CAMERA,
