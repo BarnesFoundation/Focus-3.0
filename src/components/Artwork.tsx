@@ -4,7 +4,7 @@ import { compose } from "redux";
 import $ from 'jquery';
 import classnames from "classnames";
 
-import * as constants from "./Constants";
+import * as constants from "../constants";
 import withOrientation from "./withOrientation";
 import withTranslation from "./withTranslation";
 

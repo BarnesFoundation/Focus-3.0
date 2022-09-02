@@ -5,7 +5,7 @@ import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import { isIOS } from "react-device-detect";
 import { compose } from "redux";
 import { cropPhoto } from "./CameraHelper";
-import * as constants from "./Constants";
+import * as constants from "../constants";
 import withOrientation from "./withOrientation";
 import withTranslation from "./withTranslation";
 import { shouldLogPermissionGrantTime } from "../helpers/googleAnalyticsHelpers";

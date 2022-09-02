@@ -5,7 +5,7 @@ import {
   SNAP_LANGUAGE_TRANSLATION,
   SNAP_LAST_TIMESTAMP,
   SNAP_USER_EMAIL,
-} from "../components/Constants";
+} from "../constants";
 
 type SetLocalStorage = (key: string, value: any) => void;
 type GetLocalStorage = (key: string) => any;

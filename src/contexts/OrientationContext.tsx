@@ -1,10 +1,8 @@
 import React, { createContext, Fragment, useEffect, useState } from "react";
 import { isIOS, isSafari } from "react-device-detect";
 import { useLocation } from "react-router-dom";
-import {
-  ROUTES,
-  UNSUPPORTED_ORIENTATION_ALERT_MESSAGE
-} from "../components/Constants";
+import { UNSUPPORTED_ORIENTATION_ALERT_MESSAGE } from "../constants";
+import * as ROUTES from "../constants/routes";
 
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import landscape_bg from "../images/barnes-landscape-background.png";

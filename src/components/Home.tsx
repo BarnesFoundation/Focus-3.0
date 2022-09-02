@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { Textfit } from "react-textfit";
 
 import { UnsupportedDialogue } from "./UnsupportedDialogue";
-import * as constants from "./Constants";
+import * as constants from "../constants";
 import home_background from "../images/barnes-v2-landing.png";
 import barnes_logo from "../images/Barnes_logo.svg";
 import barnes_100_logo from "../images/Barnes_100_logo.svg";

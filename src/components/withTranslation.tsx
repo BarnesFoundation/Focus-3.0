@@ -1,6 +1,6 @@
 import React from "react";
 import { SearchRequestService } from "../services/SearchRequestService";
-import { SNAP_LANGUAGE_TRANSLATION } from "./Constants";
+import { SNAP_LANGUAGE_TRANSLATION } from "../constants";
 
 const withTranslation = (WrappedComponent) => {
   return class WithTranslation extends React.Component {

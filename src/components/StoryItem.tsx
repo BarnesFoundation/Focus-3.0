@@ -9,7 +9,7 @@ import {
   LANGUAGE_EN,
   VIEWPORT_HEIGHT,
   SNAP_LANGUAGE_PREFERENCE,
-} from "./Constants";
+} from "../constants";
 import { isAndroid } from "react-device-detect";
 import VizSensor from "react-visibility-sensor";
 

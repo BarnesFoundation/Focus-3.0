@@ -9,12 +9,12 @@ import StoryPage from "../components/StoryPage";
 import { TranslationContextProvider } from "../contexts/TranslationContext";
 import { OrientationContextProvider } from "../contexts/OrientationContext";
 import {
-  ROUTES,
   SNAP_APP_RESET_INTERVAL,
   SNAP_ATTEMPTS,
   SNAP_LANGUAGE_PREFERENCE,
   SNAP_USER_EMAIL,
-} from "../components/Constants";
+} from "../constants";
+import * as ROUTES from "../constants/routes";
 
 const RouteContainer = posed.div({
   enter: { opacity: 1, delay: 0, beforeChildren: true },
