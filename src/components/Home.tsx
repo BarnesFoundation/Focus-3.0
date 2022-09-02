@@ -23,6 +23,7 @@ export const Home: React.FC = () => {
   const [unsupportedIOSVersion, setUnsupportedIOSVersion] = useState(null);
   const [unsupportedIOSBrowser, setUnsupportedIOSBrowser] = useState(null);
   const [cameraAccessible, setCameraAccessible] = useState(null);
+  const [showError, setShowError] = useState(false);
   // Get year to determine whether to use centennial logo or original logo
   const today = new Date();
   const isCentennial = today.getFullYear() === 2022;
@@ -54,12 +55,14 @@ export const Home: React.FC = () => {
     if (iOSVersion >= parseFloat("11.0")) {
       if (!isSafari) {
         setUnsupportedIOSBrowser(true);
+        setShowError(true);
       }
     }
 
     // If they're not on iOS 11, it doesn't matter what browser they're using, navigator.mediaDevices.getUserMedia() will return undefined
     else {
       setUnsupportedIOSVersion(true);
+      setShowError(true);
     }
   };
 
@@ -83,6 +86,7 @@ export const Home: React.FC = () => {
       history.push({ pathname: "/scan" });
     } catch (error) {
       setCameraAccessible(false);
+      setShowError(true);
     }
   };
 
@@ -90,6 +94,7 @@ export const Home: React.FC = () => {
     // The user has seen that camera is not accessible, so essentially close the screen and reset camera access and them being at the Barnes
     setCameraAccessible(null);
     setUserAtBarnes(null);
+    setShowError(false);
   };
 
   return (
@@ -111,7 +116,7 @@ export const Home: React.FC = () => {
       />
 
       {/* Only show the initial Welcome Screen prompt if they haven't selected any value for userAtBarnes */}
-      {userAtBarnes == null && (
+      {userAtBarnes == null && !showError && (
         <div className="landing-screen">
           {/* logo */}
           {isCentennial ? (
