@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UnsupportedDialogue should match the snapshot when unsupportedIOSBrowser is true 1`] = `
+<Context.Provider
+  value={
+    Object {
+      "getTranslation": [Function],
+      "translations": null,
+    }
+  }
+>
+  <UnsupportedDialogue
+    unsupportedIOSBrowser={true}
+    unsupportedIOSVersion={false}
+  />
+</Context.Provider>
+`;
+
+exports[`UnsupportedDialogue should match the snapshot when unsupportedIOSVersion is true 1`] = `
+<Context.Provider
+  value={
+    Object {
+      "getTranslation": [Function],
+      "translations": null,
+    }
+  }
+>
+  <UnsupportedDialogue
+    unsupportedIOSBrowser={false}
+    unsupportedIOSVersion={true}
+  />
+</Context.Provider>
+`;

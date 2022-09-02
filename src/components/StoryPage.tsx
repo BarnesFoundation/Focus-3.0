@@ -7,7 +7,7 @@ import styled from "styled-components";
 import queryString from "query-string";
 import StoryItem from "../components/StoryItem";
 import { SearchRequestService } from "../services/SearchRequestService";
-import * as constants from "./Constants";
+import * as constants from "../constants";
 import withOrientation from "./withOrientation";
 import withTranslation from "./withTranslation";
 

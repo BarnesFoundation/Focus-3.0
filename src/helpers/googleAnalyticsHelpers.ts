@@ -2,7 +2,7 @@ import {
   GA_EVENT_CATEGORY,
   GA_EVENT_ACTION,
   GA_EVENT_LABEL,
-} from "../components/Constants";
+} from "../constants";
 
 // Database of possible iPhone configurations
 const database = {

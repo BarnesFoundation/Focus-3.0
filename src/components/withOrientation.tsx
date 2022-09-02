@@ -4,7 +4,7 @@ import { isIOS, isSafari } from "react-device-detect";
 import {
   UNSUPPORTED_ORIENTATION_ALERT_MESSAGE,
   SNAP_LANGUAGE_TRANSLATION,
-} from "./Constants";
+} from "../constants";
 
 const withOrientation = (WrappedComponent) =>
   class WithOrientation extends Component {

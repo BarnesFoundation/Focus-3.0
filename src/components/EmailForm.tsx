@@ -4,7 +4,7 @@ import throttle from "lodash.throttle";
 import classnames from "classnames";
 import { isAndroid } from "react-device-detect";
 
-import { SNAP_USER_EMAIL, TOP_OFFSET, VIEWPORT_HEIGHT } from "./Constants";
+import { SNAP_USER_EMAIL, TOP_OFFSET, VIEWPORT_HEIGHT } from "../constants";
 import { SearchRequestService } from "../services/SearchRequestService";
 import { ScanButton } from "./ScanButton";
 import { EmailFormInput } from "./EmailFormInput";

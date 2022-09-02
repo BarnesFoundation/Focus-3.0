@@ -1,4 +1,4 @@
-import * as constants from "../components/Constants";
+import * as constants from "../constants";
 import axios from "axios";
 import {
   IdentifiedImagePayload,
