@@ -117,10 +117,7 @@ export const EmailForm: React.FC<EmailFormProps> = ({
       }
       // Otherwise, it is valid
       else {
-        console.log("Valid email. Call backend API to save email.");
         setEmailCaptured(true);
-        // TODO: figure out why they reset email here
-        // this.setState({ email: "", emailCaptured: true });
         setLocalStorage(SNAP_USER_EMAIL, email);
         onSubmitEmail(email);
       }
