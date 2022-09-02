@@ -8,13 +8,13 @@ This repository contains the code for The Barnes Foundation digital guide — Ba
 - React for the client-side interaction
 - Configured for deployment on AWS Lambda
 - PostgreSQL for caching artworks locally and persisting user session information
-- Node v14.15.4
+- Node v14.5.0
 
 # Local Development
 
 To develop this application locally, follow these steps
 
-1. Switch to the correct version of Node with `nvm use` or `nvm use 14.15.4`.
+1. Switch to the correct version of Node with `nvm use` or `nvm use 14.5.0`.
 2. Run `npm ci` to install the needed node modules
 3. Create a `.env` file and populate with values as specified by [.env-template](.env-template)
   a. Make sure to populate the DATABASE_URL with the correct database credentials
