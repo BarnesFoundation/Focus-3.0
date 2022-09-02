@@ -15,6 +15,7 @@ const withStoryStyles = {
   color: "#353535",
 };
 
+// TODO: Fix types once we figure out what they should be!
 type EmailFormProps = {
   withStory: any;
   onSubmitEmail: (email: any) => void;
