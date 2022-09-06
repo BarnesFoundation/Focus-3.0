@@ -57,7 +57,8 @@ export default class GraphCMSService {
 
   /** Retrieves a specific story from Graph CMS as identified by the provided object id */
   public static async findByObjectId(
-    objectId: string
+    objectId: string,
+    languagePreference: string
   ): Promise<ParsedRelatedStory> {
     const query = relatedStoriesByObjectIdQuery(objectId);
     const { data } = await GraphCMSService.makeGraphQLRequest(query);
@@ -66,12 +67,17 @@ export default class GraphCMSService {
       ? data.storiesForObjectIds[0].relatedStories
       : [];
 
-    return await ArtworkService.parseRelatedStory(relatedStories, objectId);
+    return await ArtworkService.parseRelatedStory(
+      relatedStories,
+      objectId,
+      languagePreference
+    );
   }
 
   /** Retrieves a specific story from Graph CMS as identified by the provided story title */
   public static async findByTitle(
-    storyTitle: string
+    storyTitle: string,
+    languagePreference: string
   ): Promise<ParsedRelatedStory> {
     const query = relatedStoriesByTitleQuery(storyTitle);
     const graphContent = await GraphCMSService.makeGraphQLRequest(query);
@@ -79,7 +85,11 @@ export default class GraphCMSService {
     const relatedStories = graphContent.data.storiesForObjectIds[0]
       .relatedStories as Array<RelatedStory>;
 
-    return await ArtworkService.parseRelatedStory(relatedStories, null);
+    return await ArtworkService.parseRelatedStory(
+      relatedStories,
+      null,
+      languagePreference
+    );
   }
 
   /** Retrieves the general story data for every published story in Graph CMS */

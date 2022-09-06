@@ -1,5 +1,7 @@
 import axios from "axios";
 
+import { environmentConfiguration } from "../../config";
+
 class AsyncJob {
   /** The implementation of this Asynchronous Job is a bit tricky
    * In our Ruby on Rails implementation, we actively use ActiveJob/Sidekiq to define jobs
@@ -38,8 +40,10 @@ class AsyncJob {
         method: "POST",
         data: [...args],
         url: `/api/job/${this.name}`,
-        // TODO - the base URL needs to be modified to the Lambda endpoint when running live
-        baseURL: "http://localhost:4006",
+
+        // Asset host should be the URL of the server
+        // so we're fine to use this as the URL to send this to
+        baseURL: environmentConfiguration.assetHost,
       });
     } catch (error) {
       console.error(

@@ -162,13 +162,11 @@ class BookmarkDeliveryJob {
 
     // Convert the artworks to a hash list for easier artwork picking
     const artworkHash = artworks.reduce<CollectedArtworks>((acc, artwork) => {
-      artwork.id = artwork.image_id as any;
       const spreadArtwork = {
         id: artwork.id,
         image_id: artwork.image_id,
-        // TODO - es_data is always an object
-        // In the Prisma definition, it needs to be converted
-        // from JSONValue to object type
+        // TODO - es_data is always an object in the Prisma definition
+        // it needs to be converted from JSONValue to object type
         // @ts-ignore
         ...artwork.es_data,
       };

@@ -1,7 +1,6 @@
 import { PrismaClient, bookmarks } from "@prisma/client";
 
-import Config from "../../config";
-import { groupBy, batchify, slugify } from "../utils";
+import { groupBy } from "../utils";
 import {
   GraphCMSService,
   TranslateService,
@@ -19,10 +18,11 @@ const LATEST_BOOKMARK_ENTRY_THRESHOLD_MS =
 
 type DeliverableStoryBookmarks = { [email: string]: bookmarks[] };
 type CollectedStories = {
-  [artworkId: string]: ParsedRelatedStory & {
-    translated_title: string;
-    link: string;
-  };
+  [storyBookmarkArtworkId: string]: ParsedRelatedStory;
+};
+
+type LanguageWithStory = {
+  [languagePreference: string]: CollectedStories;
 };
 
 class StoryDeliveryJob {
@@ -56,8 +56,9 @@ class StoryDeliveryJob {
       // Get the artworks needed for this email's set of bookmarks
       const bookmarkStoryList = Object.values(
         bookmarkSet.reduce<CollectedStories>((acc, bookmark) => {
-          if (stories[bookmark.image_id]) {
-            acc[bookmark.image_id] = stories[bookmark.image_id];
+          if (stories[preferredLanguage][bookmark.image_id]) {
+            acc[bookmark.image_id] =
+              stories[preferredLanguage][bookmark.image_id];
           }
           return acc;
         }, {})
@@ -99,6 +100,13 @@ class StoryDeliveryJob {
     );
   }
 
+  /** Determines story bookmarks that should be emailed as part of this job run
+   * The bookmarks that are emailed as part of this job run must meet this criteria
+   * 1. The latest bookmark entry must have been created at a time less than or equal to our
+   *    `LATEST_BOOKMARK_ENTRY_THRESHOLD_MS` value ago
+   * 2. The bookmarks must have a `story_read` value of true
+   * 3. The `email` field for the bookmarks must be non-null
+   */
   private static async getDeliverableStoryBookmarks() {
     const storyBookmarkThresholdAgo =
       Date.now() - LATEST_BOOKMARK_ENTRY_THRESHOLD_MS;
@@ -136,50 +144,58 @@ class StoryDeliveryJob {
     return identifiedDeliverableStoryBookmarks;
   }
 
-  /** Fetches the stpries information that are
-   * are associated with these bookmark entries
+  /** This function helps prevent making a redundant amount of external calls
+   * to retrieve the stories associated with our bookmarks, since
+   * to retrieve stories properly, we need to
+   * 1. Reach out to the GraphCMS API to retrieve the content
+   * 2. Translate the fetched story content to the language as indicated by the bookmarks
+   *
+   * In order to prevent redundant calls, we do the following
+   * 1. Create a hash map of the languages these set of bookmarks require, such as `{ 'fr': { ... }, 'es': { ... } }`
+   * 2. Within each of these keys, we added a key, where that key is the artwork ID for an artwork needed for the bookmark
+   *    such as `{ 'fr': { [5198]: ... }, 'es': { [6726]: .... } }`
+   * 3. Within each of the keys of these artwork IDs, we store the fetched translated story content
+   *
+   * With this logic above, we prevent reaching out to GraphCMS more than once for a story content
+   * and prevent reaching out to AWS Translate to translate the same story content more than once
    */
   private static async retrieveStoriesForBookmarks(
     deliverableStoryBookmarks: DeliverableStoryBookmarks
-  ): Promise<CollectedStories> {
-    const distinctStoryArtworkIds = Object.values(deliverableStoryBookmarks)
+  ): Promise<LanguageWithStory> {
+    const distinctStoryArtworksAndLanguages = await Object.values(
+      deliverableStoryBookmarks
+    )
       .flat()
-      .reduce((acc: string[], deliverableStoryBookmark) => {
-        const bookmarkArtworkId = deliverableStoryBookmark.image_id;
+      .reduce<Promise<LanguageWithStory>>(
+        async (accPromise, deliverableStoryBookmark) => {
+          const acc = await accPromise;
+          const bookmarkArtworkId = deliverableStoryBookmark.image_id;
+          const languagePreference = deliverableStoryBookmark.language;
 
-        // Only add this artwork id if we haven't already stored it
-        if (acc.includes(bookmarkArtworkId) === false) {
-          acc.push(bookmarkArtworkId);
-        }
+          // Only add this language if we haven't already stored it
+          if (!acc.hasOwnProperty(languagePreference)) {
+            acc[languagePreference] = {};
+          }
 
-        return acc;
-      }, []);
+          // Store this story under the language preference needed for it
+          if (!acc[languagePreference].hasOwnProperty(bookmarkArtworkId)) {
+            const translatedStory = await GraphCMSService.findByObjectId(
+              bookmarkArtworkId,
+              languagePreference
+            );
 
-    // Pull all of these stories from the source
-    const batchResponse = await batchify(
-      distinctStoryArtworkIds,
-      GraphCMSService.findByObjectId,
-      8
-    );
-    const storiesForArtworks = batchResponse.flat();
+            acc[languagePreference] = {
+              ...acc[languagePreference],
+              [bookmarkArtworkId]: translatedStory,
+            };
+          }
 
-    // Convert the artworks to a hash list for easier artwork picking
-    const storyHash = storiesForArtworks.reduce<CollectedStories>(
-      (acc, story, index) => {
-        const currentArtworkId = distinctStoryArtworkIds[index];
-        const titleSlug = slugify(story.content["original_story_title"]);
+          return acc;
+        },
+        Promise.resolve({}) as Promise<LanguageWithStory>
+      );
 
-        acc[currentArtworkId] = {
-          ...story,
-          translated_title: story.content["story_title"],
-          link: `${Config.assetHost}/story/${titleSlug}`,
-        };
-        return acc;
-      },
-      {}
-    );
-
-    return storyHash;
+    return distinctStoryArtworksAndLanguages;
   }
 }
 
