@@ -33,8 +33,9 @@ export default class TranslateService {
     targetLanguage: string | null
   ) {
     // No need to translate content if the language is English
-    // since the context is already in English
-    if (targetLanguage === "en" || !targetLanguage) {
+    // since content defaults to English. We can't translate empty
+    // strings, so short-circuit out of here if there's no content
+    if (targetLanguage === "en" || !targetLanguage || !originalText) {
       return originalText;
     }
 
