@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, History } from "react-router-dom";
 import { compose } from "redux";
 
 import posed from "react-pose";
@@ -15,16 +15,30 @@ const Container = posed.div({
   exit: { opacity: 0 },
 });
 
-class CameraContainer extends Component {
-  sr;
-  snapAttempts;
-  responseCounter;
+type CameraContainerProps = {
+  history: History;
+};
 
-  constructor() {
-    super();
+type CameraContainerState = {
+  scanSeqId: any;
+  shouldBeScanning: boolean;
+  sessionYieldedMatch: boolean;
+};
+
+class CameraContainer extends Component<
+  CameraContainerProps,
+  CameraContainerState
+> {
+  sr: SearchRequestService;
+  snapAttempts: number;
+  responseCounter: number;
+
+  constructor(props) {
+    super(props);
 
     this.sr = new SearchRequestService();
-    this.snapAttempts = localStorage.getItem(constants.SNAP_ATTEMPTS) || 0;
+    this.snapAttempts =
+      parseInt(localStorage.getItem(constants.SNAP_ATTEMPTS)) || 0;
 
     this.state = {
       scanSeqId: null,
@@ -38,12 +52,13 @@ class CameraContainer extends Component {
     // Update the snap attempts with this scan as a single attempt
     localStorage.setItem(
       constants.SNAP_ATTEMPTS,
-      parseInt(this.state.snapAttempts) + 1
+      (this.snapAttempts + 1).toString()
     );
-    localStorage.setItem(constants.SNAP_LAST_TIMESTAMP, Date.now());
+    localStorage.setItem(constants.SNAP_LAST_TIMESTAMP, Date.now().toString());
 
     // Reset scans taken and stop any existing scanning
     this.responseCounter = 0;
+    this.snapAttempts = this.snapAttempts + 1;
     this.setState({
       shouldBeScanning: true,
       scanSeqId: Date.now(),
@@ -156,6 +171,7 @@ class CameraContainer extends Component {
     return (
       <Container className="camera-container" initialPose="exit" pose="enter">
         <Camera
+          // @ts-ignore
           processImageCapture={processImageCapture}
           sessionYieldedMatch={sessionYieldedMatch}
           beginScanning={beginScanning}

@@ -10,13 +10,12 @@ import { NoMatchOverlay } from "./NoMatchOverlay";
 const DISABLE_ZOOM = "DISABLE_ZOOM";
 const ENABLE_ZOOM = "ENABLE_ZOOM";
 
-// TODO: Fill in the prop type definitions when CameraContainer is refactored
 type CameraProps = {
-  sessionYieldedMatch: any;
-  beginScanning: any;
+  sessionYieldedMatch: boolean;
+  beginScanning: () => void;
   snapAttempts: number;
-  shouldBeScanning: any;
-  processImageCapture: any;
+  shouldBeScanning: boolean;
+  processImageCapture: (imageBlob: any) => Promise<void>;
 };
 
 type CameraState = {
