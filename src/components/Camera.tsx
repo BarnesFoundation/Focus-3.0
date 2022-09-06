@@ -1,7 +1,5 @@
-import scan_button from "../images/scan-button.svg";
 import React, { Component } from "react";
 // @ts-ignore
-import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import { isIOS } from "react-device-detect";
 import { compose } from "redux";
 import { cropPhoto } from "./CameraHelper";
@@ -9,6 +7,7 @@ import * as constants from "../constants";
 import withOrientation from "./withOrientation";
 import withTranslation from "./withTranslation";
 import { shouldLogPermissionGrantTime } from "../helpers/googleAnalyticsHelpers";
+import { NoMatchOverlay } from "./NoMatchOverlay";
 
 const DISABLE_ZOOM = "DISABLE_ZOOM";
 const ENABLE_ZOOM = "ENABLE_ZOOM";
@@ -380,39 +379,12 @@ class Camera extends Component {
             )}
 
             {/* If there was an unsuccessful attempt, transition into the no result found */}
-            <ReactCSSTransitionGroup
-              transitionName="fade"
-              transitionEnterTimeout={500}
-              transitionLeaveTimeout={100}
-            >
-              {shouldBeScanning === false && sessionYieldedMatch === false && (
-                <div id="no-match-overlay" className="no-match-overlay">
-                  <div className="hint h2">
-                    <span style={{ whiteSpace: "pre-line" }}>
-                      {`${this.props.getTranslation("No_Result_page", "text_1")}
-											${this.props.getTranslation("No_Result_page", "text_2")}
-											${this.props.getTranslation("No_Result_page", "text_3")}`}
-                    </span>
-                  </div>
-                  <div
-                    className="scan-button"
-                    id="camera-btn"
-                    onClick={() => {
-                      beginScanning();
-                    }}
-                    style={{ position: "absolute", bottom: "37px" }}
-                    role="button"
-                    aria-roledescription="camera button"
-                  >
-                    <img
-                      src={scan_button}
-                      alt="scan"
-                      aria-labelledby="camera-btn"
-                    />
-                  </div>
-                </div>
-              )}
-            </ReactCSSTransitionGroup>
+            <NoMatchOverlay
+              displayOverlay={
+                shouldBeScanning === false && sessionYieldedMatch === false
+              }
+              handleScan={() => beginScanning()}
+            />
           </div>
         }
       </div>
