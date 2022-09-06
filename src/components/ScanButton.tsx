@@ -1,33 +1,27 @@
-import React, { Component } from "react";
+import React from "react";
+import classnames from "classnames";
+import { useHistory } from "react-router-dom";
 import scan_button from "../images/scan-button.svg";
 
-class ScanButton extends Component {
-  constructor(props) {
-    super(props);
-  }
+type ScanButtonProps = {
+  float?: boolean;
+};
 
-  handleScan = () => {
-    this.props.history.push({ pathname: "/scan" });
-  };
+export const ScanButton: React.FC<ScanButtonProps> = ({ float }) => {
+  const history = useHistory();
+  const handleScan = () => history.push({ pathname: "/scan" });
 
-  render() {
-    const { handleScan } = this;
-    const { float } = this.props;
-
-    return (
-      <div className="scan-wrapper">
-        <div
-          id="camera-btn"
-          className={`scan-button ${float ? "floating" : ""}`}
-          onClick={handleScan}
-          role="button"
-          aria-roledescription="camera button"
-        >
-          <img src={scan_button} alt="scan" aria-labelledby="camera-btn" />
-        </div>
+  return (
+    <div className="scan-wrapper">
+      <div
+        id="camera-btn"
+        className={classnames("scan-button", { floating: float })}
+        onClick={handleScan}
+        role="button"
+        aria-roledescription="camera button"
+      >
+        <img src={scan_button} alt="scan" aria-labelledby="camera-btn" />
       </div>
-    );
-  }
+    </div>
+  )
 }
-
-export default ScanButton;

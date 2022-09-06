@@ -12,7 +12,7 @@ import { Popover, PopoverBody } from "reactstrap";
 import { compose } from "redux";
 import { SearchRequestService } from "../services/SearchRequestService";
 import About from "./About";
-import * as constants from "./Constants";
+import * as constants from "../constants";
 import EmailForm from "./EmailForm";
 import Footer from "./Footer";
 import LanguageDropdown from "./LanguageDropdown";

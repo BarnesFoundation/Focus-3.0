@@ -8,7 +8,7 @@ import Camera from "./Camera";
 import { StorableSearch, ImageSearchResponse } from "../classes/searchResponse";
 import { SearchRequestService } from "../services/SearchRequestService";
 import { loadImage } from "./CameraHelper";
-import * as constants from "./Constants";
+import * as constants from "../constants";
 
 const Container = posed.div({
   enter: { opacity: 1 },

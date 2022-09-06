@@ -1,4 +1,4 @@
-import * as constants from "../components/Constants";
+import * as constants from "../constants";
 import axios from "axios";
 import {
   IdentifiedImagePayload,
@@ -132,7 +132,7 @@ class SearchRequestService {
 
       // Else, this image search was not successful
       else {
-        return new ImageSearchResponse(false, response, searchTIme);
+        return new ImageSearchResponse(false, response, searchTime);
       }
     } catch (error) {
       return new ImageSearchResponse(false, null, null);
@@ -151,7 +151,7 @@ class SearchRequestService {
     return new IdentifiedImagePayload(esResponse, referenceImageUrl);
   };
 
-  validteEmail = async (email) => {
+  validateEmail = async (email) => {
     try {
       let response = await axios.post(constants.VALIDATE_EMAIL_URL, {
         email: email,

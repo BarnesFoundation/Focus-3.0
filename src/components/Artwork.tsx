@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
 import { compose } from "redux";
-import $ from 'jquery'; 
+import $ from 'jquery';
+import classnames from "classnames";
 
-import * as constants from "./Constants";
+import * as constants from "../constants";
 import withOrientation from "./withOrientation";
 import withTranslation from "./withTranslation";
 
 import LanguageDropdown from "./LanguageDropdown";
-import EmailForm from "./EmailForm";
+import { EmailForm } from "./EmailForm";
 
 import google_logo from "../images/google_translate.svg";
 import { SearchRequestService } from "../services/SearchRequestService";
@@ -22,7 +23,7 @@ import { isTablet } from "react-device-detect";
 import ScrollMagic from "scrollmagic";
 import { isAndroid, isIOS } from "react-device-detect";
 
-import ScanButton from "./ScanButton";
+import { ScanButton } from "./ScanButton";
 import { Share } from "./Share";
 
 /**
@@ -81,6 +82,7 @@ class Artwork extends Component {
       ...props.location.state,
       showEmailScreen: false,
       emailCaptured: false,
+      showEmailForm: true,
       emailCaptureAck: false,
       imgLoaded: false,
       alsoInRoomResults: [],
@@ -220,6 +222,7 @@ class Artwork extends Component {
         artwork: artwork,
         roomRecords: roomRecords,
         emailCaptured: emailCaptured,
+        showEmailForm: !emailCaptured,
         emailCaptureAck: emailCaptured,
         storyDurationsCurrent: durationCurArr,
         storyOffsets: offsetArr,
@@ -246,6 +249,7 @@ class Artwork extends Component {
         artwork: artwork,
         roomRecords: roomRecords,
         emailCaptured: emailCaptured,
+        showEmailForm: !emailCaptured,
         emailCaptureAck: emailCaptured,
         storyDurationsCurrent: durationCurArr,
         storyOffsets: offsetArr,
@@ -752,38 +756,6 @@ class Artwork extends Component {
     );
   };
 
-  /* Renders the email screen. withStory flag determines whether the email screen is displayed along with story parts */
-  renderEmailScreen = () => {
-    const { showStory, emailCardClickable } = this.state;
-    const pointerSetting = emailCardClickable ? "auto" : "none";
-
-    // If the story should not be shown -- which occurs, only when no stories are available
-    const peekOffsetValue = isAndroid ? 123 : 67;
-    const peekOffset = showStory ? 0 : peekOffsetValue;
-
-    return (
-      <div
-        id="email-panel"
-        className="panel-email"
-        style={{
-          pointerEvents: pointerSetting,
-          height: `calc(60vh - ${peekOffset})px`,
-        }}
-        onClick={() => {
-          this.handleClickScroll(null, false);
-        }}
-      >
-        <EmailForm
-          withStory={showStory}
-          isEmailScreen={false}
-          onSubmitEmail={this.onSubmitEmail}
-          getTranslation={this.props.getTranslation}
-          getSize={this.onEmailHeightReady}
-        />
-      </div>
-    );
-  };
-
   /** Renders the title bar with language dropdown */
   renderTitleBar = () => {
     return (
@@ -802,7 +774,7 @@ class Artwork extends Component {
 
   /** Renders each of the story cards */
   renderStory = () => {
-    const { stories, storyTitle, emailCaptured } = this.state;
+    const { stories, storyTitle, showEmailForm } = this.state;
 
     // Iterate through the available stories
     return stories.map((story, index) => {
@@ -825,9 +797,9 @@ class Artwork extends Component {
         pointerEvents: pointerEvent,
       };
 
-      // After email is captured, set padding botttom to 200px on the last story card
+      // When email form is not visible, set padding botttom to 200px on the last story card
       const emailCapturedBottomStyle =
-        stories.length === index + 1 && emailCaptured
+        stories.length === index + 1 && !showEmailForm
           ? { paddingBottom: `200px` }
           : { paddingBottom: `0` };
 
@@ -957,8 +929,8 @@ class Artwork extends Component {
 
   /** For Android, scroll within the fixed container .sm-container because of card peek issue */
   renderStoryContainer = () => {
-    const { showTitleBar, showStory, emailCaptured } = this.state;
-    const showEmailPin = !showStory && !emailCaptured ? true : false;
+    const { showTitleBar, showStory, showEmailForm } = this.state;
+    const showEmailPin = !showStory && showEmailForm ? true : false;
 
     // Props for the controller, add container prop for Android
     const controllerProps = { refreshInterval: 250 };
@@ -979,9 +951,13 @@ class Artwork extends Component {
 
   /** Responsible for rendering the entirety of the page */
   renderResult = () => {
-    const { showStory, emailCaptureAck, emailCaptured } = this.state;
+    const {
+      showStory,
+      emailCaptureAck,
+      showEmailForm,
+      emailCardClickable
+    } = this.state;
     const hasChildCards = showStory || !emailCaptureAck;
-    const { history } = this.props;
 
     return (
       <SectionWipesStyled hasChildCards={hasChildCards}>
@@ -990,7 +966,7 @@ class Artwork extends Component {
         {this.renderStoryContainer()}
 
         {/** Placeholder element to control email card enter when no stories are available. Only show when email has not been captured */}
-        {!emailCaptured && (
+        {showEmailForm && (
           <div
             id="email-trigger-enter"
             style={{ visibility: `hidden`, bottom: 0 }}
@@ -998,13 +974,21 @@ class Artwork extends Component {
         )}
 
         {/** If email was captured, show just the scan button. Otherwise, render the email screen */}
-        {emailCaptured ? (
+        {showEmailForm ? (
+          <EmailForm
+            withStory={showStory}
+            isEmailScreen={false}
+            onSubmitEmail={this.onSubmitEmail}
+            getTranslation={this.props.getTranslation}
+            getSize={this.onEmailHeightReady}
+            pointerEvents={emailCardClickable ? "auto" : "none"}
+            handleClickScroll={this.handleClickScroll}
+          />
+        ) : (
           <div>
             {" "}
-            <ScanButton history={history} />{" "}
+            <ScanButton />{" "}
           </div>
-        ) : (
-          this.renderEmailScreen()
         )}
       </SectionWipesStyled>
     );

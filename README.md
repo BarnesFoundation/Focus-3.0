@@ -8,21 +8,23 @@ This repository contains the code for The Barnes Foundation digital guide — Ba
 - React for the client-side interaction
 - Configured for deployment on AWS Lambda
 - PostgreSQL for caching artworks locally and persisting user session information
-- Node v14.5.4
+- Node v14.5.0
 
 # Local Development
 
 To develop this application locally, follow these steps
 
-1. Run `npm ci` to install the needed node modules
-2. Create a `.env` file and populate with values as specified by [.env-template](.env-template)
-3. Run `make init` to initialize your local environment. This will  
+1. Switch to the correct version of Node with `nvm use` or `nvm use 14.5.0`.
+2. Run `npm ci` to install the needed node modules
+3. Create a `.env` file and populate with values as specified by [.env-template](.env-template)
+  a. Make sure to populate the DATABASE_URL with the correct database credentials
+4. Run `make init-dev` to initialize your local environment. This will  
   a. Compile the server code
-  b. Create the required tables for your local database schema
+  b. Create the required tables for your local database schema and create the database if one does not already exist
   c. Seed your local translations table with our stored translations data
   d. Run the ElasticSearch sync to retrieve artworks information and cache it locally
-4. Run `npm run dev` to start the server. This will also compile and reload the server code following any changes to the code in the [server](server) directory
-5. Run `npm run start` to start the React code and hot reload
+5. Run `npm run dev` to start the server. This will also compile and reload the server code following any changes to the code in the [server](server) directory
+6. Run `npm run start` to start the React code and hot reload
 
 ### Service Configuration
 

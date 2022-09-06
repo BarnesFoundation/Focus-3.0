@@ -4,7 +4,7 @@ import {
   SNAP_LANGUAGE_PREFERENCE,
   SNAP_USER_EMAIL,
   SNAP_ATTEMPTS,
-} from "../components/Constants";
+} from "../constants";
 
 /* Reset application if lastSnapTimestamp is more than 24 hours */
 export const resetApplication = () => {

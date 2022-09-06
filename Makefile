@@ -16,9 +16,12 @@ ngrok-server:
 views:
 	cp -r ./server/api/views dist/server/api
 
-init: 
+init-dev: 
 	echo "Compiling backend server code 🔨"
 	npm run build-server
+	echo "Initialize database 🗄️"
+	chmod +x bin/initdb
+	bin/initdb
 	echo "Populating database schema 💾"
 	npx prisma migrate dev
 	echo "Seeding database with stored language translations 🌐"

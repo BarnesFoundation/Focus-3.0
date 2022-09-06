@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EmailForm should match the snapshot when withStory is false and pointerEvents is 'none' 1`] = `
+<div
+  className="panel-email"
+  id="email-panel"
+  onClick={[Function]}
+  style={
+    Object {
+      "height": "calc(60vh - 67px)",
+      "pointerEvents": "none",
+    }
+  }
+>
+  <div
+    className="email-container"
+    id="email-form"
+    style={
+      Object {
+        "top": "-67px",
+      }
+    }
+  >
+    <ScanButton
+      float={false}
+    />
+    <EmailFormInput
+      email=""
+      error={false}
+      getTranslation={[Function]}
+      handleEmailInput={[Function]}
+      isEmailScreen={true}
+      saveEmail={[Function]}
+      verificationPending={false}
+      withStory={false}
+    />
+  </div>
+</div>
+`;
+
+exports[`EmailForm should match the snapshot when withStory is true and pointerEvents is 'auto' 1`] = `
+<div
+  className="panel-email"
+  id="email-panel"
+  onClick={[Function]}
+  style={
+    Object {
+      "height": "calc(60vh - 0px)",
+      "pointerEvents": "auto",
+    }
+  }
+>
+  <div
+    className="email-container"
+    id="email-form"
+    style={
+      Object {
+        "backgroundColor": "#fff",
+        "color": "#353535",
+      }
+    }
+  >
+    <ScanButton
+      float={false}
+    />
+    <EmailFormInput
+      email=""
+      error={false}
+      getTranslation={[Function]}
+      handleEmailInput={[Function]}
+      isEmailScreen={true}
+      saveEmail={[Function]}
+      verificationPending={false}
+      withStory={true}
+    />
+  </div>
+</div>
+`;
