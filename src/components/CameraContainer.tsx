@@ -93,6 +93,19 @@ class CameraContainer extends Component<
 
         // Get the identified image information
         const identifiedItem = imageSearchResponse.responsePayload.results[0];
+
+        // Temporarily redirect to special exhibition obj placeholder page
+        if (identifiedItem.item.name.split("/")[0] === "SPEX") {
+          const referenceImageUrl = identifiedItem.image.thumb_120;
+
+          this.props.history.push({
+            pathname: `/se/${identifiedItem.item.name}`,
+            state: { result: { referenceImageUrl } },
+          });
+
+          this.completeImageSearchRequest({ referenceImageUrl }, true);
+        }
+
         const identifiedImageInformation = await this.sr.processIdentifiedItem(
           identifiedItem
         );
