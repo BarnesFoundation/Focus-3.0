@@ -168,7 +168,7 @@ class StoryDeliveryJob {
       .flat()
       .reduce<Promise<LanguageWithStory>>(
         async (accPromise, deliverableStoryBookmark) => {
-          let acc = await accPromise;
+          const acc = await accPromise;
           const bookmarkArtworkId = deliverableStoryBookmark.image_id;
           const languagePreference = deliverableStoryBookmark.language;
 
