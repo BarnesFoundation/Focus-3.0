@@ -1,4 +1,4 @@
-service: focus-server
+service: focus-application
 
 provider:
     name: aws
