@@ -16,7 +16,7 @@ functions:
         handler: dist/server/handler.server
         events:
             - http: ANY /
-            - cors: true
+            - http: "ANY /{proxy+}"
 
 package:
     include:
