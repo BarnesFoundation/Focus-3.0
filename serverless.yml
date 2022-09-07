@@ -19,9 +19,8 @@ functions:
             - http: "ANY /{proxy+}"
 
 package:
-    include:
-        - dist/**
-        - package.json
-        - node_modules/**
-    exclude:
-        - ./**
+    patterns:
+        - "!./**"
+        - "dist/**"
+        - "package.json"
+        - "node_modules/**"
