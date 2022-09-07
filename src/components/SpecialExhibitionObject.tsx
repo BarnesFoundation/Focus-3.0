@@ -9,8 +9,8 @@ export const SpecialExhibitionObject: React.FC = () => {
   return (
     <div>
       <ProgressiveImage
-        src={location.state.result.referenceImageUrl}
-        placeholder={location.state.result.referenceImageUrl}
+        src={location.state.result.image.url}
+        placeholder={location.state.result.image.url}
       >
         {(src) => (
           <img

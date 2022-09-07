@@ -10,6 +10,8 @@ export const UNSUPPORTED_ORIENTATION_ALERT_MESSAGE =
 export const ART_WORK_INFO_URL = "/api/artwork/";
 export const STORIES_URL = (artworkId: string) =>
   `/api/artwork/${artworkId}/stories`;
+export const SP_EX_OBJECT_URL = (objectId: string) =>
+  `/api/artwork/special-exhibition/${objectId}`;
 export const STORIES_EMAIL_PAGE_URL = "/api/stories/";
 export const STORIES_READ_URL = (artworkId: string, storyId: string) =>
   `/api/artwork/${artworkId}/stories/${storyId}/read`;
