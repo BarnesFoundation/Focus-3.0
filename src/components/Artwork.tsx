@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, CSSProperties } from "react";
 import { withRouter } from "react-router";
 import { compose } from "redux";
 import $ from "jquery";
@@ -22,6 +22,11 @@ import { isAndroid, isIOS } from "react-device-detect";
 import { ScanButton } from "./ScanButton";
 import { ResultCard } from "./ResultCard";
 import { StoryTitle } from "./StoryTitle";
+import {
+  ArtworkComponentProps,
+  ArtworkComponentState,
+  LanguageOptionType,
+} from "../types";
 
 /**
  * withRouter HOC provides props with location, history and match objects
@@ -42,7 +47,24 @@ const SectionWipesStyled = styled.div`
   }
 `;
 
-class Artwork extends Component {
+class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
+  sr: SearchRequestService;
+  artworkScene;
+  emailScene;
+  emailSceneTrigger;
+  artworkRef;
+  infoCardRef;
+  emailCardRef;
+  sceneRefs: {};
+  contentOffset: number;
+  artworkScrollOffset: number;
+  langOptions: LanguageOptionType[];
+  artworkTimeoutCallback;
+  emailSubmitTimeoutCallback;
+  controller;
+  emailFormHeight: number;
+  shortDescContainer;
+
   constructor(props) {
     super(props);
 
@@ -84,7 +106,8 @@ class Artwork extends Component {
       imgLoaded: false,
       alsoInRoomResults: [],
       email: localStorage.getItem(constants.SNAP_USER_EMAIL) || "",
-      snapAttempts: localStorage.getItem(constants.SNAP_ATTEMPTS) || 1,
+      snapAttempts:
+        parseInt(localStorage.getItem(constants.SNAP_ATTEMPTS)) || 1,
       errors: { email: false },
       showTitleBar: false,
       storyDuration: 250,
@@ -395,7 +418,7 @@ class Artwork extends Component {
   onSelectInRoomArt = (aitrId) => {
     localStorage.setItem(
       constants.SNAP_ATTEMPTS,
-      parseInt(this.state.snapAttempts) + 1
+      (this.state.snapAttempts + 1).toString()
     );
     this.props.history.push({ pathname: `/artwork/${aitrId}` });
   };
@@ -581,7 +604,7 @@ class Artwork extends Component {
       const pointerEvent = this.state.storyTopsClickable[index]
         ? "none"
         : "auto";
-      const peekOffsetStyle = {
+      const peekOffsetStyle: CSSProperties = {
         height: `${peekOffset}px`,
         top: `-${peekHeight}px`,
         pointerEvents: pointerEvent,
@@ -600,6 +623,11 @@ class Artwork extends Component {
           key={`storyitem${storyIndex}`}
           triggerHook="onLeave"
           pin
+          /** There is something weird going on with react-scrollmagic types that
+           * keeps giving us an error, but we can't change this component or update
+           * the dependency or else it breaks!
+           */
+          // @ts-ignore
           pinSettings={{ pushFollowers: false }}
           duration={storyDuration}
           offset={storySceneOffset}
@@ -632,13 +660,10 @@ class Artwork extends Component {
                   isLastStoryItem={index === stories.length - 1 ? true : false}
                   story={story}
                   storyTitle={storyTitle}
-                  langOptions={this.langOptions}
                   selectedLanguage={this.state.selectedLanguage}
-                  onSelectLanguage={this.onSelectLanguage}
                   onStoryReadComplete={this.onStoryReadComplete}
                   getSize={this.onStoryHeightReady}
                   statusCallback={this.storySceneCallback}
-                  getTranslation={this.props.getTranslation}
                   onVisChange={this.onVisibilityChange}
                 />
               </div>
@@ -676,6 +701,11 @@ class Artwork extends Component {
         <Scene
           loglevel={0}
           key={`storytriggerenter${index + 1}`}
+          /** There is something weird going on with react-scrollmagic types that
+           * keeps giving us an error, but we can't change this component or update
+           * the dependency or else it breaks!
+           */
+          // @ts-ignore
           pin={`#story-card-${index}`}
           triggerElement={`#story-card-${index}`}
           triggerHook="onEnter"
@@ -701,6 +731,11 @@ class Artwork extends Component {
     return (
       <Scene
         loglevel={0}
+        /** There is something weird going on with react-scrollmagic types that
+         * keeps giving us an error, but we can't change this component or update
+         * the dependency or else it breaks!
+         */
+        // @ts-ignore
         pin={`#email-panel`}
         triggerElement={`#email-panel`}
         triggerHook="onEnter"
@@ -749,12 +784,8 @@ class Artwork extends Component {
 
   /** Responsible for rendering the entirety of the page */
   renderResult = () => {
-    const {
-      showStory,
-      emailCaptureAck,
-      showEmailForm,
-      emailCardClickable
-    } = this.state;
+    const { showStory, emailCaptureAck, showEmailForm, emailCardClickable } =
+      this.state;
     const hasChildCards = showStory || !emailCaptureAck;
 
     return (
@@ -824,4 +855,8 @@ class Artwork extends Component {
   }
 }
 
-export default compose(withOrientation, withTranslation, withRouter)(Artwork);
+export default compose<Artwork>(
+  withOrientation,
+  withTranslation,
+  withRouter
+)(Artwork);
