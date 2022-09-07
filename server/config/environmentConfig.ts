@@ -63,13 +63,13 @@ const EnvironmentConfiguration = {
 export default EnvironmentConfiguration;
 
 /** Helper function to check is current stage is Production */
-export const isProduction = (): boolean =>
+export const isProduction =
   EnvironmentConfiguration.nodeEnv === EnvironmentStages.PRODUCTION;
 
 /** Helper function to check is current stage is Local */
-export const isLocal = (): boolean =>
+export const isLocal =
   EnvironmentConfiguration.nodeEnv === EnvironmentStages.LOCAL;
 
 /** Helper function to check is current stage is Development */
-export const isDevelopment = (): boolean =>
+export const isDevelopment =
   EnvironmentConfiguration.nodeEnv === EnvironmentStages.DEVELOPMENT;
