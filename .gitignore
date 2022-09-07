@@ -27,3 +27,5 @@ dist
 uploads
 __save
 emailPreviews/*
+
+.serverless
