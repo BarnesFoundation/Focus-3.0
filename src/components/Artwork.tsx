@@ -8,7 +8,7 @@ import * as constants from "../constants";
 import withOrientation from "./withOrientation";
 import withTranslation from "./withTranslation";
 
-import LanguageDropdown from "./LanguageDropdown";
+import { LanguageDropdown } from "./LanguageDropdown";
 import { EmailForm } from "./EmailForm";
 
 import google_logo from "../images/google_translate.svg";
