@@ -41,6 +41,7 @@ class ArtworkController {
         },
         success: true,
         requestComplete: true,
+        specialExhibition: false,
       };
 
       // If this artwork has a story, then we want to track

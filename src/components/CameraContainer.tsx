@@ -144,30 +144,21 @@ class CameraContainer extends Component<
 
     // Get the record and art url from it
     const record = response["data"]["records"][0];
-    const { art_url: artUrl, id, objectId } = record;
+    const { art_url: artUrl, id } = record;
 
-    // If artUrl and id are present, the record is from the Barnes collection
-    if (artUrl && id) {
-      // Load the image background first so that it gets cached for faster displaying
-      const matchImage = loadImage(`${artUrl}?w=${width - 80}`);
-      const matchImageBg = loadImage(
-        `${artUrl}?q=0&auto=compress&crop=faces,entropy&fit=crop&w=${width}`
-      );
+    // Load the image background first so that it gets cached for faster displaying
+    const matchImage = loadImage(`${artUrl}?w=${width - 80}`);
+    const matchImageBg = loadImage(
+      `${artUrl}?q=0&auto=compress&crop=faces,entropy&fit=crop&w=${width}`
+    );
 
-      Promise.all([matchImage, matchImageBg]).then(() => {
-        // Navigate to the artwork page
-        this.props.history.push({
-          pathname: `/artwork/${id}`,
-          state: { result: response },
-        });
-      });
-      // If objectId is present, the record is from a special exhibition
-    } else if (objectId) {
+    Promise.all([matchImage, matchImageBg]).then(() => {
+      // Navigate to the artwork page
       this.props.history.push({
-        pathname: `/se/${objectId}`,
-        state: { result: record },
+        pathname: `/artwork/${id}`,
+        state: { result: response },
       });
-    }
+    });
   }
 
   componentDidMount() {
