@@ -26,12 +26,17 @@ prod:
 dev: 
 	npm run deploy:dev
 
+dry_package: 
+	npx serverless package
+
 # Deploy to development
 deploy_dev: build dev reset_node
 
 # Deploy to production
 deploy_prod: build prod reset_node
 
+# Test building deployment package
+deploy_dry: build dry_package reset_node
 
 ######################################
 #
