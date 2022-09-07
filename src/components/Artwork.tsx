@@ -638,15 +638,18 @@ class Artwork extends Component {
                       />
                     </div>
                   </div>
-
-                  {/* Share options button */}
-                  <Share
-                    shareText={this.props.getTranslation(
-                      "Result_page",
-                      "text_1"
-                    )}
-                    artwork={artwork}
-                  />
+                  
+                  {/* Share options button for Barnes Collection objects */}
+                  {/* TODO: determine if we want share button for special exhibition objects */}
+                  {!this.state.result.data.specialExhibition && (
+                    <Share
+                      shareText={this.props.getTranslation(
+                        "Result_page",
+                        "text_1"
+                      )}
+                      artwork={artwork}
+                    />
+                  )}
                 </div>
 
                 <div

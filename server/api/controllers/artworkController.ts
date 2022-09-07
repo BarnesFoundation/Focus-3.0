@@ -38,10 +38,10 @@ class ArtworkController {
           roomRecords: null,
           message: "Result found",
           showStory: storyInformation.hasStory,
+          specialExhibition: false,
         },
         success: true,
         requestComplete: true,
-        specialExhibition: false,
       };
 
       // If this artwork has a story, then we want to track
