@@ -15,7 +15,6 @@ import {
   SNAP_USER_EMAIL,
 } from "../constants";
 import * as ROUTES from "../constants/routes";
-import { SpecialExhibitionObject } from "../components/SpecialExhibitionObject";
 
 const RouteContainer = posed.div({
   enter: { opacity: 1, delay: 0, beforeChildren: true },
@@ -46,11 +45,6 @@ const Routes = () => (
                   path={`${ROUTES.ARTWORK}/:imageId?`}
                   component={Artwork}
                   key="artwork"
-                />
-                <Route
-                  path="/se/:imageId?"
-                  component={SpecialExhibitionObject}
-                  key="spex"
                 />
                 <Route
                   path={`${ROUTES.STORY}/:slug`}
