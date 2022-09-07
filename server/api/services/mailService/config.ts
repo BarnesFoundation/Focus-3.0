@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import Email from "email-templates";
 import path from "path";
 
-import { environmentConfiguration } from "../../../config";
+import { environmentConfiguration, isProduction } from "../../../config";
 
 const { sendGrid } = environmentConfiguration;
 
@@ -34,7 +34,7 @@ export const Emailer = new Email({
   message: {
     from: sendGrid.email,
   },
-  send: true,
+  send: isProduction(),
   transport: transporter,
   preview: {
     open: {
