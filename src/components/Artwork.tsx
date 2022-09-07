@@ -22,6 +22,7 @@ import { isAndroid, isIOS } from "react-device-detect";
 
 import { ScanButton } from "./ScanButton";
 import { ResultCard } from "./ResultCard";
+import { StoryTitle } from "./StoryTitle";
 
 /**
  * withRouter HOC provides props with location, history and match objects
@@ -562,22 +563,6 @@ class Artwork extends Component {
     this.setState({ imgLoaded: true });
   };
 
-  /** Renders the title bar with language dropdown */
-  renderTitleBar = () => {
-    return (
-      <div id="story-title-bar" className="story-title-bar">
-        <div className="language-dropdown">
-          <LanguageDropdown
-            isStoryItemDropDown={true}
-            langOptions={this.langOptions}
-            selected={this.state.selectedLanguage}
-            onSelectLanguage={this.onSelectLanguage}
-          />
-        </div>
-      </div>
-    );
-  };
-
   /** Renders each of the story cards */
   renderStory = () => {
     const { stories, storyTitle, showEmailForm } = this.state;
@@ -747,7 +732,15 @@ class Artwork extends Component {
     return (
       <Controller {...controllerProps}>
         {/* Render these components conditionally, otherwise render empty divs */}
-        {showTitleBar ? this.renderTitleBar() : <div />}
+        {showTitleBar ? (
+          <StoryTitle
+            langOptions={this.langOptions}
+            selectedLanguage={this.state.selectedLanguage}
+            onSelectLanguage={this.onSelectLanguage}
+          />
+        ) : (
+          <div />
+        )}
         {showEmailPin ? this.renderEmailPin() : <div />}
         {showStory ? this.renderPinsEnter() : <div />}
         {showStory ? this.renderStory() : <div />}

@@ -10,7 +10,7 @@ const DROP_DOWN = "DOWN";
 
 // TODO: Fill in type defs as we refactor parent components;
 type LanguageDropdownProps = {
-  onSelectLanguage;
+  onSelectLanguage: (item: any) => void;
   isStoryItemDropDown?;
   selected;
   langOptions;
