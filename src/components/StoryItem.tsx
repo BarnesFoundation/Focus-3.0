@@ -1,10 +1,9 @@
-// @ts-ignore
+import React from "react";
+import { Timeline, Tween } from "react-gsap";
 import { Linear, TimelineLite } from "gsap/all";
 import barnes_logo from "../images/barnes_email_logo_1x.png";
 import google_logo from "../images/google_translate.svg";
 import scroll_up from "../images/up_wht_1x.png";
-import React from "react";
-import { Timeline, Tween } from "react-gsap";
 import {
   LANGUAGE_EN,
   VIEWPORT_HEIGHT,
@@ -13,15 +12,67 @@ import {
 import { isAndroid } from "react-device-detect";
 import VizSensor from "react-visibility-sensor";
 
-class StoryItem extends React.Component {
+type StoryItemProps = {
+  sceneStatus: {
+    type: string;
+    state: string;
+  };
+  statusCallback: (showTitle: boolean) => void;
+  storyIndex: number;
+  onStoryReadComplete: () => void;
+  getSize: (scrollOffset: number, storyIndex: number) => void;
+  storyEmailPage: boolean;
+  isLastStoryItem: boolean;
+  progress: number;
+  story: {
+    detail: {
+      art_url: string;
+      people: string;
+      title: string;
+      culture: string;
+      nationality: string;
+      birthDate: string;
+      deathDate: string;
+      displayDate: string;
+    };
+    long_paragraph: {
+      html: string;
+    };
+    short_paragraph: {
+      html: string;
+    };
+  };
+  storyTitle: string;
+  onVisChange: (isVisible: boolean, storyIndex: number) => void;
+  selectedLanguage: {
+    code: string;
+  };
+};
+
+type StoryItemState = {
+  storyRead: boolean;
+  heightUpdated: boolean;
+  scrollHeight: number;
+  showTitle: boolean;
+  scrollOffset?: number;
+};
+
+class StoryItem extends React.Component<StoryItemProps, StoryItemState> {
+  contentRef: HTMLDivElement;
+  titleRef: HTMLDivElement;
+  overlayRef: HTMLDivElement;
+  scrollCtaRef: HTMLDivElement;
+  masterTimeline;
+  imgTopTimeline;
+  overlayTimeline;
+  masterTimelineGSAP;
+  imgTopTimelineGSAP;
+  overlayTimelineGSAP;
+  scrollInProgress: boolean;
+  t2: TimelineLite;
+
   constructor(props) {
     super(props);
-
-    // Setup refs
-    this.contentRef = React.createRef();
-    this.titleRef = React.createRef();
-    this.overlayRef = React.createRef();
-    this.scrollCtaRef = React.createRef();
 
     this.state = {
       storyRead: false,
@@ -198,12 +249,6 @@ class StoryItem extends React.Component {
     return `${this.props.story.detail.art_url}?crop=faces,entropy&fit=crop&w=${screen.width}&h=${screen.height}`;
   };
 
-  refCallback = (element) => {
-    if (element) {
-      this[element.id] = element;
-    }
-  };
-
   /** Returns boolean whether or not the artist is unidentified */
   isUnidentifiedArtist = () => {
     return this.props.story.detail.people
@@ -305,7 +350,11 @@ class StoryItem extends React.Component {
             </Timeline>
 
             {this.props.storyIndex === 0 && (
-              <div className="overlay" ref={this.refCallback} id="overlayRef" />
+              <div
+                className="overlay"
+                ref={(c) => (this.overlayRef = c)}
+                id="overlayRef"
+              />
             )}
 
             <div className="content-mask">
@@ -313,7 +362,11 @@ class StoryItem extends React.Component {
                 {/** In the email page, for the first story item */}
                 {storyEmailPage && storyIndex === 0 && (
                   <div>
-                    <div className="intro" ref={this.refCallback} id="titleRef">
+                    <div
+                      className="intro"
+                      ref={(c) => (this.titleRef = c)}
+                      id="titleRef"
+                    >
                       <div className="barnes-logo">
                         <img src={barnes_logo} alt="barnes_logo" />
                         <div className="story-name">{storyTitle}</div>
@@ -321,7 +374,7 @@ class StoryItem extends React.Component {
                     </div>
                     <div
                       className="scroll-cta"
-                      ref={this.refCallback}
+                      ref={(c) => (this.scrollCtaRef = c)}
                       id="scrollCtaRef"
                     >
                       <div className="scroll-icon">
@@ -335,7 +388,7 @@ class StoryItem extends React.Component {
                 {/** Scroll text section */}
                 <div
                   className="scroll-text"
-                  ref={this.refCallback}
+                  ref={(c) => (this.contentRef = c)}
                   id="contentRef"
                 >
                   {/** Display the story title for non-story email pages */}
