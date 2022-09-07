@@ -1,5 +1,8 @@
 import environmentConfiguration, {
   EnvironmentStages,
+  isDevelopment,
+  isProduction,
+  isLocal,
 } from "./environmentConfig";
 import applicationConfiguration from "./applicationConfig";
 
@@ -8,4 +11,7 @@ export {
   environmentConfiguration,
   applicationConfiguration,
   EnvironmentStages,
+  isDevelopment,
+  isLocal,
+  isProduction,
 };
