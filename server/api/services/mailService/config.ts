@@ -42,16 +42,16 @@ export const Emailer = new Email({
   // We only want to send emails on Production stage
   send: isProduction,
   transport: transporter,
-  preview: {
-    // Only open mail preview on Local stage
-    open: isLocal
-      ? {
+  preview: isLocal
+    ? {
+        // Only open mail preview on Local stage
+        open: {
           app: "chrome",
           wait: false,
-        }
-      : false,
-    dir: EMAIL_PREVIEW_OUTPUT_PATH,
-  },
+        },
+        dir: EMAIL_PREVIEW_OUTPUT_PATH,
+      }
+    : false,
   views: {
     root: EMAIL_VIEWS_TEMPLATES_PATH,
     options: {
