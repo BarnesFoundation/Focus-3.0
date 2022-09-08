@@ -18,6 +18,7 @@ const withTranslation = (WrappedComponent) => {
         translations: null,
         loaded: false,
         getTranslation: this.getTranslation,
+        updateTranslations: this.updateTranslations,
       };
     }
 

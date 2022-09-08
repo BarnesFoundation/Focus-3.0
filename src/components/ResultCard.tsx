@@ -18,11 +18,9 @@ type ResultCardProps = {
   onSelectLanguage;
   shortDescContainer;
   specialExhibition: boolean;
-};
+} & WithTranslationState;
 
-export const ResultCardComponent: React.FC<
-  ResultCardProps & WithTranslationState
-> = ({
+export const ResultCardComponent: React.FC<ResultCardProps> = ({
   artwork,
   refCallbackInfo,
   setArtworkRef,

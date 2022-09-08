@@ -7,11 +7,13 @@ import withTranslation from "./withTranslation";
 type NoMatchOverlayProps = {
   displayOverlay: boolean;
   handleScan: () => void;
-};
+} & WithTranslationState;
 
-export const NoMatchOverlayComponent: React.FC<
-  NoMatchOverlayProps & WithTranslationState
-> = ({ displayOverlay, handleScan, getTranslation }) => {
+export const NoMatchOverlayComponent: React.FC<NoMatchOverlayProps> = ({
+  displayOverlay,
+  handleScan,
+  getTranslation,
+}) => {
   return (
     <ReactCSSTransitionGroup
       transitionName="fade"

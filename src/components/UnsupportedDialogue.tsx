@@ -6,10 +6,10 @@ import withTranslation from "./withTranslation";
 type UnsupportedDialogueProps = {
   unsupportedIOSBrowser?: boolean;
   unsupportedIOSVersion?: boolean;
-};
+} & WithTranslationState;
 
 export const UnsupportedDialogueComponent: React.FC<
-  UnsupportedDialogueProps & WithTranslationState
+  UnsupportedDialogueProps
 > = ({
   unsupportedIOSBrowser = false,
   unsupportedIOSVersion = false,

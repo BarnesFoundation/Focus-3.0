@@ -48,9 +48,7 @@ export type StoryItemState = {
 export type ArtworkComponentProps = {
   match: any;
   history: any;
-  updateTranslations: () => Promise<void>;
-  getTranslation: () => void;
-};
+} & WithTranslationState;
 
 export type ArtworkComponentState = {
   showEmailScreen: boolean;
@@ -165,4 +163,5 @@ export type WithTranslationState = {
   translations;
   loaded: boolean;
   getTranslation: (screen: string, textId: string) => string;
+  updateTranslations: () => Promise<void>;
 };
