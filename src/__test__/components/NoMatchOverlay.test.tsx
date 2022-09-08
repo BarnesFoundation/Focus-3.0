@@ -13,6 +13,10 @@ describe("NoMatchOverlay", () => {
         translations={null}
         loaded={true}
         getTranslation={(screen, textId) => textId + " " + screen}
+        updateTranslations={() => Promise.resolve(null)}
+        langOptions={[]}
+        getSelectedLanguage={() => Promise.resolve([])}
+        updateSelectedLanguage={(language) => null}
       />
     );
 

@@ -86,18 +86,6 @@ class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
     this.contentOffset = 67;
     this.artworkScrollOffset = 0;
 
-    this.langOptions = [
-      { name: "English", code: "En", selected: true },
-      { name: "Español", code: "Es", selected: false },
-      { name: "Français", code: "Fr", selected: false },
-      { name: "Deutsch", code: "De", selected: false },
-      { name: "Italiano", code: "It", selected: false },
-      { name: "русский", code: "Ru", selected: false },
-      { name: "中文", code: "Zh", selected: false },
-      { name: "日本語", code: "Ja", selected: false },
-      { name: "한국어", code: "Ko", selected: false },
-    ];
-
     this.state = {
       ...props.location.state,
       showEmailScreen: false,
@@ -126,7 +114,7 @@ class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
     let imageId = this.state.result
       ? this.state.result.data.records[0].id
       : this.props.match.params.imageId;
-    const selectedLang = await this.getSelectedLanguage();
+    const selectedLang = await this.props.getSelectedLanguage();
     const emailCaptured =
       localStorage.getItem(constants.SNAP_USER_EMAIL) !== null;
 
@@ -259,32 +247,6 @@ class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
     }
   };
 
-  getSelectedLanguage = async () => {
-    const selectedLangCode = localStorage.getItem(
-      constants.SNAP_LANGUAGE_PREFERENCE
-    );
-    if (selectedLangCode !== null) {
-      this.langOptions.map((option) => {
-        if (option.code === selectedLangCode) {
-          option.selected = true;
-        } else {
-          option.selected = false;
-        }
-      });
-    }
-    return this.langOptions.filter((lang) => lang.selected === true);
-  };
-
-  updateSelectedLanguage = (lang) => {
-    this.langOptions.map((option) => {
-      if (option.code === lang.code) {
-        option.selected = true;
-      } else {
-        option.selected = false;
-      }
-    });
-  };
-
   onSelectLanguage = async (selectedLanguage) => {
     // Scroll to top when language changes. This should help re-calculate correct offsets on language change
     window.scroll({ top: 0, behavior: "smooth" });
@@ -297,7 +259,7 @@ class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
     await this.sr.saveLanguagePreference(selectedLanguage.code);
 
     await this.props.updateTranslations();
-    this.updateSelectedLanguage(selectedLanguage);
+    this.props.updateSelectedLanguage(selectedLanguage);
 
     // Get the new language translations
     const imageId = this.getFocusedArtworkImageId();
@@ -693,7 +655,7 @@ class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
         {/* Render these components conditionally, otherwise render empty divs */}
         {showTitleBar ? (
           <StoryTitle
-            langOptions={this.langOptions}
+            langOptions={this.props.langOptions}
             selectedLanguage={this.state.selectedLanguage}
             onSelectLanguage={this.onSelectLanguage}
           />
@@ -716,10 +678,11 @@ class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
     return (
       <SectionWipesStyled hasChildCards={hasChildCards}>
         <ResultCard
+          // @ts-ignore
           artwork={this.state.artwork}
           refCallbackInfo={this.refCallbackInfo}
           setArtworkRef={this.setArtworkRef}
-          langOptions={this.langOptions}
+          langOptions={this.props.langOptions}
           selectedLanguage={this.state.selectedLanguage}
           onSelectLanguage={this.onSelectLanguage}
           shortDescContainer={this.shortDescContainer}

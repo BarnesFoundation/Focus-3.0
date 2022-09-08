@@ -1,6 +1,9 @@
 import React from "react";
 import { SearchRequestService } from "../services/SearchRequestService";
-import { SNAP_LANGUAGE_TRANSLATION } from "../constants";
+import {
+  SNAP_LANGUAGE_PREFERENCE,
+  SNAP_LANGUAGE_TRANSLATION,
+} from "../constants";
 import { WithTranslationState } from "../types";
 
 const withTranslation = (WrappedComponent) => {
@@ -19,6 +22,19 @@ const withTranslation = (WrappedComponent) => {
         loaded: false,
         getTranslation: this.getTranslation,
         updateTranslations: this.updateTranslations,
+        langOptions: [
+          { name: "English", code: "En", selected: true },
+          { name: "Español", code: "Es", selected: false },
+          { name: "Français", code: "Fr", selected: false },
+          { name: "Deutsch", code: "De", selected: false },
+          { name: "Italiano", code: "It", selected: false },
+          { name: "русский", code: "Ru", selected: false },
+          { name: "中文", code: "Zh", selected: false },
+          { name: "日本語", code: "Ja", selected: false },
+          { name: "한국어", code: "Ko", selected: false },
+        ],
+        getSelectedLanguage: this.getSelectedLanguage,
+        updateSelectedLanguage: this.updateSelectedLanguage,
       };
     }
 
@@ -53,6 +69,31 @@ const withTranslation = (WrappedComponent) => {
       );
     };
 
+    getSelectedLanguage = async () => {
+      const selectedLangCode = localStorage.getItem(SNAP_LANGUAGE_PREFERENCE);
+      if (selectedLangCode !== null) {
+        this.state.langOptions.map((option) => {
+          if (option.code === selectedLangCode) {
+            option.selected = true;
+          } else {
+            option.selected = false;
+          }
+        });
+      }
+      return this.state.langOptions.filter((lang) => lang.selected === true);
+    };
+
+    updateSelectedLanguage = (lang) => {
+      this.state.langOptions.map((option) => {
+        if (option.code === lang.code) {
+          option.selected = true;
+          localStorage.setItem(SNAP_LANGUAGE_PREFERENCE, lang.code);
+        } else {
+          option.selected = false;
+        }
+      });
+    };
+
     render() {
       return (
         <div>
@@ -61,6 +102,9 @@ const withTranslation = (WrappedComponent) => {
               {...this.props}
               getTranslation={this.getTranslation}
               updateTranslations={this.updateTranslations}
+              getSelectedLanguage={this.getSelectedLanguage}
+              updateSelectedLanguage={this.updateSelectedLanguage}
+              langOptions={this.state.langOptions}
             />
           )}
         </div>

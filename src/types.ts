@@ -164,4 +164,7 @@ export type WithTranslationState = {
   loaded: boolean;
   getTranslation: (screen: string, textId: string) => string;
   updateTranslations: () => Promise<void>;
+  langOptions: LanguageOptionType[];
+  getSelectedLanguage: () => Promise<LanguageOptionType[]>;
+  updateSelectedLanguage: (language: string) => void;
 };

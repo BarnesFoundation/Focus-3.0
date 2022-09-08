@@ -11,6 +11,10 @@ describe("ResultCard", () => {
         translations={null}
         loaded={true}
         getTranslation={(screen, textId) => textId + " " + screen}
+        updateTranslations={() => Promise.resolve(null)}
+        langOptions={[]}
+        getSelectedLanguage={() => Promise.resolve([])}
+        updateSelectedLanguage={(language) => null}
         artwork={{
           bg_url: "bg_url",
           title: "title",
@@ -20,7 +24,6 @@ describe("ResultCard", () => {
         }}
         refCallbackInfo={createRef()}
         setArtworkRef={createRef()}
-        langOptions={[]}
         selectedLanguage={"EN"}
         onSelectLanguage={() => null}
         shortDescContainer={createRef()}
@@ -37,6 +40,10 @@ describe("ResultCard", () => {
         translations={null}
         loaded={true}
         getTranslation={(screen, textId) => textId + " " + screen}
+        updateTranslations={() => Promise.resolve(null)}
+        langOptions={[]}
+        getSelectedLanguage={() => Promise.resolve([])}
+        updateSelectedLanguage={(language) => null}
         artwork={{
           bg_url: "bg_url",
           title: "title",
@@ -46,7 +53,6 @@ describe("ResultCard", () => {
         }}
         refCallbackInfo={createRef()}
         setArtworkRef={createRef()}
-        langOptions={[]}
         selectedLanguage={"EN"}
         onSelectLanguage={() => null}
         shortDescContainer={createRef()}
