@@ -81,23 +81,7 @@ class Camera extends Component<CameraProps, CameraState> {
 
       // Get the blob from canvas
       const imageBlob = await new Promise((resolve) => {
-        canvas.toBlob(
-          async (blob) => {
-            if (process.env.CROP_IMAGE === "TRUE") {
-              // Convert the image uri to blob
-              /* window.URL = window.URL || window.webkitURL;
-              let imageUri = window.URL.createObjectURL(blob);
-              let imageBlob = await cropPhoto(imageUri);
-              window.URL.revokeObjectURL(imageUri); */
-
-              resolve(blob);
-            } else {
-              resolve(blob);
-            }
-          },
-          "image/jpeg",
-          0.75
-        );
+        canvas.toBlob(async (blob) => resolve(blob), "image/jpeg", 0.75);
       });
 
       this.props.processImageCapture(imageBlob);

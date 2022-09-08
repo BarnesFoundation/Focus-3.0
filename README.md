@@ -60,6 +60,6 @@ Behind the scenes these two commands:
 
 Objects from special exhibitions can be added to the app by following these steps:
 
-1. Add a reference image for each object to [craftar](https://my.craftar.net/accounts/login/) and use the prefix `SPEX/` to denote that the object is part of a special exibition.
+1. Add a reference image for each object to [craftar](https://my.craftar.net/accounts/login/) and use the prefix `SPEX/` in the item name to denote that the object is part of a special exibition, eg: `SPEX/MOD-3-1-1`.
 
 <!-- TODO write more instructions as things are implemented -->
