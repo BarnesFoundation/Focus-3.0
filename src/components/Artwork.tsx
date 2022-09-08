@@ -27,6 +27,7 @@ import {
   ArtworkComponentState,
   LanguageOptionType,
 } from "../types";
+import { constructResultAndInRoomSlider } from "../helpers/artWorkHelper";
 
 /**
  * withRouter HOC provides props with location, history and match objects
@@ -121,87 +122,6 @@ class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
     this.emailSubmitTimeoutCallback = null;
   }
 
-  constructResultAndInRoomSlider = (artworkResult) => {
-    const { success } = artworkResult;
-
-    let artwork = {};
-    let roomRecords = [];
-
-    if (success) {
-      // If the artwork result has records
-      if (artworkResult["data"]["records"].length > 0) {
-        const w = screen.width;
-        const h = isTablet ? screen.height : 95;
-        const artUrlParams = `?w=${w - 120}`;
-        const cropParams = `?q=0&auto=compress&crop=faces,entropy&fit=crop&w=${w}`;
-        const topCropParams = `?q=0&auto=compress&crop=top&fit=crop&h=${h}&w=${w}`;
-        const lowQualityParams = `?q=0&auto=compress&w=${w - 120}`;
-
-        // Extract needed data from the art object
-        const artObject = artworkResult["data"]["records"][0];
-        const {
-          id,
-          title,
-          shortDescription,
-          people: artist,
-          nationality,
-          birthDate,
-          deathDate,
-          culture,
-          classification,
-          locations,
-          medium,
-          invno,
-          displayDate,
-          dimensions,
-          visualDescription,
-        } = artObject;
-
-        // Determine the flags
-        const curatorialApproval =
-          artObject.curatorialApproval === "false" ? false : true;
-        const unIdentified = artObject.people
-          .toLowerCase()
-          .includes("unidentified");
-
-        // Assign into artwork
-        artwork = {
-          id,
-          title,
-          shortDescription,
-          artist,
-          nationality,
-          birthDate,
-          deathDate,
-          culture,
-          classification,
-          locations,
-          medium,
-          invno,
-          displayDate,
-          dimensions,
-          visualDescription,
-
-          // Set the urls
-          url: `${artObject.art_url}${artUrlParams}`,
-          url_low_quality: `${artObject.art_url}${lowQualityParams}`,
-          bg_url: `${artObject.art_url}${topCropParams}`,
-
-          // Set the flags
-          curatorialApproval,
-          unIdentified,
-        };
-      }
-      // Get the room records array
-      const rr = artworkResult["data"]["roomRecords"] || [];
-
-      if (rr?.length > 0) {
-        roomRecords = rr;
-      }
-    }
-    return { artwork, roomRecords };
-  };
-
   async componentWillMount() {
     let imageId = this.state.result
       ? this.state.result.data.records[0].id
@@ -222,8 +142,10 @@ class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
         this.setupStory(imageId),
       ]);
       const { stories, storyId, storyTitle } = storyResponse;
-      const { artwork, roomRecords } =
-        this.constructResultAndInRoomSlider(artworkInfo);
+      const { artwork, roomRecords } = constructResultAndInRoomSlider(
+        artworkInfo,
+        isTablet
+      );
 
       stories.forEach((story) => {
         durationCurArr.push(durDefault);
@@ -248,8 +170,9 @@ class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
         storyOffsets: offsetArr,
       });
     } else {
-      const { artwork, roomRecords } = this.constructResultAndInRoomSlider(
-        this.state.result
+      const { artwork, roomRecords } = constructResultAndInRoomSlider(
+        this.state.result,
+        isTablet
       );
       const { stories, storyId, storyTitle } = await this.setupStory(imageId);
 
@@ -381,8 +304,10 @@ class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
     const artworkInfo = await this.sr.getArtworkInformation(imageId);
 
     const { stories, storyId, storyTitle } = await this.setupStory(imageId);
-    const { artwork, roomRecords } =
-      this.constructResultAndInRoomSlider(artworkInfo);
+    const { artwork, roomRecords } = constructResultAndInRoomSlider(
+      artworkInfo,
+      isTablet
+    );
 
     this.setState({
       result: artworkInfo,
