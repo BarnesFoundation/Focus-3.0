@@ -1,9 +1,15 @@
 import React from "react";
 import { SearchRequestService } from "../services/SearchRequestService";
 import { SNAP_LANGUAGE_TRANSLATION } from "../constants";
+import { WithTranslationState } from "../types";
 
 const withTranslation = (WrappedComponent) => {
-  return class WithTranslation extends React.Component {
+  return class WithTranslation extends React.Component<
+    {},
+    WithTranslationState
+  > {
+    sr: SearchRequestService;
+
     constructor(props) {
       super(props);
 
@@ -11,6 +17,7 @@ const withTranslation = (WrappedComponent) => {
       this.state = {
         translations: null,
         loaded: false,
+        getTranslation: this.getTranslation,
       };
     }
 

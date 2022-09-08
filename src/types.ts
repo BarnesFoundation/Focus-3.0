@@ -160,3 +160,9 @@ export type ArtworkObject = {
   };
   roomRecords: any[];
 };
+
+export type WithTranslationState = {
+  translations;
+  loaded: boolean;
+  getTranslation: (screen: string, textId: string) => string;
+};
