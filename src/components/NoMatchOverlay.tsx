@@ -1,19 +1,17 @@
-import React, { useContext } from "react";
+import React from "react";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
-import { TranslationContext } from "../contexts/TranslationContext";
 import scan_button from "../images/scan-button.svg";
+import { WithTranslationState } from "../types";
+import withTranslation from "./withTranslation";
 
 type NoMatchOverlayProps = {
   displayOverlay: boolean;
   handleScan: () => void;
 };
 
-export const NoMatchOverlay: React.FC<NoMatchOverlayProps> = ({
-  displayOverlay,
-  handleScan,
-}) => {
-  const { getTranslation } = useContext(TranslationContext);
-
+export const NoMatchOverlayComponent: React.FC<
+  NoMatchOverlayProps & WithTranslationState
+> = ({ displayOverlay, handleScan, getTranslation }) => {
   return (
     <ReactCSSTransitionGroup
       transitionName="fade"
@@ -44,3 +42,5 @@ export const NoMatchOverlay: React.FC<NoMatchOverlayProps> = ({
     </ReactCSSTransitionGroup>
   );
 };
+
+export const NoMatchOverlay = withTranslation(NoMatchOverlayComponent);

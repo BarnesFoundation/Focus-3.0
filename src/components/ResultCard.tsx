@@ -1,11 +1,12 @@
-import React, { useContext } from "react";
+import React from "react";
 import ProgressiveImage from "react-progressive-image";
 import { LANGUAGE_EN, SNAP_LANGUAGE_PREFERENCE } from "../constants";
-import { TranslationContext } from "../contexts/TranslationContext";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import google_logo from "../images/google_translate.svg";
+import { WithTranslationState } from "../types";
 import { LanguageDropdown } from "./LanguageDropdown";
 import { Share } from "./Share";
+import withTranslation from "./withTranslation";
 
 // TODO: add in type defs as we refactor parent components
 type ResultCardProps = {
@@ -19,7 +20,9 @@ type ResultCardProps = {
   specialExhibition: boolean;
 };
 
-export const ResultCard: React.FC<ResultCardProps> = ({
+export const ResultCardComponent: React.FC<
+  ResultCardProps & WithTranslationState
+> = ({
   artwork,
   refCallbackInfo,
   setArtworkRef,
@@ -28,8 +31,8 @@ export const ResultCard: React.FC<ResultCardProps> = ({
   onSelectLanguage,
   shortDescContainer,
   specialExhibition,
+  getTranslation,
 }) => {
-  const { getTranslation } = useContext(TranslationContext);
   const { getLocalStorage } = useLocalStorage();
 
   const shortDescFontStyle =
@@ -72,8 +75,9 @@ export const ResultCard: React.FC<ResultCardProps> = ({
                         src={src}
                         alt="match_image"
                         role="img"
-                        aria-label={`${artwork.title} by ${artwork.artist}${artwork.culture ? `, ${artwork.culture}.` : "."
-                          } ${artwork.visualDescription}`}
+                        aria-label={`${artwork.title} by ${artwork.artist}${
+                          artwork.culture ? `, ${artwork.culture}.` : "."
+                        } ${artwork.visualDescription}`}
                       />
                     )}
                   </ProgressiveImage>
@@ -205,3 +209,5 @@ export const ResultCard: React.FC<ResultCardProps> = ({
     </div>
   );
 };
+
+export const ResultCard = withTranslation(ResultCardComponent);

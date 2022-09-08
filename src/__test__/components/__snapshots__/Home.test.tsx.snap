@@ -1,15 +1,85 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Home should match the snapshot 1`] = `
-<Context.Provider
-  value={
-    Object {
-      "getTranslation": [Function],
-      "translations": null,
-    }
-  }
->
-  <Home />
-  /&gt;
-</Context.Provider>
+<div>
+  <div
+    class="home-wrapper"
+    id="home-wrapper"
+  >
+    <img
+      alt="home_background"
+      src="barnes-v2-landing.png"
+      style="width: 0px; height: 0px;"
+    />
+    <div
+      class="landing-screen"
+    >
+      <img
+        alt="barnes_logo"
+        aria-label="Welcome to the Barnes Focus Digital Guide"
+        class="logo-center centennial-logo"
+        role="img"
+        src="Barnes_100_logo.svg"
+      />
+      <div
+        class="user-loc-prompt"
+      >
+        text_1 Welcome_screen
+         
+        <br
+          aria-hidden="true"
+        />
+        text_2 Welcome_screen
+      </div>
+      <div
+        class="home-action"
+      >
+        <button
+          class="action-btn"
+        >
+          <span
+            class="action-text h2"
+          >
+            <div>
+              <div
+                style="display: inline-block; white-space: nowrap;"
+              >
+                text_3 Welcome_screen
+              </div>
+            </div>
+          </span>
+        </button>
+        <button
+          class="action-btn"
+        >
+          <span
+            class="action-text h2"
+          >
+            <div>
+              <div
+                style="display: inline-block; white-space: nowrap;"
+              >
+                text_4 Welcome_screen
+              </div>
+            </div>
+          </span>
+        </button>
+      </div>
+      <div
+        class="kf-banner"
+      >
+        <img
+          alt="knight_foundation_logo"
+          class="kf-logo"
+          src="knight-foundation-logo.svg"
+        />
+        <div
+          class="kf-text caption"
+        >
+          text_2 About
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 `;

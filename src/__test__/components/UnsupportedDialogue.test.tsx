@@ -4,8 +4,7 @@ import ShallowRenderer from "react-test-renderer/shallow";
 import { configure } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 
-import { UnsupportedDialogue } from "../../components/UnsupportedDialogue";
-import { TranslationContextProvider } from "../../contexts/TranslationContext";
+import { UnsupportedDialogueComponent } from "../../components/UnsupportedDialogue";
 
 let container;
 configure({ adapter: new Adapter() }); //enzyme - react 16 hooks support
@@ -27,19 +26,13 @@ describe("UnsupportedDialogue", () => {
   it("should match the snapshot when unsupportedIOSBrowser is true", () => {
     const renderer = new ShallowRenderer();
     renderer.render(
-      <TranslationContextProvider
-      // @ts-ignore
-        value={{
-          translations: {},
-          getTranslations: (screen: string, textId: string) =>
-            "Test Translation!",
-        }}
-      >
-        <UnsupportedDialogue
-          unsupportedIOSBrowser={true}
-          unsupportedIOSVersion={false}
-        />
-      </TranslationContextProvider>,
+      <UnsupportedDialogueComponent
+        unsupportedIOSBrowser={true}
+        unsupportedIOSVersion={false}
+        translations={null}
+        loaded={true}
+        getTranslation={(screen, textId) => textId + " " + screen}
+      />,
       container
     );
     const result = renderer.getRenderOutput();
@@ -50,19 +43,13 @@ describe("UnsupportedDialogue", () => {
   it("should match the snapshot when unsupportedIOSVersion is true", () => {
     const renderer = new ShallowRenderer();
     renderer.render(
-      <TranslationContextProvider
-      // @ts-ignore
-        value={{
-          translations: {},
-          getTranslations: (screen: string, textId: string) =>
-            "Test Translation!",
-        }}
-      >
-        <UnsupportedDialogue
-          unsupportedIOSBrowser={false}
-          unsupportedIOSVersion={true}
-        />
-      </TranslationContextProvider>,
+      <UnsupportedDialogueComponent
+        unsupportedIOSBrowser={false}
+        unsupportedIOSVersion={true}
+        translations={null}
+        loaded={true}
+        getTranslation={(screen, textId) => textId + " " + screen}
+      />,
       container
     );
     const result = renderer.getRenderOutput();

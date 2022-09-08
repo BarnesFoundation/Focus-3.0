@@ -6,7 +6,6 @@ import { Home } from "../components/Home";
 import CameraContainer from "../components/CameraContainer";
 import Artwork from "../components/Artwork";
 import StoryPage from "../components/StoryPage";
-import { TranslationContextProvider } from "../contexts/TranslationContext";
 import { OrientationContextProvider } from "../contexts/OrientationContext";
 import {
   SNAP_APP_RESET_INTERVAL,
@@ -22,43 +21,41 @@ const RouteContainer = posed.div({
 });
 
 const Routes = () => (
-  <TranslationContextProvider>
-    <OrientationContextProvider>
-      <Route
-        render={({ location }) => (
-          <PoseGroup>
-            <RouteContainer key={location.pathname}>
-              <Switch location={location}>
-                <Route
-                  path={ROUTES.HOME}
-                  component={Home}
-                  exact={true}
-                  key="home"
-                />
-                <Route
-                  path={ROUTES.SCAN}
-                  component={CameraContainer}
-                  exact={true}
-                  key="scan"
-                />
-                <Route
-                  path={`${ROUTES.ARTWORK}/:imageId?`}
-                  component={Artwork}
-                  key="artwork"
-                />
-                <Route
-                  path={`${ROUTES.STORY}/:slug`}
-                  component={StoryPage}
-                  exact={false}
-                  key="story"
-                />
-              </Switch>
-            </RouteContainer>
-          </PoseGroup>
-        )}
-      />
-    </OrientationContextProvider>
-  </TranslationContextProvider>
+  <OrientationContextProvider>
+    <Route
+      render={({ location }) => (
+        <PoseGroup>
+          <RouteContainer key={location.pathname}>
+            <Switch location={location}>
+              <Route
+                path={ROUTES.HOME}
+                component={Home}
+                exact={true}
+                key="home"
+              />
+              <Route
+                path={ROUTES.SCAN}
+                component={CameraContainer}
+                exact={true}
+                key="scan"
+              />
+              <Route
+                path={`${ROUTES.ARTWORK}/:imageId?`}
+                component={Artwork}
+                key="artwork"
+              />
+              <Route
+                path={`${ROUTES.STORY}/:slug`}
+                component={StoryPage}
+                exact={false}
+                key="story"
+              />
+            </Switch>
+          </RouteContainer>
+        </PoseGroup>
+      )}
+    />
+  </OrientationContextProvider>
 );
 
 class AppRouter extends Component {

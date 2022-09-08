@@ -1,33 +1,53 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`UnsupportedDialogue should match the snapshot when unsupportedIOSBrowser is true 1`] = `
-<Context.Provider
-  value={
-    Object {
-      "getTranslation": [Function],
-      "translations": null,
-    }
-  }
+<Modal
+  ariaHideApp={true}
+  bodyOpenClassName="ReactModal__Body--open"
+  className="Modal"
+  closeTimeoutMS={0}
+  isOpen={true}
+  parentSelector={[Function]}
+  portalClassName="ReactModalPortal"
+  shouldCloseOnEsc={true}
+  shouldCloseOnOverlayClick={true}
+  shouldFocusAfterRender={true}
+  shouldReturnFocusAfterClose={true}
 >
-  <UnsupportedDialogue
-    unsupportedIOSBrowser={true}
-    unsupportedIOSVersion={false}
-  />
-</Context.Provider>
+  <div
+    className="browser-modal"
+  >
+    <div
+      className="safari-text h2"
+    >
+      text_1 UnSupported_OS_Browser_Screen
+    </div>
+  </div>
+</Modal>
 `;
 
 exports[`UnsupportedDialogue should match the snapshot when unsupportedIOSVersion is true 1`] = `
-<Context.Provider
-  value={
-    Object {
-      "getTranslation": [Function],
-      "translations": null,
-    }
-  }
+<Modal
+  ariaHideApp={true}
+  bodyOpenClassName="ReactModal__Body--open"
+  className="Modal"
+  closeTimeoutMS={0}
+  isOpen={true}
+  parentSelector={[Function]}
+  portalClassName="ReactModalPortal"
+  shouldCloseOnEsc={true}
+  shouldCloseOnOverlayClick={true}
+  shouldFocusAfterRender={true}
+  shouldReturnFocusAfterClose={true}
 >
-  <UnsupportedDialogue
-    unsupportedIOSBrowser={false}
-    unsupportedIOSVersion={true}
-  />
-</Context.Provider>
+  <div
+    className="browser-modal"
+  >
+    <div
+      className="safari-text h2"
+    >
+      text_2 UnSupported_OS_Browser_Screen
+    </div>
+  </div>
+</Modal>
 `;
