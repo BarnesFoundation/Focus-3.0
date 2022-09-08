@@ -157,3 +157,35 @@ export function allStoriesQuery(): GraphQLQuery {
     variables: {},
   };
 }
+
+export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
+  return {
+    query: `
+		query($objectId: String) {
+			specialExhibitionObjects(where: {objectId: $objectId}) {
+				birthDate
+				classification
+				creditLine
+				culture
+				deathDate
+				dimensions
+				medium
+				nationality
+				objectId
+				people
+				title
+				visualDescription
+				shortDescription {
+					html
+				}
+				image {
+					url
+				}
+			}
+      }
+			`,
+    variables: {
+      objectId: objectId,
+    },
+  };
+}
