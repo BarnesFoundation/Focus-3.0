@@ -8,7 +8,7 @@ export enum EnvironmentStages {
   PRODUCTION = "PRODUCTION",
 }
 
-export default {
+const EnvironmentConfiguration = {
   /** AWS Credentials for the bucket to store scanned image attempts into */
   aws: {
     s3Bucket: process.env.AWS_S3_BUCKET,
@@ -59,3 +59,17 @@ export default {
     repo: process.env.IMGIX_REPO,
   },
 };
+
+export default EnvironmentConfiguration;
+
+/** Helper function to check is current stage is Production */
+export const isProduction =
+  EnvironmentConfiguration.nodeEnv === EnvironmentStages.PRODUCTION;
+
+/** Helper function to check is current stage is Local */
+export const isLocal =
+  EnvironmentConfiguration.nodeEnv === EnvironmentStages.LOCAL;
+
+/** Helper function to check is current stage is Development */
+export const isDevelopment =
+  EnvironmentConfiguration.nodeEnv === EnvironmentStages.DEVELOPMENT;

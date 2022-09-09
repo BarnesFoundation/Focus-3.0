@@ -9,7 +9,6 @@
         "@aws-sdk/client-s3": "^3.131.0",
         "@aws-sdk/client-translate": "^3.159.0",
         "@elastic/elasticsearch": "^7.5.1",
-        "@google-cloud/translate": "^7.0.0",
         "@prisma/client": "^3.14.0",
         "axios": "^0.27.2",
         "connect-pg-simple": "^7.0.0",
@@ -117,6 +116,7 @@
         "sass": "1.54.0",
         "scrollmagic": "2.0.7",
         "scrollmagic-plugin-gsap": "1.0.3",
+        "serverless": "^3.22.0",
         "slick-carousel": "1.8.1",
         "styled-components": "4.3.2",
         "typescript": "^4.6.4"

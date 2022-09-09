@@ -1,0 +1,26 @@
+service: focus-application
+
+provider:
+    name: aws
+    runtime: nodejs14.x
+    region: us-east-1
+    timeout: 900
+    memorySize: 3008
+
+    # Accept stage from command line, defaults to dev
+    # - Should be EITHER prod or dev
+    stage: ${opt:stage, 'dev'}
+
+functions:
+    server:
+        handler: dist/server/handler.server
+        events:
+            - http: ANY /
+            - http: "ANY /{proxy+}"
+
+package:
+    patterns:
+        - "!./**"
+        - "dist/**"
+        - "package.json"
+        - "node_modules/**"

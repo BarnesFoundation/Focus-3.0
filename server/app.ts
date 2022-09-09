@@ -11,6 +11,8 @@ const app = express();
 const build = join(__dirname, "../build");
 const index = join(build, "index.html");
 
+console.log(`Initializing application. Current stage is: ${Config.nodeEnv}`);
+
 // Configure some of our server-wide middlewares
 app.use(express.json());
 app.use(cookieParser());

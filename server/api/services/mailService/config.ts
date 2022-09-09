@@ -2,7 +2,11 @@ import nodemailer from "nodemailer";
 import Email from "email-templates";
 import path from "path";
 
-import { environmentConfiguration } from "../../../config";
+import {
+  environmentConfiguration,
+  isProduction,
+  isLocal,
+} from "../../../config";
 
 const { sendGrid } = environmentConfiguration;
 
@@ -34,15 +38,20 @@ export const Emailer = new Email({
   message: {
     from: sendGrid.email,
   },
-  send: true,
+
+  // We only want to send emails on Production stage
+  send: isProduction,
   transport: transporter,
-  preview: {
-    open: {
-      app: "chrome",
-      wait: false,
-    },
-    dir: EMAIL_PREVIEW_OUTPUT_PATH,
-  },
+  preview: isLocal
+    ? {
+        // Only open mail preview on Local stage
+        open: {
+          app: "chrome",
+          wait: false,
+        },
+        dir: EMAIL_PREVIEW_OUTPUT_PATH,
+      }
+    : false,
   views: {
     root: EMAIL_VIEWS_TEMPLATES_PATH,
     options: {
