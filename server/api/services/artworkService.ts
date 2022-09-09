@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 import ElasticSearchService from "./elasticSearchService";
-import { RelatedStory, ObjectID } from "./graphCMSService";
+import GraphCMSService, { RelatedStory, ObjectID } from "./graphCMSService";
 import Config from "../../config";
 import { slugify } from "../utils";
 
@@ -204,6 +204,11 @@ export default class ArtworkService {
       translated_title: translatedTitle,
       link: `${Config.assetHost}/story/${titleSlug}`,
     };
+  }
+
+  public static async findSpecialExhibitionObject(objectId: string) {
+    const object = await GraphCMSService.findObjectById(objectId);
+    return object;
   }
 }
 
