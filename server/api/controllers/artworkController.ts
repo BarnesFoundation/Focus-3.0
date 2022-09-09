@@ -139,11 +139,11 @@ class ArtworkController {
     // TODO - uncomment this once translation is working
     // const session = request.session;
     // const languagePreference = session.lang_pref;
-    const objectData = await ArtworkService.findSpecialExhibitionObject(
+    /* const objectData = await ArtworkService.findSpecialExhibitionObject(
       objectId
     );
 
-    return response.status(200).json({ data: objectData });
+    return response.status(200).json({ data: objectData }); */
   }
 }
 
