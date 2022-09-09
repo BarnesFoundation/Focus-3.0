@@ -6,6 +6,7 @@ import {
   relatedStoriesByObjectIdQuery,
   relatedStoriesByTitleQuery,
   allStoriesQuery,
+  getObjectByObjectIdQuery,
 } from "./queries";
 import { GraphQLQuery, RelatedStory } from "./types";
 import { isEmpty } from "../../utils/isEmpty";
@@ -145,5 +146,14 @@ export default class GraphCMSService {
     }
 
     return translatableContent;
+  }
+
+  /** Retrieves special exhibit object information from Graph CMS as identified by the provided object id */
+  public static async findObjectById(objectId: string): Promise<any> {
+    const query = getObjectByObjectIdQuery(objectId);
+    const {
+      data: { specialExhibitionObjects },
+    } = await GraphCMSService.makeGraphQLRequest(query);
+    return specialExhibitionObjects;
   }
 }

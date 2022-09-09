@@ -139,16 +139,36 @@ class SearchRequestService {
     }
   };
 
+  /** Retrieves special exhibition object details from Hygraph/GraphCMS */
+  getSpecialExhibitionObject = async (objectId) => {
+    try {
+      let response = await axios.get(constants.SP_EX_OBJECT_URL(objectId));
+      return response.data;
+    } catch (error) {
+      console.log("An error occurred while retrieving story from the server");
+    }
+  };
+
   /** Closure function so that an identified item is processed only once. Returns an IdentifiedImagePayload object */
   processIdentifiedItem = async (identifiedItem) => {
     // Get the image id and reference image url
     const imageId = identifiedItem.item.name;
     const referenceImageUrl = identifiedItem.image.thumb_120;
+    let data;
+
+    // If it is a special exhibition object, get info from CMS
+    if (imageId.split("/")[0] === "SPEX") {
+      data = await this.getSpecialExhibitionObject(imageId.split("/")[1]);
+    // Otherwise search for item in ElasticSearch
+    } else {
+      // Retrieve artwork information
+      data = await this.getArtworkInformation(imageId);
+    };
 
     // Retrieve artwork information
     const esResponse = await this.getArtworkInformation(imageId);
 
-    return new IdentifiedImagePayload(esResponse, referenceImageUrl);
+    return new IdentifiedImagePayload(data, referenceImageUrl);
   };
 
   validateEmail = async (email) => {

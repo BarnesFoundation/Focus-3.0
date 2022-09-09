@@ -129,6 +129,22 @@ class ArtworkController {
       });
     }
   }
+
+  public static async getSpecialExhibitionObject(
+    request: express.Request,
+    response: express.Response
+  ) {
+    const objectId = request.params.objectId;
+
+    // TODO - uncomment this once translation is working
+    // const session = request.session;
+    // const languagePreference = session.lang_pref;
+    const objectData = await ArtworkService.findSpecialExhibitionObject(
+      objectId
+    );
+
+    return response.status(200).json({ data: objectData });
+  }
 }
 
 export default ArtworkController;
