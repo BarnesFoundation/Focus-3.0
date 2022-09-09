@@ -253,7 +253,6 @@ export class Artwork extends Component<ArtworkComponentProps, ArtworkComponentSt
 
     // Update local storage with the new set language and then update the server session
     await this.props.updateSelectedLanguage(selectedLanguage);
-    await this.props.updateTranslations();
 
     // Get the new language translations
     const imageId = this.getFocusedArtworkImageId();
@@ -681,6 +680,7 @@ export class Artwork extends Component<ArtworkComponentProps, ArtworkComponentSt
           onSelectLanguage={this.onSelectLanguage}
           shortDescContainer={this.shortDescContainer}
           specialExhibition={this.state.result.data.specialExhibition}
+          getTranslation={this.props.getTranslation}
         />
 
         {this.renderStoryContainer()}

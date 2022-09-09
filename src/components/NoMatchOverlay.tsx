@@ -1,7 +1,7 @@
 import React from "react";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 import scan_button from "../images/scan-button.svg";
-import { WithTranslationState } from "../types";
+import { WithTranslationState } from "../types/componentTypes";
 import withTranslation from "./withTranslation";
 
 type NoMatchOverlayProps = {

@@ -1,4 +1,4 @@
-import { TimelineLite } from "gsap/all";
+import { ArtworkObject, ArtWorkResult } from "./payloadTypes";
 
 export type StoryItemProps = {
   sceneStatus: {
@@ -98,66 +98,6 @@ export type LanguageOptionType =
   | Chinese
   | Japanese
   | Korean;
-
-export type ArtWorkResult = {
-  data: {
-    records: {
-      id: number;
-      room: string;
-      invno: string;
-      title: string;
-      medium: string;
-      people: string;
-      culture: string;
-      birthDate: string;
-      deathDate: string;
-      locations: string;
-      creditLine: string;
-      dimensions: string;
-      displayDate: string;
-      imageSecret: string;
-      nationality: string;
-      ensembleIndex: string;
-      classification: string;
-      shortDescription: string;
-      visualDescription: string;
-      curatorialApproval: string;
-      art_url: string;
-    }[];
-    roomRecords;
-    message: string;
-    show_story: boolean;
-    specialExhibition: boolean;
-  };
-  success: boolean;
-  requestComplete: boolean;
-};
-
-export type ArtworkObject = {
-  artwork: {
-    id?: number;
-    title?: string;
-    shortDescription?: string;
-    artist?: string;
-    nationality?: string;
-    birthDate?: string;
-    deathDate?: string;
-    culture?: string;
-    classification?: string;
-    locations?: string;
-    medium?: string;
-    invno?: string;
-    displayDate?: string;
-    dimensions?: string;
-    visualDescription?: string;
-    url?: string;
-    url_low_quality?: string;
-    bg_url?: string;
-    curatorialApproval?: boolean;
-    unIdentified?: boolean;
-  };
-  roomRecords: any[];
-};
 
 export type WithTranslationState = {
   translations;

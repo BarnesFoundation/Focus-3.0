@@ -1,6 +1,6 @@
 import React from "react";
 import ReactModal from "react-modal";
-import { WithTranslationState } from "../types";
+import { WithTranslationState } from "../types/componentTypes";
 import withTranslation from "./withTranslation";
 
 type UnsupportedDialogueProps = {

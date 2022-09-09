@@ -4,7 +4,10 @@ import {
   SNAP_LANGUAGE_PREFERENCE,
   SNAP_LANGUAGE_TRANSLATION,
 } from "../constants";
-import { LanguageOptionType, WithTranslationState } from "../types";
+import {
+  LanguageOptionType,
+  WithTranslationState,
+} from "../types/componentTypes";
 
 const withTranslation = (WrappedComponent) => {
   return class WithTranslation extends React.Component<
