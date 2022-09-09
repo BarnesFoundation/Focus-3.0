@@ -48,7 +48,7 @@ const SectionWipesStyled = styled.div`
   }
 `;
 
-class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
+export class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
   sr: SearchRequestService;
   artworkScene;
   emailScene;
@@ -247,19 +247,13 @@ class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
     }
   };
 
-  onSelectLanguage = async (selectedLanguage) => {
+  onSelectLanguage = async (selectedLanguage: LanguageOptionType) => {
     // Scroll to top when language changes. This should help re-calculate correct offsets on language change
     window.scroll({ top: 0, behavior: "smooth" });
 
     // Update local storage with the new set language and then update the server session
-    localStorage.setItem(
-      constants.SNAP_LANGUAGE_PREFERENCE,
-      selectedLanguage.code
-    );
-    await this.sr.saveLanguagePreference(selectedLanguage.code);
-
+    await this.props.updateSelectedLanguage(selectedLanguage);
     await this.props.updateTranslations();
-    this.props.updateSelectedLanguage(selectedLanguage);
 
     // Get the new language translations
     const imageId = this.getFocusedArtworkImageId();

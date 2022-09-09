@@ -166,5 +166,5 @@ export type WithTranslationState = {
   updateTranslations: () => Promise<void>;
   langOptions: LanguageOptionType[];
   getSelectedLanguage: () => Promise<LanguageOptionType[]>;
-  updateSelectedLanguage: (language: string) => void;
+  updateSelectedLanguage: (language: LanguageOptionType) => Promise<void>;
 };

@@ -20,7 +20,7 @@ type ResultCardProps = {
   specialExhibition: boolean;
 } & WithTranslationState;
 
-export const ResultCardComponent: React.FC<ResultCardProps> = ({
+export const ResultCard: React.FC<ResultCardProps> = ({
   artwork,
   refCallbackInfo,
   setArtworkRef,
@@ -207,5 +207,3 @@ export const ResultCardComponent: React.FC<ResultCardProps> = ({
     </div>
   );
 };
-
-export const ResultCard = withTranslation(ResultCardComponent);

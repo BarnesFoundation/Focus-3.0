@@ -1,13 +1,13 @@
 import React, { createRef } from "react";
 import { render, cleanup } from "@testing-library/react";
-import { ResultCardComponent } from "../../components/ResultCard";
+import { ResultCard } from "../../components/ResultCard";
 
 afterEach(cleanup);
 
 describe("ResultCard", () => {
   it("should match the snapshot for a Barnes collection object", () => {
     const { container } = render(
-      <ResultCardComponent
+      <ResultCard
         translations={null}
         loaded={true}
         getTranslation={(screen, textId) => textId + " " + screen}
@@ -36,7 +36,7 @@ describe("ResultCard", () => {
 
   it("should match the snapshot for a special exhibition object", () => {
     const { container } = render(
-      <ResultCardComponent
+      <ResultCard
         translations={null}
         loaded={true}
         getTranslation={(screen, textId) => textId + " " + screen}
