@@ -1,7 +1,12 @@
-import { ArtworkObject, ArtWorkResult } from "../types";
+import {
+  ArtworkObject,
+  ArtWorkRecordsResult,
+  StoryItemsResponse,
+  StoryItemType,
+} from "../types/payloadTypes";
 
 export const constructResultAndInRoomSlider = (
-  artworkResult: ArtWorkResult,
+  artworkResult: ArtWorkRecordsResult,
   isTablet: boolean
 ): ArtworkObject => {
   const { success } = artworkResult;
@@ -82,4 +87,17 @@ export const constructResultAndInRoomSlider = (
     }
   }
   return { artwork, roomRecords };
+};
+
+export const constructStory = (storyInformation: StoryItemsResponse) => {
+  let stories: StoryItemType[] = [],
+    storyId: string = undefined,
+    storyTitle: string = undefined;
+
+  if (storyInformation.data.total > 0) {
+    ({ stories, story_title: storyTitle } = storyInformation.data.content);
+    storyId = storyInformation.data.unique_identifier;
+  }
+
+  return { stories, storyId, storyTitle };
 };

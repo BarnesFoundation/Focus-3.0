@@ -26,8 +26,11 @@ import {
   ArtworkComponentProps,
   ArtworkComponentState,
   LanguageOptionType,
-} from "../types";
-import { constructResultAndInRoomSlider } from "../helpers/artWorkHelper";
+} from "../types/componentTypes";
+import {
+  constructResultAndInRoomSlider,
+  constructStory,
+} from "../helpers/artWorkHelper";
 
 /**
  * withRouter HOC provides props with location, history and match objects
@@ -48,7 +51,10 @@ const SectionWipesStyled = styled.div`
   }
 `;
 
-export class Artwork extends Component<ArtworkComponentProps, ArtworkComponentState> {
+export class Artwork extends Component<
+  ArtworkComponentProps,
+  ArtworkComponentState
+> {
   sr: SearchRequestService;
   artworkScene;
   emailScene;
@@ -283,16 +289,7 @@ export class Artwork extends Component<ArtworkComponentProps, ArtworkComponentSt
 
   setupStory = async (imageId) => {
     const storyInformation = await this.sr.getStoryItems(imageId);
-    let stories = [],
-      storyId = undefined,
-      storyTitle = undefined;
-
-    if (storyInformation.data.total > 0) {
-      ({ stories, story_title: storyTitle } = storyInformation.data.content);
-      storyId = storyInformation.data.unique_identifier;
-    }
-
-    return { stories, storyId, storyTitle };
+    return constructStory(storyInformation);
   };
 
   onSelectInRoomArt = (aitrId) => {

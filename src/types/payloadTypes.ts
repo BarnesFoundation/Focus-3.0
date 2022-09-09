@@ -1,0 +1,86 @@
+export type ArtWorkRecord = {
+  id: number;
+  room: string;
+  invno: string;
+  title: string;
+  medium: string;
+  people: string;
+  culture: string;
+  birthDate: string;
+  deathDate: string;
+  locations: string;
+  creditLine: string;
+  dimensions: string;
+  displayDate: string;
+  imageSecret: string;
+  nationality: string;
+  ensembleIndex: string;
+  classification: string;
+  shortDescription: string;
+  visualDescription: string;
+  curatorialApproval: string;
+  art_url: string;
+};
+
+export type ArtWorkRecordsResult = {
+  data: {
+    records: ArtWorkRecord[];
+    roomRecords;
+    message: string;
+    show_story: boolean;
+    specialExhibition: boolean;
+  };
+  success: boolean;
+  requestComplete: boolean;
+};
+
+export type ArtworkObject = {
+  artwork: {
+    id?: number;
+    title?: string;
+    shortDescription?: string;
+    artist?: string;
+    nationality?: string;
+    birthDate?: string;
+    deathDate?: string;
+    culture?: string;
+    classification?: string;
+    locations?: string;
+    medium?: string;
+    invno?: string;
+    displayDate?: string;
+    dimensions?: string;
+    visualDescription?: string;
+    url?: string;
+    url_low_quality?: string;
+    bg_url?: string;
+    curatorialApproval?: boolean;
+    unIdentified?: boolean;
+  };
+  roomRecords: any[];
+};
+
+export type StoryItemType = {
+  image_id: string;
+  short_paragraph: {
+    html: string;
+  };
+  long_paragraph: {
+    html: string;
+  };
+  detail: ArtWorkRecord;
+};
+
+export type StoryItemsResponse = {
+  data: {
+    content: {
+      story_title: string;
+      original_story_title: string;
+      stories: StoryItemType[];
+    };
+    unique_identifier: string;
+    total: number;
+    translated_title: string;
+    link: string;
+  };
+};

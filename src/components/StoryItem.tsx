@@ -11,7 +11,7 @@ import {
 } from "../constants";
 import { isAndroid } from "react-device-detect";
 import VizSensor from "react-visibility-sensor";
-import { StoryItemProps, StoryItemState } from "../types";
+import { StoryItemProps, StoryItemState } from "../types/componentTypes";
 
 class StoryItem extends React.Component<StoryItemProps, StoryItemState> {
   contentRef: HTMLDivElement;
