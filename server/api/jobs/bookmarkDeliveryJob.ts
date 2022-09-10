@@ -1,15 +1,14 @@
 import { PrismaClient, bookmarks, es_cached_records } from "@prisma/client";
 
-import { groupBy } from "../utils";
-import { MailService, MailTemplates, TranslateService } from "../services";
+import { groupBy, generateTimeAgo } from "../utils";
+import { MailService, TranslateService } from "../services";
+import { isLocal } from "../../config";
 
 const prisma = new PrismaClient();
 
 // When this bookmark delivery job runs, we will collect bookmarks for each
 // email that occurred more than 3 hours ago
 const LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS = 3;
-const LATEST_BOOKMARK_ENTRY_THRESHOLD_MS =
-  LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS * 3600 * 1000;
 
 type DeliverableBookmarks = { [email: string]: bookmarks[] };
 type CollectedArtworks = {
@@ -99,8 +98,9 @@ class BookmarkDeliveryJob {
    * hours ago (which would indicate the user has likely finished their Focus session)
    */
   private static async getDeliverableBookmarks(): Promise<DeliverableBookmarks> {
-    const bookmarkThresholdAgo =
-      Date.now() - LATEST_BOOKMARK_ENTRY_THRESHOLD_MS;
+    const bookmarkThresholdAgo = generateTimeAgo(
+      LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS
+    );
 
     const recentBookmarks = await prisma.bookmarks.findMany({
       where: {

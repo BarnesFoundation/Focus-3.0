@@ -1,6 +1,6 @@
 import { PrismaClient, bookmarks } from "@prisma/client";
 
-import { groupBy } from "../utils";
+import { groupBy, generateTimeAgo } from "../utils";
 import {
   GraphCMSService,
   TranslateService,
@@ -12,9 +12,7 @@ const prisma = new PrismaClient();
 
 // When this story delivery job runs, we will collect stories for each
 // set of bookmarks that occurred more than 22 hours ago
-const LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS = 0.017; // 22;
-const LATEST_BOOKMARK_ENTRY_THRESHOLD_MS =
-  LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS * 3600 * 1000;
+const LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS = 22;
 
 type DeliverableStoryBookmarks = { [email: string]: bookmarks[] };
 type CollectedStories = {
@@ -103,13 +101,14 @@ class StoryDeliveryJob {
   /** Determines story bookmarks that should be emailed as part of this job run
    * The bookmarks that are emailed as part of this job run must meet this criteria
    * 1. The latest bookmark entry must have been created at a time less than or equal to our
-   *    `LATEST_BOOKMARK_ENTRY_THRESHOLD_MS` value ago
+   *    `LATEST_BOOKMARK_ENTRY_THRESHOLD` value ago
    * 2. The bookmarks must have a `story_read` value of true
    * 3. The `email` field for the bookmarks must be non-null
    */
   private static async getDeliverableStoryBookmarks() {
-    const storyBookmarkThresholdAgo =
-      Date.now() - LATEST_BOOKMARK_ENTRY_THRESHOLD_MS;
+    const storyBookmarkThresholdAgo = generateTimeAgo(
+      LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS
+    );
 
     const recentStoryBookmarks = await prisma.bookmarks.findMany({
       where: {
