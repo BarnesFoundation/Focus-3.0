@@ -7,6 +7,7 @@ import {
   MailService,
   ParsedRelatedStory,
 } from "../services";
+import { isLocal } from "../../config";
 
 const prisma = new PrismaClient();
 
@@ -106,9 +107,14 @@ class StoryDeliveryJob {
    * 3. The `email` field for the bookmarks must be non-null
    */
   private static async getDeliverableStoryBookmarks() {
-    const storyBookmarkThresholdAgo = generateTimeAgo(
-      LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS
-    );
+    // When we're running locally, we're typically running the job immediately
+    // via POSTing the endpoint or manually executing this file
+    // So, in a local environment only, we'll override the threshold
+    // to identify all records up through the present moment
+    // rather than the delay threshold used in Production/Development
+    const storyBookmarkThresholdAgo = isLocal
+      ? Date.now()
+      : generateTimeAgo(LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS);
 
     const recentStoryBookmarks = await prisma.bookmarks.findMany({
       where: {

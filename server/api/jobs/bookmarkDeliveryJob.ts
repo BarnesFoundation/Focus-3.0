@@ -98,9 +98,14 @@ class BookmarkDeliveryJob {
    * hours ago (which would indicate the user has likely finished their Focus session)
    */
   private static async getDeliverableBookmarks(): Promise<DeliverableBookmarks> {
-    const bookmarkThresholdAgo = generateTimeAgo(
-      LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS
-    );
+    // When we're running locally, we're typically running the job immediately
+    // via POSTing the endpoint or manually executing this file
+    // So, in a local environment only, we'll override the threshold
+    // to identify all records up through the present moment
+    // rather than the delay threshold used in Production/Development
+    const bookmarkThresholdAgo = isLocal
+      ? Date.now()
+      : generateTimeAgo(LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS);
 
     const recentBookmarks = await prisma.bookmarks.findMany({
       where: {
