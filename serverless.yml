@@ -11,12 +11,63 @@ provider:
     # - Should be EITHER prod or dev
     stage: ${opt:stage, 'dev'}
 
+resources:
+    Conditions:
+        # Determine if deployment is for Production
+        IsProduction:
+            Fn::Equals:
+                - ${opt:stage}
+                - prod
+
 functions:
     server:
         handler: dist/server/handler.server
         events:
             - http: ANY /
             - http: "ANY /{proxy+}"
+
+            # For our CRON jobs, we only want to deploy the schedules
+            # in our Production deployment stage
+
+            - schedule:
+                  Condition: IsProduction
+                  name: CRON_ElasticSearchSyncJob
+                  description: "An event scheduled to run the ElasticSearchSyncJob each night at 8 AM UTC/4 AM UTC-4"
+                  rate: cron(0 12 ? * 3 *)
+                  enabled: true
+                  input:
+                      path: "/api/job/ElasticSearchSyncJob"
+                      httpMethod: "POST"
+
+            - schedule:
+                Condition: IsProduction
+                name: CRON_BookmarkDeliveryJob
+                description: "An event scheduled to run the BookmarkDeliveryJob each night at 8 AM UTC/4 AM UTC-4"
+                rate: cron(0 12 ? * 3 *)
+                enabled: true
+                input:
+                    path: "/api/job/BookmarkDeliveryJob"
+                    httpMethod: "POST"
+
+            - schedule:
+                Condition: IsProduction
+                name: CRON_StoryDeliveryJob
+                description: "An event scheduled to run the StoryDeliveryJob each night at 8 AM UTC/4 AM UTC-4"
+                rate: cron(0 12 ? * 3 *)
+                enabled: true
+                input:
+                    path: "/api/job/StoryDeliveryJob"
+                    httpMethod: "POST"
+
+            - schedule:
+                Condition: IsProduction
+                name: CRON_StorySyncJob
+                description: "An event scheduled to run the StorySyncJob each night at 8 AM UTC/4 AM UTC-4"
+                rate: cron(0 12 ? * 3 *)
+                enabled: true
+                input:
+                    path: "/api/job/StorySyncJob"
+                    httpMethod: "POST"
 
 package:
     patterns:
