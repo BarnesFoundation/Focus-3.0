@@ -32,8 +32,8 @@ functions:
             - schedule:
                   Condition: IsProduction
                   name: CRON_ElasticSearchSyncJob
-                  description: "An event scheduled to run the ElasticSearchSyncJob each night at 8 AM UTC/4 AM UTC-4"
-                  rate: cron(0 12 ? * 3 *)
+                  description: "An event scheduled to run the ElasticSearchSyncJob once each day"
+                  rate: rate(1 day)
                   enabled: true
                   input:
                       path: "/api/job/ElasticSearchSyncJob"
@@ -42,8 +42,8 @@ functions:
             - schedule:
                 Condition: IsProduction
                 name: CRON_BookmarkDeliveryJob
-                description: "An event scheduled to run the BookmarkDeliveryJob each night at 8 AM UTC/4 AM UTC-4"
-                rate: cron(0 12 ? * 3 *)
+                description: "An event scheduled to run the BookmarkDeliveryJob once every 3 hours"
+                rate: rate(3 hours)
                 enabled: true
                 input:
                     path: "/api/job/BookmarkDeliveryJob"
@@ -52,8 +52,8 @@ functions:
             - schedule:
                 Condition: IsProduction
                 name: CRON_StoryDeliveryJob
-                description: "An event scheduled to run the StoryDeliveryJob each night at 8 AM UTC/4 AM UTC-4"
-                rate: cron(0 12 ? * 3 *)
+                description: "An event scheduled to run the StoryDeliveryJob once every 3 hours"
+                rate: rate(3 hours)
                 enabled: true
                 input:
                     path: "/api/job/StoryDeliveryJob"
@@ -62,11 +62,21 @@ functions:
             - schedule:
                 Condition: IsProduction
                 name: CRON_StorySyncJob
-                description: "An event scheduled to run the StorySyncJob each night at 8 AM UTC/4 AM UTC-4"
-                rate: cron(0 12 ? * 3 *)
+                description: "An event scheduled to run the StorySyncJob once each day"
+                rate: rate(1 day)
                 enabled: true
                 input:
                     path: "/api/job/StorySyncJob"
+                    httpMethod: "POST"
+
+            - schedule:
+                Condition: IsProduction
+                name: CRON_SessionClearJob
+                description: "An event scheduled to run the SessionClearJob once every 3 days"
+                rate: rate(3 days)
+                enabled: false
+                input:
+                    path: "/api/job/SessionClearJob"
                     httpMethod: "POST"
 
 package:
