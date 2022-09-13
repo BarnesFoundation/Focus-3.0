@@ -26,12 +26,12 @@ functions:
             - http: ANY /
             - http: "ANY /{proxy+}"
 
-            # For our CRON jobs, we only want to deploy the schedules
+            # For our Schedule jobs, we only want to deploy the schedules
             # in our Production deployment stage
 
             - schedule:
                   Condition: IsProduction
-                  name: CRON_ElasticSearchSyncJob
+                  name: Schedule_ElasticSearchSyncJob
                   description: "An event scheduled to run the ElasticSearchSyncJob once each day"
                   rate: rate(1 day)
                   enabled: true
@@ -41,7 +41,7 @@ functions:
 
             - schedule:
                 Condition: IsProduction
-                name: CRON_BookmarkDeliveryJob
+                name: Schedule_BookmarkDeliveryJob
                 description: "An event scheduled to run the BookmarkDeliveryJob once every 3 hours"
                 rate: rate(3 hours)
                 enabled: true
@@ -51,7 +51,7 @@ functions:
 
             - schedule:
                 Condition: IsProduction
-                name: CRON_StoryDeliveryJob
+                name: Schedule_StoryDeliveryJob
                 description: "An event scheduled to run the StoryDeliveryJob once every 3 hours"
                 rate: rate(3 hours)
                 enabled: true
@@ -61,7 +61,7 @@ functions:
 
             - schedule:
                 Condition: IsProduction
-                name: CRON_StorySyncJob
+                name: Schedule_StorySyncJob
                 description: "An event scheduled to run the StorySyncJob once each day"
                 rate: rate(1 day)
                 enabled: true
@@ -71,7 +71,7 @@ functions:
 
             - schedule:
                 Condition: IsProduction
-                name: CRON_SessionClearJob
+                name: Schedule_SessionClearJob
                 description: "An event scheduled to run the SessionClearJob once every 3 days"
                 rate: rate(3 days)
                 enabled: false
