@@ -1,12 +1,6 @@
 import React from "react";
+import { StoryTitleProps } from "../types/componentTypes";
 import { LanguageDropdown } from "./LanguageDropdown";
-
-// TODO: finish adding types as we refactor parent components
-type StoryTitleProps = {
-  langOptions;
-  selectedLanguage;
-  onSelectLanguage: (args?: any) => void;
-};
 
 export const StoryTitle: React.FC<StoryTitleProps> = ({
   langOptions,

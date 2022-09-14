@@ -3,23 +3,10 @@ import ProgressiveImage from "react-progressive-image";
 import { LANGUAGE_EN, SNAP_LANGUAGE_PREFERENCE } from "../constants";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import google_logo from "../images/google_translate.svg";
-import { WithTranslationState } from "../types/componentTypes";
+import { ResultCardProps } from "../types/componentTypes";
 import { LanguageDropdown } from "./LanguageDropdown";
 import { Share } from "./Share";
 import withTranslation from "./withTranslation";
-
-// TODO: add in type defs as we refactor parent components
-type ResultCardProps = {
-  artwork;
-  refCallbackInfo;
-  setArtworkRef;
-  langOptions;
-  selectedLanguage;
-  onSelectLanguage;
-  shortDescContainer;
-  specialExhibition: boolean;
-  getTranslation: WithTranslationState["getTranslation"];
-};
 
 export const ResultCard: React.FC<ResultCardProps> = ({
   artwork,

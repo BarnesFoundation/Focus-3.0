@@ -1,3 +1,4 @@
+import { History, Match } from "react-router-dom";
 import { ArtworkObject, ArtWorkRecordsResult } from "./payloadTypes";
 
 export type StoryItemProps = {
@@ -46,8 +47,8 @@ export type StoryItemState = {
 };
 
 export type ArtworkComponentProps = {
-  match: any;
-  history: any;
+  match: Match;
+  history: History;
 } & WithTranslationState;
 
 export type ArtworkComponentState = {
@@ -77,6 +78,56 @@ export type ArtworkComponentState = {
   storyDurationsCurrent: any[];
   storyOffsets: any[];
 };
+
+export type CameraContainerProps = {
+  history: History;
+};
+
+export type CameraContainerState = {
+  scanSeqId: any;
+  shouldBeScanning: boolean;
+  sessionYieldedMatch: boolean;
+};
+
+export type LanguageDropdownProps = {
+  onSelectLanguage: (item: LanguageOptionType) => void;
+  isStoryItemDropDown?: boolean;
+  selected: LanguageOptionType;
+  langOptions: WithTranslationState["langOptions"];
+};
+
+export type NoMatchOverlayProps = {
+  displayOverlay: boolean;
+  handleScan: () => void;
+} & WithTranslationState;
+
+export type ResultCardProps = {
+  artwork: ArtworkObject["artwork"];
+  refCallbackInfo: (element: any) => void;
+  setArtworkRef: (element: any) => void;
+  langOptions: WithTranslationState["langOptions"];
+  selectedLanguage: LanguageOptionType;
+  onSelectLanguage: (item: LanguageOptionType) => void;
+  shortDescContainer: any;
+  specialExhibition: boolean;
+  getTranslation: WithTranslationState["getTranslation"];
+};
+
+export type ShareProps = {
+  artwork: ArtworkObject["artwork"];
+  shareText: string;
+};
+
+export type StoryTitleProps = {
+  langOptions: WithTranslationState["langOptions"];
+  selectedLanguage: LanguageOptionType;
+  onSelectLanguage: (item: LanguageOptionType) => void;
+};
+
+export type UnsupportedDialogueProps = {
+  unsupportedIOSBrowser?: boolean;
+  unsupportedIOSVersion?: boolean;
+} & WithTranslationState;
 
 type English = { name: "English"; code: "En"; selected: boolean };
 type Spanish = { name: "Español"; code: "Es"; selected: boolean };

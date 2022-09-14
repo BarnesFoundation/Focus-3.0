@@ -3,12 +3,7 @@ import React, { Component, useState } from "react";
 import { Popover, PopoverBody } from "reactstrap";
 import shareButton from "../images/share-icon.svg";
 import * as constants from "../constants";
-
-// TODO: add in type defs as we refactor parent components
-type ShareProps = {
-  artwork;
-  shareText;
-};
+import { ShareProps } from "../types/componentTypes";
 
 export const Share: React.FC<ShareProps> = ({ artwork, shareText }) => {
   const [sharePopoverIsOpen, setSharePopoverIsOpen] = useState(false);
