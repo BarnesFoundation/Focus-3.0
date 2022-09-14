@@ -29,7 +29,7 @@
         "client-build": "TSC_COMPILE_ON_ERROR=true react-scripts build",
         "build": "npm run client-build && rm -rf dist && npm run build-server",
         "postbuild": "cp -r build dist && rm -rf build && make views",
-        "test:client": "react-scripts test",
+        "test:client": "react-scripts test --transformIgnorePatterns \"node_modules/(?!my-library-dir)/\"",
         "eject": "react-scripts eject",
         "build-server": "tsc -p server/",
         "local-server": "NODE_DEBUG=email-templates nodemon dist/server/app.js",

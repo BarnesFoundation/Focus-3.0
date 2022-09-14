@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Share should match the snapshot 1`] = `
+<div>
+  <div
+    className="btn-share-result"
+    id="share-it"
+    onClick={[Function]}
+  >
+    <img
+      alt="share"
+      src="share-icon.svg"
+    />
+    <span
+      className="text-share"
+    >
+      Text
+    </span>
+  </div>
+  <Popover
+    isOpen={false}
+    placement="top"
+    placementPrefix="bs-popover"
+    target="share-it"
+    trigger="click"
+  >
+    <PopoverBody
+      tag="div"
+    >
+      <div
+        className="share"
+      >
+        <a
+          data-id="twitter"
+          onClick={[Function]}
+        >
+          <i
+            aria-hidden="true"
+            className="fa fa-lg fa-twitter"
+          />
+        </a>
+        <a
+          data-id="facebook"
+          href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcollection.barnesfoundation.org%2Fobjects%2Fundefined"
+          rel="noreferrer"
+          target="_blank"
+        >
+          <i
+            aria-hidden="true"
+            className="fa fa-lg fa-facebook"
+          />
+        </a>
+      </div>
+    </PopoverBody>
+  </Popover>
+</div>
+`;

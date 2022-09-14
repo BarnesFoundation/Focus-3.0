@@ -26,7 +26,7 @@ type CameraContainerState = {
   sessionYieldedMatch: boolean;
 };
 
-class CameraContainer extends Component<
+export class CameraContainerComponent extends Component<
   CameraContainerProps,
   CameraContainerState
 > {
@@ -186,4 +186,4 @@ class CameraContainer extends Component<
   }
 }
 
-export default compose(withRouter)(CameraContainer);
+export default compose(withRouter)(CameraContainerComponent);

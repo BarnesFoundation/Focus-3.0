@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StoryTitle should match the snapshot 1`] = `
+<div
+  className="story-title-bar"
+  id="story-title-bar"
+>
+  <div
+    className="language-dropdown"
+  >
+    <LanguageDropdown
+      isStoryItemDropDown={true}
+      langOptions={null}
+      onSelectLanguage={[Function]}
+      selected="En"
+    />
+  </div>
+</div>
+`;

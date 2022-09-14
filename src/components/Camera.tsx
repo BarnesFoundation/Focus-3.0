@@ -24,7 +24,7 @@ type CameraState = {
   error?: string;
 };
 
-class Camera extends Component<CameraProps, CameraState> {
+export class CameraComponent extends Component<CameraProps, CameraState> {
   cropRectangle: {
     x: number;
     y: number;
@@ -330,4 +330,4 @@ class Camera extends Component<CameraProps, CameraState> {
   }
 }
 
-export default compose(withOrientation)(Camera);
+export default compose(withOrientation)(CameraComponent);

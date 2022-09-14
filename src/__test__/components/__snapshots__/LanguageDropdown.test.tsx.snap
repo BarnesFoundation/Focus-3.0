@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LanguageDropdown should match the snapshot 1`] = `
+<div
+  className="dd-wrapper"
+>
+  <div
+    aria-haspopup="true"
+    className="dd-header"
+    id="language-btn"
+    onClick={[Function]}
+  >
+    <div
+      aria-labelledby="language-btn"
+      className="dd-header-title"
+    />
+    <span>
+      <img
+        aria-hidden={true}
+        aria-label="Down"
+        src="down_gray_1x.png"
+      />
+    </span>
+  </div>
+</div>
+`;

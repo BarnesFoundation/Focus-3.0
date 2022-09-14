@@ -1,4 +1,4 @@
-import { ArtworkObject, ArtWorkResult } from "./payloadTypes";
+import { ArtworkObject, ArtWorkRecordsResult } from "./payloadTypes";
 
 export type StoryItemProps = {
   sceneStatus: {
@@ -66,7 +66,7 @@ export type ArtworkComponentState = {
   infoCardDuration: number;
   emailCardClickable: boolean;
   storyTopsClickable: {};
-  result: ArtWorkResult;
+  result: ArtWorkRecordsResult;
   selectedLanguage: LanguageOptionType;
   stories: any[];
   storyId: string;
