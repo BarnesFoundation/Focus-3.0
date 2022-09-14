@@ -131,10 +131,20 @@ export class Artwork extends Component<
     const durDefault = 300;
 
     if (!this.state.result) {
-      const [artworkInfo, storyResponse] = await Promise.all([
-        this.sr.getArtworkInformation(imageId),
-        this.setupStory(imageId),
-      ]);
+      let artworkInfo, storyResponse;
+
+      if (this.props.match.url.includes("artwork")) {
+        [artworkInfo, storyResponse] = await Promise.all([
+          this.sr.getArtworkInformation(imageId),
+          this.setupStory(imageId),
+        ]);
+      } else if (this.props.match.url.includes("exhibition")) {
+        [artworkInfo, storyResponse] = await Promise.all([
+          this.sr.getSpecialExhibitionObject(imageId),
+          this.setupStory(imageId),
+        ]);
+      }
+
       const { stories, storyId, storyTitle } = storyResponse;
       const { artwork, roomRecords } = constructResultAndInRoomSlider(
         artworkInfo,
