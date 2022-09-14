@@ -45,6 +45,11 @@ const Routes = () => (
                 key="artwork"
               />
               <Route
+                path={`${ROUTES.EXHIBITION}/:imageId?`}
+                component={Artwork}
+                key="artwork"
+              />
+              <Route
                 path={`${ROUTES.STORY}/:slug`}
                 component={StoryPage}
                 exact={false}

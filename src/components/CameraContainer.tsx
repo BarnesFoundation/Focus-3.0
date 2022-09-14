@@ -9,6 +9,7 @@ import { StorableSearch, ImageSearchResponse } from "../classes/searchResponse";
 import { SearchRequestService } from "../services/SearchRequestService";
 import { loadImage } from "./CameraHelper";
 import * as constants from "../constants";
+import { ARTWORK, EXHIBITION } from "../constants/routes";
 
 const Container = posed.div({
   enter: { opacity: 1 },
@@ -145,6 +146,7 @@ class CameraContainer extends Component<
     // Get the record and art url from it
     const record = response["data"]["records"][0];
     const { art_url: artUrl, id } = record;
+    const specialExhibition: boolean = response["data"]["specialExhibition"];
 
     // Load the image background first so that it gets cached for faster displaying
     const matchImage = loadImage(`${artUrl}?w=${width - 80}`);
@@ -153,9 +155,9 @@ class CameraContainer extends Component<
     );
 
     Promise.all([matchImage, matchImageBg]).then(() => {
-      // Navigate to the artwork page
+      // Navigate to the artwork or exhibition page
       this.props.history.push({
-        pathname: `/artwork/${id}`,
+        pathname: `${specialExhibition ? EXHIBITION : ARTWORK}/${id}`,
         state: { result: response },
       });
     });
