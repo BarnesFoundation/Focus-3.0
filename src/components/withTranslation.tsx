@@ -74,7 +74,7 @@ const withTranslation = (WrappedComponent) => {
       );
       // check local store for existing language preference and then save it if found
       const langPref = localStorage.getItem(SNAP_LANGUAGE_PREFERENCE);
-      langPref && (await this.sr.saveLanguagePreference(langPref));
+      if (langPref) await this.sr.saveLanguagePreference(langPref);
       // Set translations in state
       const translations = await this.sr.getAppTranslations();
       this.setState({ translations: translations, loaded: true });

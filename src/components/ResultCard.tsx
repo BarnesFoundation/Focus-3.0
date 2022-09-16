@@ -79,7 +79,6 @@ export const ResultCard: React.FC<ResultCardProps> = ({
                       />
                     )}
                   </ProgressiveImage>
-                  {/* <img src={artwork.url} alt="match_image" /> */}
                 </div>
                 <div className="card-artist">{artwork.artist}</div>
                 <div className="card-title">{artwork.title}</div>

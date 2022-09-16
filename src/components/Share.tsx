@@ -63,12 +63,10 @@ export const Share: React.FC<ShareProps> = ({ artwork, shareText }) => {
     setSharePopoverIsOpen(!sharePopoverIsOpen);
   };
 
-  const getFacebookShareUrl = () => {
-    const url = `https://collection.barnesfoundation.org/objects/${artwork.id}`;
-    return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-      url
-    )}`;
-  };
+  const fbUrl = `https://collection.barnesfoundation.org/objects/${artwork.id}`;
+  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+    fbUrl
+  )}`;
 
   /* Fallback for sharing functionality when native sharing is not available. Opens the web intent in a new window */
   const shareWebFallback = (e) => {
@@ -119,7 +117,7 @@ export const Share: React.FC<ShareProps> = ({ artwork, shareText }) => {
             </a>
             <a
               target="_blank"
-              href={getFacebookShareUrl()}
+              href={facebookShareUrl}
               data-id={constants.SOCIAL_MEDIA_FACEBOOK}
               rel="noreferrer"
             >

@@ -142,7 +142,7 @@ class SearchRequestService {
   /** Retrieves special exhibition object details from Hygraph/GraphCMS */
   getSpecialExhibitionObject = async (objectId) => {
     try {
-      let response = await axios.get(constants.EXHIBITION_OBJECT_URL(objectId));
+      const response = await axios.get(constants.EXHIBITION_OBJECT_URL(objectId));
       return response.data;
     } catch (error) {
       console.log("An error occurred while retrieving story from the server");
