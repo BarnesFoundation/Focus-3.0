@@ -1,7 +1,7 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 
-import { ArtworkService } from "../services";
+import { ArtworkService, TranslateService } from "../services";
 
 export const fieldName = "storablePhoto";
 const prisma = new PrismaClient();
@@ -12,10 +12,6 @@ class ExhibitionController {
     response: express.Response
   ) {
     const objectId = request.params.objectId;
-
-    // TODO - uncomment this once translation is working
-    // const session = request.session;
-    // const languagePreference = session.lang_pref;
     const objectData = await ArtworkService.findSpecialExhibitionObject(
       objectId
     );
@@ -24,6 +20,15 @@ class ExhibitionController {
     objectData[0]["art_url"] = objectData[0].image.url;
     objectData[0]["shortDescription"] = objectData[0].shortDescription.html;
     objectData[0]["id"] = objectData[0].objectId;
+
+    const session = request.session;
+    const preferredLanguage = session.lang_pref;
+
+    // Translate the content
+    objectData[0]["shortDescription"] = await TranslateService.translate(
+      objectData[0]["shortDescription"],
+      preferredLanguage
+    );
 
     const responseObject = {
       data: {
