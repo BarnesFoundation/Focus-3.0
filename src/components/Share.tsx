@@ -1,9 +1,14 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 
 import { Popover, PopoverBody } from "reactstrap";
 import shareButton from "../images/share-icon.svg";
 import * as constants from "../constants";
-import { ShareProps } from "../types/componentTypes";
+import { ArtworkObject } from "../types/payloadTypes";
+
+export type ShareProps = {
+  artwork: ArtworkObject["artwork"];
+  shareText: string;
+};
 
 export const Share: React.FC<ShareProps> = ({ artwork, shareText }) => {
   const [sharePopoverIsOpen, setSharePopoverIsOpen] = useState(false);

@@ -1,7 +1,11 @@
 import React from "react";
 import ReactModal from "react-modal";
-import { UnsupportedDialogueProps } from "../types/componentTypes";
-import withTranslation from "./withTranslation";
+import withTranslation, { WithTranslationState } from "./withTranslation";
+
+export type UnsupportedDialogueProps = {
+  unsupportedIOSBrowser?: boolean;
+  unsupportedIOSVersion?: boolean;
+} & WithTranslationState;
 
 export const UnsupportedDialogueComponent: React.FC<
   UnsupportedDialogueProps

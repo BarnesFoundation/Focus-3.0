@@ -10,15 +10,21 @@ import { SearchRequestService } from "../services/SearchRequestService";
 import { loadImage } from "./CameraHelper";
 import * as constants from "../constants";
 import { ARTWORK, EXHIBITION } from "../constants/routes";
-import {
-  CameraContainerProps,
-  CameraContainerState,
-} from "../types/componentTypes";
 
 const Container = posed.div({
   enter: { opacity: 1 },
   exit: { opacity: 0 },
 });
+
+type CameraContainerProps = {
+  history: History;
+};
+
+type CameraContainerState = {
+  scanSeqId: any;
+  shouldBeScanning: boolean;
+  sessionYieldedMatch: boolean;
+};
 
 export class CameraContainerComponent extends Component<
   CameraContainerProps,

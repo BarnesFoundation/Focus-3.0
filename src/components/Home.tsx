@@ -14,7 +14,7 @@ import kf_logo from "../images/knight-foundation-logo.svg";
 import { logiPhoneModel } from "../helpers/googleAnalyticsHelpers";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import withTranslation from "./withTranslation";
-import { WithTranslationState } from "../types/componentTypes";
+import { WithTranslationState } from "../withTranslation";
 
 export const HomeComponent: React.FC<WithTranslationState> = ({
   getTranslation,

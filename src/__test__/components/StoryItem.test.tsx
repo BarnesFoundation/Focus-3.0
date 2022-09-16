@@ -5,7 +5,7 @@ import { configure } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 
 import StoryItem from "../../components/StoryItem";
-import { StoryItemProps } from "../../types/componentTypes";
+import { StoryItemProps } from "../../withTranslation";
 
 let container;
 configure({ adapter: new Adapter() }); //enzyme - react 16 hooks support

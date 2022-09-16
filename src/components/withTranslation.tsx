@@ -4,10 +4,37 @@ import {
   SNAP_LANGUAGE_PREFERENCE,
   SNAP_LANGUAGE_TRANSLATION,
 } from "../constants";
-import {
-  LanguageOptionType,
-  WithTranslationState,
-} from "../types/componentTypes";
+
+type English = { name: "English"; code: "En"; selected: boolean };
+type Spanish = { name: "Español"; code: "Es"; selected: boolean };
+type French = { name: "Français"; code: "Fr"; selected: boolean };
+type German = { name: "Deutsch"; code: "De"; selected: boolean };
+type Italian = { name: "Italiano"; code: "It"; selected: boolean };
+type Russian = { name: "русский"; code: "Ru"; selected: boolean };
+type Chinese = { name: "中文"; code: "Zh"; selected: boolean };
+type Japanese = { name: "日本語"; code: "Ja"; selected: boolean };
+type Korean = { name: "한국어"; code: "Ko"; selected: boolean };
+
+export type LanguageOptionType =
+  | English
+  | Spanish
+  | French
+  | German
+  | Italian
+  | Russian
+  | Chinese
+  | Japanese
+  | Korean;
+
+export type WithTranslationState = {
+  translations;
+  loaded: boolean;
+  getTranslation: (screen: string, textId: string) => string;
+  updateTranslations: () => Promise<void>;
+  langOptions: LanguageOptionType[];
+  getSelectedLanguage: () => Promise<LanguageOptionType[]>;
+  updateSelectedLanguage: (language: LanguageOptionType) => Promise<void>;
+};
 
 const withTranslation = (WrappedComponent) => {
   return class WithTranslation extends React.Component<

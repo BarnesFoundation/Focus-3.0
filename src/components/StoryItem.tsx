@@ -11,7 +11,51 @@ import {
 } from "../constants";
 import { isAndroid } from "react-device-detect";
 import VizSensor from "react-visibility-sensor";
-import { StoryItemProps, StoryItemState } from "../types/componentTypes";
+
+type StoryItemProps = {
+  sceneStatus: {
+    type: string;
+    state: string;
+  };
+  statusCallback: (showTitle: boolean) => void;
+  storyIndex: number;
+  onStoryReadComplete: () => void;
+  getSize: (scrollOffset: number, storyIndex: number) => void;
+  storyEmailPage?: boolean;
+  isLastStoryItem: boolean;
+  progress: number;
+  story: {
+    detail: {
+      art_url: string;
+      people: string;
+      title: string;
+      culture: string;
+      nationality: string;
+      birthDate: string;
+      deathDate: string;
+      displayDate: string;
+    };
+    long_paragraph: {
+      html: string;
+    };
+    short_paragraph: {
+      html: string;
+    };
+  };
+  storyTitle: string;
+  onVisChange: (isVisible: boolean, storyIndex: number) => void;
+  selectedLanguage: {
+    code: string;
+  };
+};
+
+type StoryItemState = {
+  storyRead: boolean;
+  heightUpdated: boolean;
+  scrollHeight: number;
+  showTitle: boolean;
+  scrollOffset?: number;
+};
 
 class StoryItem extends React.Component<StoryItemProps, StoryItemState> {
   contentRef: HTMLDivElement;

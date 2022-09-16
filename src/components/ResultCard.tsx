@@ -1,12 +1,24 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ProgressiveImage from "react-progressive-image";
 import { LANGUAGE_EN, SNAP_LANGUAGE_PREFERENCE } from "../constants";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import google_logo from "../images/google_translate.svg";
-import { ResultCardProps } from "../types/componentTypes";
+import { LanguageOptionType, WithTranslationState } from "./withTranslation";
+import { ArtworkObject } from "../types/payloadTypes";
 import { LanguageDropdown } from "./LanguageDropdown";
 import { Share } from "./Share";
-import withTranslation from "./withTranslation";
+
+export type ResultCardProps = {
+  artwork: ArtworkObject["artwork"];
+  refCallbackInfo: (element: any) => void;
+  setArtworkRef: (element: any) => void;
+  langOptions: WithTranslationState["langOptions"];
+  selectedLanguage: LanguageOptionType;
+  onSelectLanguage: (item: LanguageOptionType) => void;
+  shortDescContainer: any;
+  specialExhibition: boolean;
+  getTranslation: WithTranslationState["getTranslation"];
+};
 
 export const ResultCard: React.FC<ResultCardProps> = ({
   artwork,

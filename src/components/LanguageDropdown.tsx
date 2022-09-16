@@ -4,10 +4,17 @@ import down_gray from "../images/down_gray_1x.png";
 import down_white from "../images/down_wht_1x.png";
 import up_gray from "../images/up_gray_1x.png";
 import up_white from "../images/up_wht_1x.png";
-import { LanguageDropdownProps } from "../types/componentTypes";
+import { LanguageOptionType, WithTranslationState } from "./withTranslation";
 
 const DROP_UP = "UP";
 const DROP_DOWN = "DOWN";
+
+type LanguageDropdownProps = {
+  onSelectLanguage: (item: LanguageOptionType) => void;
+  isStoryItemDropDown?: boolean;
+  selected: LanguageOptionType;
+  langOptions: WithTranslationState["langOptions"];
+};
 
 export const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
   onSelectLanguage,

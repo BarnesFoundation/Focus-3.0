@@ -1,11 +1,12 @@
 import React, { Component, CSSProperties } from "react";
 import { withRouter } from "react-router";
+import { History, Match } from "react-router-dom";
 import { compose } from "redux";
 import $ from "jquery";
 
 import * as constants from "../constants";
 import withOrientation from "./withOrientation";
-import withTranslation from "./withTranslation";
+import withTranslation, { LanguageOptionType, WithTranslationState } from "./withTranslation";
 
 import { EmailForm } from "./EmailForm";
 
@@ -23,14 +24,10 @@ import { ScanButton } from "./ScanButton";
 import { ResultCard } from "./ResultCard";
 import { StoryTitle } from "./StoryTitle";
 import {
-  ArtworkComponentProps,
-  ArtworkComponentState,
-  LanguageOptionType,
-} from "../types/componentTypes";
-import {
   constructResultAndInRoomSlider,
   constructStory,
 } from "../helpers/artWorkHelper";
+import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
 
 /**
  * withRouter HOC provides props with location, history and match objects
@@ -50,6 +47,40 @@ const SectionWipesStyled = styled.div`
     position: fixed;
   }
 `;
+
+type ArtworkComponentProps = {
+  match: Match;
+  history: History;
+} & WithTranslationState;
+
+type ArtworkComponentState = {
+  showEmailScreen: boolean;
+  emailCaptured: boolean;
+  showEmailForm: boolean;
+  emailCaptureAck: boolean;
+  imgLoaded: boolean;
+  alsoInRoomResults: any[];
+  email: string;
+  snapAttempts: number;
+  errors: { email: boolean };
+  showTitleBar: boolean;
+  storyDuration: number;
+  infoHeightUpdated: boolean;
+  infoCardDuration: number;
+  emailCardClickable: boolean;
+  storyTopsClickable: {};
+  result: ArtWorkRecordsResult;
+  selectedLanguage: LanguageOptionType;
+  stories: any[];
+  storyId: string;
+  storyTitle: string;
+  showStory: boolean;
+  artwork: ArtworkObject["artwork"];
+  roomRecords: ArtworkObject["roomRecords"];
+  storyDurationsCurrent: any[];
+  storyOffsets: any[];
+};
+
 
 export class Artwork extends Component<
   ArtworkComponentProps,

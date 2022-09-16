@@ -1,6 +1,12 @@
 import React from "react";
-import { StoryTitleProps } from "../types/componentTypes";
+import { LanguageOptionType, WithTranslationState } from "./withTranslation";
 import { LanguageDropdown } from "./LanguageDropdown";
+
+export type StoryTitleProps = {
+  langOptions: WithTranslationState["langOptions"];
+  selectedLanguage: LanguageOptionType;
+  onSelectLanguage: (item: LanguageOptionType) => void;
+};
 
 export const StoryTitle: React.FC<StoryTitleProps> = ({
   langOptions,
