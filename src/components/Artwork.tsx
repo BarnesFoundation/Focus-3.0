@@ -275,8 +275,9 @@ export class Artwork extends Component<
     const artworkInfo = await this.sr.getArtworkInformation(imageId);
 
     const { stories, storyId, storyTitle } = await this.setupStory(imageId);
-    const { artwork, roomRecords } =
-      artworkInfo && constructResultAndInRoomSlider(artworkInfo, isTablet);
+    const { artwork, roomRecords } = artworkInfo
+      ? constructResultAndInRoomSlider(artworkInfo, isTablet)
+      : undefined;
 
     this.setState({
       result: artworkInfo,
