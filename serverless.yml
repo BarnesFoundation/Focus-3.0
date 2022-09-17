@@ -21,6 +21,7 @@ resources:
 
 functions:
     server:
+        url: true
         handler: dist/server/handler.server
         events:
             - http: ANY /
