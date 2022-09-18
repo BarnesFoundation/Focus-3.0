@@ -27,7 +27,7 @@ dev:
 	npm run deploy:dev
 
 dry_package: 
-	npx serverless package
+	npx serverless package --stage dry
 
 # Deploy to development
 deploy_dev: build dev reset_node
