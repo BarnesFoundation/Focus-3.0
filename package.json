@@ -35,8 +35,8 @@
         "local-server": "NODE_DEBUG=email-templates nodemon dist/server/app.js",
         "watch-server": "tsc -w -p server",
         "dev": " concurrently \"npm run watch-server\" \"npm run local-server\"",
-		"deploy:dev": "serverless deploy -v --stage dev",
-		"deploy:prod": "serverless deploy -v --stage prod"
+		"deploy:dev": "npx serverless deploy --verbose --stage dev",
+		"deploy:prod": "npx serverless deploy --verbose --stage prod"
     },
     "eslintConfig": {
         "extends": [
