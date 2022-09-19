@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Camera should match the snapshot when session should be scanning is true 1`] = `
+<div>
+  <div
+    class="camera"
+  >
+    <div>
+      <video
+        autoplay=""
+        id="video"
+        playsinline=""
+        style="filter: blur(25px); transform: scale(1.2);"
+        width="100%"
+      />
+      <div />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Camera should match the snapshot when session yielded match is false 1`] = `
+<div>
+  <div
+    class="camera"
+  >
+    <div>
+      <video
+        autoplay=""
+        id="video"
+        playsinline=""
+        style="filter: blur(25px); transform: scale(1.2);"
+        width="100%"
+      />
+      <div />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Camera should match the snapshot when session yielded match is true 1`] = `
+<div>
+  <div
+    class="camera"
+  >
+    <div>
+      <video
+        autoplay=""
+        id="video"
+        playsinline=""
+        style="filter: blur(25px); transform: scale(1.2);"
+        width="100%"
+      />
+      <canvas
+        id="video-preview"
+      />
+      <div />
+    </div>
+  </div>
+</div>
+`;

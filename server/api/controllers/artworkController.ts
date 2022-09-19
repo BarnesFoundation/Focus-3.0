@@ -38,6 +38,7 @@ class ArtworkController {
           roomRecords: null,
           message: "Result found",
           showStory: storyInformation.hasStory,
+          specialExhibition: false,
         },
         success: true,
         requestComplete: true,

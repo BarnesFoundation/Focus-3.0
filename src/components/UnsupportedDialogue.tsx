@@ -1,17 +1,19 @@
-import React, { useContext } from "react";
+import React from "react";
 import ReactModal from "react-modal";
-import { TranslationContext } from "../contexts/TranslationContext";
+import withTranslation, { WithTranslationState } from "./withTranslation";
 
-type UnsupportedDialogueProps = {
+export type UnsupportedDialogueProps = {
   unsupportedIOSBrowser?: boolean;
   unsupportedIOSVersion?: boolean;
-};
+} & WithTranslationState;
 
-export const UnsupportedDialogue: React.FC<UnsupportedDialogueProps> = ({
+export const UnsupportedDialogueComponent: React.FC<
+  UnsupportedDialogueProps
+> = ({
   unsupportedIOSBrowser = false,
   unsupportedIOSVersion = false,
+  getTranslation,
 }) => {
-  const { getTranslation } = useContext(TranslationContext);
   const text = unsupportedIOSBrowser
     ? "text_1"
     : unsupportedIOSVersion
@@ -30,3 +32,7 @@ export const UnsupportedDialogue: React.FC<UnsupportedDialogueProps> = ({
     )
   );
 };
+
+export const UnsupportedDialogue = withTranslation(
+  UnsupportedDialogueComponent
+);

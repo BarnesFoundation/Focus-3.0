@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { isAndroid, isIOS, isSafari, osVersion } from "react-device-detect";
 import { useHistory } from "react-router-dom";
 import { Textfit } from "react-textfit";
@@ -13,11 +13,13 @@ import kf_logo from "../images/knight-foundation-logo.svg";
 
 import { logiPhoneModel } from "../helpers/googleAnalyticsHelpers";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import { TranslationContext } from "../contexts/TranslationContext";
+import withTranslation from "./withTranslation";
+import { WithTranslationState } from "../withTranslation";
 
-export const Home: React.FC = () => {
+export const HomeComponent: React.FC<WithTranslationState> = ({
+  getTranslation,
+}) => {
   const { resetLocalStorage } = useLocalStorage();
-  const { getTranslation } = useContext(TranslationContext);
   const history = useHistory();
   const [userAtBarnes, setUserAtBarnes] = useState(null);
   const [unsupportedIOSVersion, setUnsupportedIOSVersion] = useState(null);
@@ -216,3 +218,5 @@ export const Home: React.FC = () => {
     </div>
   );
 };
+
+export const Home = withTranslation(HomeComponent);

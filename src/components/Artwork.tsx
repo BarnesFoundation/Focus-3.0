@@ -1,19 +1,16 @@
-import React, { Component } from "react";
+import React, { Component, CSSProperties } from "react";
 import { withRouter } from "react-router";
+import { History, Match } from "react-router-dom";
 import { compose } from "redux";
-import $ from 'jquery';
-import classnames from "classnames";
+import $ from "jquery";
 
 import * as constants from "../constants";
 import withOrientation from "./withOrientation";
-import withTranslation from "./withTranslation";
+import withTranslation, { LanguageOptionType, WithTranslationState } from "./withTranslation";
 
-import LanguageDropdown from "./LanguageDropdown";
 import { EmailForm } from "./EmailForm";
 
-import google_logo from "../images/google_translate.svg";
 import { SearchRequestService } from "../services/SearchRequestService";
-import ProgressiveImage from "react-progressive-image";
 import { Controller, Scene } from "react-scrollmagic";
 // @ts-ignore
 import styled, { css } from "styled-components";
@@ -24,7 +21,13 @@ import ScrollMagic from "scrollmagic";
 import { isAndroid, isIOS } from "react-device-detect";
 
 import { ScanButton } from "./ScanButton";
-import { Share } from "./Share";
+import { ResultCard } from "./ResultCard";
+import { StoryTitle } from "./StoryTitle";
+import {
+  constructResultAndInRoomSlider,
+  constructStory,
+} from "../helpers/artWorkHelper";
+import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
 
 /**
  * withRouter HOC provides props with location, history and match objects
@@ -45,7 +48,61 @@ const SectionWipesStyled = styled.div`
   }
 `;
 
-class Artwork extends Component {
+type ArtworkComponentProps = {
+  match: Match;
+  history: History;
+} & WithTranslationState;
+
+type ArtworkComponentState = {
+  showEmailScreen: boolean;
+  emailCaptured: boolean;
+  showEmailForm: boolean;
+  emailCaptureAck: boolean;
+  imgLoaded: boolean;
+  alsoInRoomResults: any[];
+  email: string;
+  snapAttempts: number;
+  errors: { email: boolean };
+  showTitleBar: boolean;
+  storyDuration: number;
+  infoHeightUpdated: boolean;
+  infoCardDuration: number;
+  emailCardClickable: boolean;
+  storyTopsClickable: {};
+  result: ArtWorkRecordsResult;
+  selectedLanguage: LanguageOptionType;
+  stories: any[];
+  storyId: string;
+  storyTitle: string;
+  showStory: boolean;
+  artwork: ArtworkObject["artwork"];
+  roomRecords: ArtworkObject["roomRecords"];
+  storyDurationsCurrent: any[];
+  storyOffsets: any[];
+};
+
+
+export class Artwork extends Component<
+  ArtworkComponentProps,
+  ArtworkComponentState
+> {
+  sr: SearchRequestService;
+  artworkScene;
+  emailScene;
+  emailSceneTrigger;
+  artworkRef;
+  infoCardRef;
+  emailCardRef;
+  sceneRefs: {};
+  contentOffset: number;
+  artworkScrollOffset: number;
+  langOptions: LanguageOptionType[];
+  artworkTimeoutCallback;
+  emailSubmitTimeoutCallback;
+  controller;
+  emailFormHeight: number;
+  shortDescContainer;
+
   constructor(props) {
     super(props);
 
@@ -66,18 +123,6 @@ class Artwork extends Component {
     this.contentOffset = 67;
     this.artworkScrollOffset = 0;
 
-    this.langOptions = [
-      { name: "English", code: "En", selected: true },
-      { name: "Español", code: "Es", selected: false },
-      { name: "Français", code: "Fr", selected: false },
-      { name: "Deutsch", code: "De", selected: false },
-      { name: "Italiano", code: "It", selected: false },
-      { name: "русский", code: "Ru", selected: false },
-      { name: "中文", code: "Zh", selected: false },
-      { name: "日本語", code: "Ja", selected: false },
-      { name: "한국어", code: "Ko", selected: false },
-    ];
-
     this.state = {
       ...props.location.state,
       showEmailScreen: false,
@@ -87,7 +132,8 @@ class Artwork extends Component {
       imgLoaded: false,
       alsoInRoomResults: [],
       email: localStorage.getItem(constants.SNAP_USER_EMAIL) || "",
-      snapAttempts: localStorage.getItem(constants.SNAP_ATTEMPTS) || 1,
+      snapAttempts:
+        parseInt(localStorage.getItem(constants.SNAP_ATTEMPTS)) || 1,
       errors: { email: false },
       showTitleBar: false,
       storyDuration: 250,
@@ -101,92 +147,11 @@ class Artwork extends Component {
     this.emailSubmitTimeoutCallback = null;
   }
 
-  constructResultAndInRoomSlider = (artworkResult) => {
-    const { success } = artworkResult;
-
-    let artwork = {};
-    let roomRecords = [];
-
-    if (success) {
-      // If the artwork result has records
-      if (artworkResult["data"]["records"].length > 0) {
-        const w = screen.width;
-        const h = isTablet ? screen.height : 95;
-        const artUrlParams = `?w=${w - 120}`;
-        const cropParams = `?q=0&auto=compress&crop=faces,entropy&fit=crop&w=${w}`;
-        const topCropParams = `?q=0&auto=compress&crop=top&fit=crop&h=${h}&w=${w}`;
-        const lowQualityParams = `?q=0&auto=compress&w=${w - 120}`;
-
-        // Extract needed data from the art object
-        const artObject = artworkResult["data"]["records"][0];
-        const {
-          id,
-          title,
-          shortDescription,
-          people: artist,
-          nationality,
-          birthDate,
-          deathDate,
-          culture,
-          classification,
-          locations,
-          medium,
-          invno,
-          displayDate,
-          dimensions,
-          visualDescription,
-        } = artObject;
-
-        // Determine the flags
-        const curatorialApproval =
-          artObject.curatorialApproval === "false" ? false : true;
-        const unIdentified = artObject.people
-          .toLowerCase()
-          .includes("unidentified");
-
-        // Assign into artwork
-        artwork = {
-          id,
-          title,
-          shortDescription,
-          artist,
-          nationality,
-          birthDate,
-          deathDate,
-          culture,
-          classification,
-          locations,
-          medium,
-          invno,
-          displayDate,
-          dimensions,
-          visualDescription,
-
-          // Set the urls
-          url: `${artObject.art_url}${artUrlParams}`,
-          url_low_quality: `${artObject.art_url}${lowQualityParams}`,
-          bg_url: `${artObject.art_url}${topCropParams}`,
-
-          // Set the flags
-          curatorialApproval,
-          unIdentified,
-        };
-      }
-      // Get the room records array
-      const rr = artworkResult["data"]["roomRecords"] || [];
-
-      if (rr?.length > 0) {
-        roomRecords = rr;
-      }
-    }
-    return { artwork, roomRecords };
-  };
-
   async componentWillMount() {
     let imageId = this.state.result
       ? this.state.result.data.records[0].id
       : this.props.match.params.imageId;
-    const selectedLang = await this.getSelectedLanguage();
+    const selectedLang = await this.props.getSelectedLanguage();
     const emailCaptured =
       localStorage.getItem(constants.SNAP_USER_EMAIL) !== null;
 
@@ -197,13 +162,25 @@ class Artwork extends Component {
     const durDefault = 300;
 
     if (!this.state.result) {
-      const [artworkInfo, storyResponse] = await Promise.all([
-        this.sr.getArtworkInformation(imageId),
-        this.setupStory(imageId),
-      ]);
+      let artworkInfo, storyResponse;
+
+      if (this.props.match.url.includes("artwork")) {
+        [artworkInfo, storyResponse] = await Promise.all([
+          this.sr.getArtworkInformation(imageId),
+          this.setupStory(imageId),
+        ]);
+      } else if (this.props.match.url.includes("exhibition")) {
+        [artworkInfo, storyResponse] = await Promise.all([
+          this.sr.getSpecialExhibitionObject(imageId),
+          this.setupStory(imageId),
+        ]);
+      }
+
       const { stories, storyId, storyTitle } = storyResponse;
-      const { artwork, roomRecords } =
-        this.constructResultAndInRoomSlider(artworkInfo);
+      const { artwork, roomRecords } = constructResultAndInRoomSlider(
+        artworkInfo,
+        isTablet
+      );
 
       stories.forEach((story) => {
         durationCurArr.push(durDefault);
@@ -228,8 +205,9 @@ class Artwork extends Component {
         storyOffsets: offsetArr,
       });
     } else {
-      const { artwork, roomRecords } = this.constructResultAndInRoomSlider(
-        this.state.result
+      const { artwork, roomRecords } = constructResultAndInRoomSlider(
+        this.state.result,
+        isTablet
       );
       const { stories, storyId, storyTitle } = await this.setupStory(imageId);
 
@@ -316,53 +294,21 @@ class Artwork extends Component {
     }
   };
 
-  getSelectedLanguage = async () => {
-    const selectedLangCode = localStorage.getItem(
-      constants.SNAP_LANGUAGE_PREFERENCE
-    );
-    if (selectedLangCode !== null) {
-      this.langOptions.map((option) => {
-        if (option.code === selectedLangCode) {
-          option.selected = true;
-        } else {
-          option.selected = false;
-        }
-      });
-    }
-    return this.langOptions.filter((lang) => lang.selected === true);
-  };
-
-  updateSelectedLanguage = (lang) => {
-    this.langOptions.map((option) => {
-      if (option.code === lang.code) {
-        option.selected = true;
-      } else {
-        option.selected = false;
-      }
-    });
-  };
-
-  onSelectLanguage = async (selectedLanguage) => {
+  onSelectLanguage = async (selectedLanguage: LanguageOptionType) => {
     // Scroll to top when language changes. This should help re-calculate correct offsets on language change
     window.scroll({ top: 0, behavior: "smooth" });
 
     // Update local storage with the new set language and then update the server session
-    localStorage.setItem(
-      constants.SNAP_LANGUAGE_PREFERENCE,
-      selectedLanguage.code
-    );
-    await this.sr.saveLanguagePreference(selectedLanguage.code);
-
-    await this.props.updateTranslations();
-    this.updateSelectedLanguage(selectedLanguage);
+    await this.props.updateSelectedLanguage(selectedLanguage);
 
     // Get the new language translations
     const imageId = this.getFocusedArtworkImageId();
     const artworkInfo = await this.sr.getArtworkInformation(imageId);
 
     const { stories, storyId, storyTitle } = await this.setupStory(imageId);
-    const { artwork, roomRecords } =
-      this.constructResultAndInRoomSlider(artworkInfo);
+    const { artwork, roomRecords } = artworkInfo
+      ? constructResultAndInRoomSlider(artworkInfo, isTablet)
+      : undefined;
 
     this.setState({
       result: artworkInfo,
@@ -383,22 +329,13 @@ class Artwork extends Component {
 
   setupStory = async (imageId) => {
     const storyInformation = await this.sr.getStoryItems(imageId);
-    let stories = [],
-      storyId = undefined,
-      storyTitle = undefined;
-
-    if (storyInformation.data.total > 0) {
-      ({ stories, story_title: storyTitle } = storyInformation.data.content);
-      storyId = storyInformation.data.unique_identifier;
-    }
-
-    return { stories, storyId, storyTitle };
+    return constructStory(storyInformation);
   };
 
   onSelectInRoomArt = (aitrId) => {
     localStorage.setItem(
       constants.SNAP_ATTEMPTS,
-      parseInt(this.state.snapAttempts) + 1
+      (this.state.snapAttempts + 1).toString()
     );
     this.props.history.push({ pathname: `/artwork/${aitrId}` });
   };
@@ -565,213 +502,6 @@ class Artwork extends Component {
     this.setState({ imgLoaded: true });
   };
 
-  /* Renders the focused artwork card */
-  renderArtwork = () => {
-    const { artwork, selectedLanguage } = this.state;
-    const shortDescFontStyle =
-      localStorage.getItem(constants.SNAP_LANGUAGE_PREFERENCE) === "Ru"
-        ? { fontSize: `14px` }
-        : {};
-
-    const { refCallbackInfo, setArtworkRef, langOptions, onSelectLanguage } =
-      this;
-
-    return (
-      <div className="container-fluid artwork-container" id="search-result">
-        <div className="row" ref={refCallbackInfo}>
-          <div className="artwork-top-bg">
-            <img
-              className="card-img-top"
-              src={artwork.bg_url}
-              alt="match_image_background"
-              aria-hidden={true}
-            />
-          </div>
-          <div className="col-12 col-md-12">
-            <div
-              id="result-card"
-              className="card"
-              data-title={artwork.title}
-              data-artist={artwork.artist}
-              data-id={artwork.id}
-              data-invno={artwork.invno}
-              data-nodesc-invno={!artwork.shortDescription ? artwork.invno : ""}
-            >
-              <div className="card-top-container">
-                <div className="card-img-overlay">
-                  <div className="card-header h1">Focused Artwork</div>
-                  <div className="card-img-result">
-                    <ProgressiveImage
-                      src={artwork.url}
-                      placeholder={artwork.url_low_quality}
-                    >
-                      {(src) => (
-                        <img
-                          src={src}
-                          alt="match_image"
-                          role="img"
-                          aria-label={`${artwork.title} by ${artwork.artist}${
-                            artwork.culture ? `, ${artwork.culture}.` : "."
-                          } ${artwork.visualDescription}`}
-                        />
-                      )}
-                    </ProgressiveImage>
-                    {/* <img src={artwork.url} alt="match_image" /> */}
-                  </div>
-                  <div className="card-artist">{artwork.artist}</div>
-                  <div className="card-title">{artwork.title}</div>
-                </div>
-              </div>
-              <div
-                className="card-body"
-                id="focussed-artwork-body"
-                ref={setArtworkRef}
-              >
-                <div className="share-wrapper">
-                  {/* Language options button */}
-                  <div className="language-dropdown-wrapper">
-                    <div className="language-dropdown">
-                      <LanguageDropdown
-                        langOptions={langOptions}
-                        selected={selectedLanguage}
-                        onSelectLanguage={onSelectLanguage}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Share options button */}
-                  <Share
-                    shareText={this.props.getTranslation(
-                      "Result_page",
-                      "text_1"
-                    )}
-                    artwork={artwork}
-                  />
-                </div>
-
-                <div
-                  className="short-desc-container"
-                  ref={(elem) => (this.shortDescContainer = elem)}
-                >
-                  {artwork.shortDescription && (
-                    <div
-                      className="card-text paragraph"
-                      style={shortDescFontStyle}
-                      dangerouslySetInnerHTML={{
-                        __html: artwork.shortDescription,
-                      }}
-                    ></div>
-                  )}
-                </div>
-                {artwork.shortDescription &&
-                  selectedLanguage.code !== constants.LANGUAGE_EN && (
-                    <div className="google-translate-disclaimer">
-                      <span>Translated with </span>
-                      <img src={google_logo} alt="google_logo" />
-                    </div>
-                  )}
-                <div className="card-info">
-                  <table className="detail-table">
-                    <tbody>
-                      <tr>
-                        <td className="text-left item-label">{`${this.props.getTranslation(
-                          "Result_page",
-                          "text_3"
-                        )}:`}</td>
-                        <td className="text-left item-info">
-                          {artwork.artist}{" "}
-                          {!artwork.unIdentified && artwork.nationality
-                            ? `(${artwork.nationality}, ${artwork.birthDate} - ${artwork.deathDate})`
-                            : ""}
-                        </td>
-                      </tr>
-                      {artwork.unIdentified && (
-                        <tr>
-                          <td className="text-left item-label">
-                            {`${this.props.getTranslation(
-                              "Result_page",
-                              "text_10"
-                            )}:`}
-                          </td>
-                          <td className="text-left item-info">
-                            {artwork.culture}
-                          </td>
-                        </tr>
-                      )}
-                      <tr>
-                        <td className="text-left item-label">{`${this.props.getTranslation(
-                          "Result_page",
-                          "text_4"
-                        )}:`}</td>
-                        <td className="text-left item-info">{artwork.title}</td>
-                      </tr>
-                      <tr>
-                        <td className="text-left item-label">{`${this.props.getTranslation(
-                          "Result_page",
-                          "text_5"
-                        )}:`}</td>
-                        <td className="text-left item-info">
-                          {artwork.displayDate}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="text-left item-label">{`${this.props.getTranslation(
-                          "Result_page",
-                          "text_6"
-                        )}:`}</td>
-                        <td className="text-left item-info">
-                          {artwork.medium}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="text-left item-label">{`${this.props.getTranslation(
-                          "Result_page",
-                          "text_7"
-                        )}:`}</td>
-                        <td className="text-left item-info">
-                          {artwork.dimensions}
-                        </td>
-                      </tr>
-                      {!artwork.curatorialApproval && (
-                        <tr>
-                          <td className="text-left item-label">
-                            {`${this.props.getTranslation(
-                              "Result_page",
-                              "text_8"
-                            )}:`}
-                          </td>
-                          <td className="text-left item-info">
-                            {this.props.getTranslation("Result_page", "text_9")}
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  /** Renders the title bar with language dropdown */
-  renderTitleBar = () => {
-    return (
-      <div id="story-title-bar" className="story-title-bar">
-        <div className="language-dropdown">
-          <LanguageDropdown
-            isStoryItemDropDown={true}
-            langOptions={this.langOptions}
-            selected={this.state.selectedLanguage}
-            onSelectLanguage={this.onSelectLanguage}
-          />
-        </div>
-      </div>
-    );
-  };
-
   /** Renders each of the story cards */
   renderStory = () => {
     const { stories, storyTitle, showEmailForm } = this.state;
@@ -791,7 +521,7 @@ class Artwork extends Component {
       const pointerEvent = this.state.storyTopsClickable[index]
         ? "none"
         : "auto";
-      const peekOffsetStyle = {
+      const peekOffsetStyle: CSSProperties = {
         height: `${peekOffset}px`,
         top: `-${peekHeight}px`,
         pointerEvents: pointerEvent,
@@ -810,6 +540,11 @@ class Artwork extends Component {
           key={`storyitem${storyIndex}`}
           triggerHook="onLeave"
           pin
+          /** There is something weird going on with react-scrollmagic types that
+           * keeps giving us an error, but we can't change this component or update
+           * the dependency or else it breaks!
+           */
+          // @ts-ignore
           pinSettings={{ pushFollowers: false }}
           duration={storyDuration}
           offset={storySceneOffset}
@@ -842,13 +577,10 @@ class Artwork extends Component {
                   isLastStoryItem={index === stories.length - 1 ? true : false}
                   story={story}
                   storyTitle={storyTitle}
-                  langOptions={this.langOptions}
                   selectedLanguage={this.state.selectedLanguage}
-                  onSelectLanguage={this.onSelectLanguage}
                   onStoryReadComplete={this.onStoryReadComplete}
                   getSize={this.onStoryHeightReady}
                   statusCallback={this.storySceneCallback}
-                  getTranslation={this.props.getTranslation}
                   onVisChange={this.onVisibilityChange}
                 />
               </div>
@@ -886,6 +618,11 @@ class Artwork extends Component {
         <Scene
           loglevel={0}
           key={`storytriggerenter${index + 1}`}
+          /** There is something weird going on with react-scrollmagic types that
+           * keeps giving us an error, but we can't change this component or update
+           * the dependency or else it breaks!
+           */
+          // @ts-ignore
           pin={`#story-card-${index}`}
           triggerElement={`#story-card-${index}`}
           triggerHook="onEnter"
@@ -911,6 +648,11 @@ class Artwork extends Component {
     return (
       <Scene
         loglevel={0}
+        /** There is something weird going on with react-scrollmagic types that
+         * keeps giving us an error, but we can't change this component or update
+         * the dependency or else it breaks!
+         */
+        // @ts-ignore
         pin={`#email-panel`}
         triggerElement={`#email-panel`}
         triggerHook="onEnter"
@@ -941,7 +683,15 @@ class Artwork extends Component {
     return (
       <Controller {...controllerProps}>
         {/* Render these components conditionally, otherwise render empty divs */}
-        {showTitleBar ? this.renderTitleBar() : <div />}
+        {showTitleBar ? (
+          <StoryTitle
+            langOptions={this.props.langOptions}
+            selectedLanguage={this.state.selectedLanguage}
+            onSelectLanguage={this.onSelectLanguage}
+          />
+        ) : (
+          <div />
+        )}
         {showEmailPin ? this.renderEmailPin() : <div />}
         {showStory ? this.renderPinsEnter() : <div />}
         {showStory ? this.renderStory() : <div />}
@@ -951,17 +701,24 @@ class Artwork extends Component {
 
   /** Responsible for rendering the entirety of the page */
   renderResult = () => {
-    const {
-      showStory,
-      emailCaptureAck,
-      showEmailForm,
-      emailCardClickable
-    } = this.state;
+    const { showStory, emailCaptureAck, showEmailForm, emailCardClickable } =
+      this.state;
     const hasChildCards = showStory || !emailCaptureAck;
 
     return (
       <SectionWipesStyled hasChildCards={hasChildCards}>
-        {this.renderArtwork()}
+        <ResultCard
+          // @ts-ignore
+          artwork={this.state.artwork}
+          refCallbackInfo={this.refCallbackInfo}
+          setArtworkRef={this.setArtworkRef}
+          langOptions={this.props.langOptions}
+          selectedLanguage={this.state.selectedLanguage}
+          onSelectLanguage={this.onSelectLanguage}
+          shortDescContainer={this.shortDescContainer}
+          specialExhibition={this.state.result.data.specialExhibition}
+          getTranslation={this.props.getTranslation}
+        />
 
         {this.renderStoryContainer()}
 
@@ -1017,4 +774,8 @@ class Artwork extends Component {
   }
 }
 
-export default compose(withOrientation, withTranslation, withRouter)(Artwork);
+export default compose<Artwork>(
+  withOrientation,
+  withTranslation,
+  withRouter
+)(Artwork);

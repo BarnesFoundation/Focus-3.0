@@ -3,7 +3,6 @@ import { compose } from "redux";
 import { cropPhoto } from "./CameraHelper";
 import * as constants from "../constants";
 import withOrientation from "./withOrientation";
-import withTranslation from "./withTranslation";
 import { shouldLogPermissionGrantTime } from "../helpers/googleAnalyticsHelpers";
 import { NoMatchOverlay } from "./NoMatchOverlay";
 
@@ -25,7 +24,7 @@ type CameraState = {
   error?: string;
 };
 
-class Camera extends Component<CameraProps, CameraState> {
+export class CameraComponent extends Component<CameraProps, CameraState> {
   cropRectangle: {
     x: number;
     y: number;
@@ -318,6 +317,7 @@ class Camera extends Component<CameraProps, CameraState> {
 
             {/* If there was an unsuccessful attempt, transition into the no result found */}
             <NoMatchOverlay
+              // @ts-ignore
               displayOverlay={
                 shouldBeScanning === false && sessionYieldedMatch === false
               }
@@ -330,4 +330,4 @@ class Camera extends Component<CameraProps, CameraState> {
   }
 }
 
-export default compose(withOrientation, withTranslation)(Camera);
+export default compose(withOrientation)(CameraComponent);

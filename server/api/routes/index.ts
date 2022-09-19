@@ -6,6 +6,7 @@ import JobRouter from "./jobRouter";
 import BookmarkRouter from "./bookmarkRouter";
 import TranslationRouter from "./translationsRouter";
 import StoryRouter from "./storyRouter";
+import ExhibitionRouter from "./exhibitionRouter";
 
 const ApiRouter = Router();
 
@@ -15,5 +16,6 @@ ApiRouter.use("/job", JobRouter);
 ApiRouter.use("/bookmark", BookmarkRouter);
 ApiRouter.use("/translation", TranslationRouter);
 ApiRouter.use("/stories", StoryRouter);
+ApiRouter.use("/exhibition", ExhibitionRouter)
 
 export default ApiRouter;

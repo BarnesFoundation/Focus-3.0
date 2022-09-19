@@ -1,0 +1,411 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ResultCard should match the snapshot for a Barnes collection object 1`] = `
+<div>
+  <div
+    class="container-fluid artwork-container"
+    id="search-result"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="artwork-top-bg"
+      >
+        <img
+          alt="match_image_background"
+          aria-hidden="true"
+          class="card-img-top"
+          src="bg_url"
+        />
+      </div>
+      <div
+        class="col-12 col-md-12"
+      >
+        <div
+          class="card"
+          data-artist="artist"
+          data-id="id"
+          data-invno="invno"
+          data-nodesc-invno="invno"
+          data-title="title"
+          id="result-card"
+        >
+          <div
+            class="card-top-container"
+          >
+            <div
+              class="card-img-overlay"
+            >
+              <div
+                class="card-header h1"
+              >
+                Focused Artwork
+              </div>
+              <div
+                class="card-img-result"
+              >
+                <img
+                  alt="match_image"
+                  aria-label="title by artist. undefined"
+                  role="img"
+                />
+              </div>
+              <div
+                class="card-artist"
+              >
+                artist
+              </div>
+              <div
+                class="card-title"
+              >
+                title
+              </div>
+            </div>
+          </div>
+          <div
+            class="card-body"
+            id="focussed-artwork-body"
+          >
+            <div
+              class="share-wrapper"
+            >
+              <div
+                class="language-dropdown-wrapper"
+              >
+                <div
+                  class="language-dropdown"
+                >
+                  <div
+                    class="dd-wrapper"
+                  >
+                    <div
+                      aria-haspopup="true"
+                      class="dd-header"
+                      id="language-btn"
+                    >
+                      <div
+                        aria-labelledby="language-btn"
+                        class="dd-header-title"
+                      />
+                      <span>
+                        <img
+                          aria-hidden="true"
+                          aria-label="Down"
+                          src="down_gray_1x.png"
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div
+                  class="btn-share-result"
+                  id="share-it"
+                >
+                  <img
+                    alt="share"
+                    src="share-icon.svg"
+                  />
+                  <span
+                    class="text-share"
+                  >
+                    text_1 Result_page
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="short-desc-container"
+            />
+            <div
+              class="card-info"
+            >
+              <table
+                class="detail-table"
+              >
+                <tbody>
+                  <tr>
+                    <td
+                      class="text-left item-label"
+                    >
+                      text_3 Result_page:
+                    </td>
+                    <td
+                      class="text-left item-info"
+                    >
+                      artist
+                       
+                      
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      class="text-left item-label"
+                    >
+                      text_4 Result_page:
+                    </td>
+                    <td
+                      class="text-left item-info"
+                    >
+                      title
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      class="text-left item-label"
+                    >
+                      text_5 Result_page:
+                    </td>
+                    <td
+                      class="text-left item-info"
+                    />
+                  </tr>
+                  <tr>
+                    <td
+                      class="text-left item-label"
+                    >
+                      text_6 Result_page:
+                    </td>
+                    <td
+                      class="text-left item-info"
+                    />
+                  </tr>
+                  <tr>
+                    <td
+                      class="text-left item-label"
+                    >
+                      text_7 Result_page:
+                    </td>
+                    <td
+                      class="text-left item-info"
+                    />
+                  </tr>
+                  <tr>
+                    <td
+                      class="text-left item-label"
+                    >
+                      text_8 Result_page:
+                    </td>
+                    <td
+                      class="text-left item-info"
+                    >
+                      text_9 Result_page
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ResultCard should match the snapshot for a special exhibition object 1`] = `
+<div>
+  <div
+    class="container-fluid artwork-container"
+    id="search-result"
+  >
+    <div
+      class="row"
+    >
+      <div
+        class="artwork-top-bg"
+      >
+        <img
+          alt="match_image_background"
+          aria-hidden="true"
+          class="card-img-top"
+          src="bg_url"
+        />
+      </div>
+      <div
+        class="col-12 col-md-12"
+      >
+        <div
+          class="card"
+          data-artist="artist"
+          data-id="id"
+          data-invno="invno"
+          data-nodesc-invno="invno"
+          data-title="title"
+          id="result-card"
+        >
+          <div
+            class="card-top-container"
+          >
+            <div
+              class="card-img-overlay"
+            >
+              <div
+                class="card-header h1"
+              >
+                Focused Artwork
+              </div>
+              <div
+                class="card-img-result"
+              >
+                <img
+                  alt="match_image"
+                  aria-label="title by artist. undefined"
+                  role="img"
+                />
+              </div>
+              <div
+                class="card-artist"
+              >
+                artist
+              </div>
+              <div
+                class="card-title"
+              >
+                title
+              </div>
+            </div>
+          </div>
+          <div
+            class="card-body"
+            id="focussed-artwork-body"
+          >
+            <div
+              class="share-wrapper"
+            >
+              <div
+                class="language-dropdown-wrapper"
+              >
+                <div
+                  class="language-dropdown"
+                >
+                  <div
+                    class="dd-wrapper"
+                  >
+                    <div
+                      aria-haspopup="true"
+                      class="dd-header"
+                      id="language-btn"
+                    >
+                      <div
+                        aria-labelledby="language-btn"
+                        class="dd-header-title"
+                      />
+                      <span>
+                        <img
+                          aria-hidden="true"
+                          aria-label="Down"
+                          src="down_gray_1x.png"
+                        />
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div
+                  class="btn-share-result"
+                  id="share-it"
+                >
+                  <img
+                    alt="share"
+                    src="share-icon.svg"
+                  />
+                  <span
+                    class="text-share"
+                  >
+                    text_1 Result_page
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="short-desc-container"
+            />
+            <div
+              class="card-info"
+            >
+              <table
+                class="detail-table"
+              >
+                <tbody>
+                  <tr>
+                    <td
+                      class="text-left item-label"
+                    >
+                      text_3 Result_page:
+                    </td>
+                    <td
+                      class="text-left item-info"
+                    >
+                      artist
+                       
+                      
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      class="text-left item-label"
+                    >
+                      text_4 Result_page:
+                    </td>
+                    <td
+                      class="text-left item-info"
+                    >
+                      title
+                    </td>
+                  </tr>
+                  <tr>
+                    <td
+                      class="text-left item-label"
+                    >
+                      text_5 Result_page:
+                    </td>
+                    <td
+                      class="text-left item-info"
+                    />
+                  </tr>
+                  <tr>
+                    <td
+                      class="text-left item-label"
+                    >
+                      text_6 Result_page:
+                    </td>
+                    <td
+                      class="text-left item-info"
+                    />
+                  </tr>
+                  <tr>
+                    <td
+                      class="text-left item-label"
+                    >
+                      text_7 Result_page:
+                    </td>
+                    <td
+                      class="text-left item-info"
+                    />
+                  </tr>
+                  <tr>
+                    <td
+                      class="text-left item-label"
+                    >
+                      text_8 Result_page:
+                    </td>
+                    <td
+                      class="text-left item-info"
+                    >
+                      text_9 Result_page
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

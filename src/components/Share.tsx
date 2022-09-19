@@ -1,21 +1,21 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 
 import { Popover, PopoverBody } from "reactstrap";
 import shareButton from "../images/share-icon.svg";
 import * as constants from "../constants";
+import { ArtworkObject } from "../types/payloadTypes";
 
-export class Share extends Component {
-  constructor(props) {
-    super(props);
+export type ShareProps = {
+  artwork: ArtworkObject["artwork"];
+  shareText: string;
+};
 
-    this.state = {
-      sharePopoverIsOpen: false,
-    };
-  }
+export const Share: React.FC<ShareProps> = ({ artwork, shareText }) => {
+  const [sharePopoverIsOpen, setSharePopoverIsOpen] = useState(false);
 
   /** Generates the shareable text items. The title, titleAuthorLine, hashtags list, and url */
-  generateShareableText = () => {
-    const { artist, title, id } = this.props.artwork;
+  const generateShareableText = () => {
+    const { artist, title, id } = artwork;
 
     const url = `https://collection.barnesfoundation.org/objects/${id}`;
     const bTitle = `Barnes Foundation`;
@@ -33,11 +33,11 @@ export class Share extends Component {
   };
 
   /** Handles sharing click, attempts to use native sharing. Otherwise, opens the share modal */
-  onClickShare = async () => {
+  const onClickShare = async () => {
     // For mobile devices where native share is available
     if (navigator.share) {
       const { bTitle, titleAuthorLine, hashtags, url } =
-        this.generateShareableText();
+        generateShareableText();
 
       // Generate the text line by adding the # in front of each hashtag
       let text = `${titleAuthorLine}`;
@@ -46,7 +46,7 @@ export class Share extends Component {
       });
 
       try {
-        await navigator.share({ bTitle, text, url });
+        await navigator.share({ title: bTitle, text, url });
       } catch (error) {
         console.log(`An error occurred during sharing`, error);
       }
@@ -54,26 +54,24 @@ export class Share extends Component {
 
     // Otherwise, normal share modal
     else {
-      this.toggleShareModal();
+      toggleShareModal();
     }
   };
 
   /** Toggles display of the share modal */
-  toggleShareModal = () => {
-    this.setState({ sharePopoverIsOpen: !this.state.sharePopoverIsOpen });
+  const toggleShareModal = () => {
+    setSharePopoverIsOpen(!sharePopoverIsOpen);
   };
 
-  getFacebookShareUrl = () => {
-    const url = `https://collection.barnesfoundation.org/objects/${this.props.artwork.id}`;
-    return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-      url
-    )}`;
-  };
+  const fbUrl = `https://collection.barnesfoundation.org/objects/${artwork.id}`;
+  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+    fbUrl
+  )}`;
 
   /* Fallback for sharing functionality when native sharing is not available. Opens the web intent in a new window */
-  shareWebFallback = (e) => {
+  const shareWebFallback = (e) => {
     const socialMediaType = e.currentTarget.dataset.id;
-    this.setState({ sharePopoverIsOpen: false });
+    setSharePopoverIsOpen(false);
 
     let appUriScheme;
     let webFallbackURL;
@@ -81,7 +79,7 @@ export class Share extends Component {
     switch (socialMediaType) {
       case constants.SOCIAL_MEDIA_TWITTER: {
         const { bTitle, titleAuthorLine, hashtags, url } =
-          this.generateShareableText();
+          generateShareableText();
 
         // Join the line with '+' for the url
         const text = titleAuthorLine.split(" ").join("+");
@@ -99,41 +97,35 @@ export class Share extends Component {
     e.preventDefault();
   };
 
-  render() {
-    const { shareText } = this.props;
-    const { sharePopoverIsOpen } = this.state;
-    const { onClickShare, shareWebFallback, getFacebookShareUrl } = this;
-
-    return (
-      <div>
-        {/* Share button */}
-        <div id="share-it" className="btn-share-result" onClick={onClickShare}>
-          <img src={shareButton} alt="share" />
-          <span className="text-share">{shareText}</span>
-        </div>
-
-        {/* Share popup that displays upon share button click when native sharing isn't available */}
-        <Popover placement="top" isOpen={sharePopoverIsOpen} target="share-it">
-          <PopoverBody>
-            <div className="share">
-              <a
-                data-id={constants.SOCIAL_MEDIA_TWITTER}
-                onClick={shareWebFallback}
-              >
-                <i className="fa fa-lg fa-twitter" aria-hidden="true" />
-              </a>
-              <a
-                target="_blank"
-                href={getFacebookShareUrl()}
-                data-id={constants.SOCIAL_MEDIA_FACEBOOK}
-                rel="noreferrer"
-              >
-                <i className="fa fa-lg fa-facebook" aria-hidden="true" />
-              </a>
-            </div>
-          </PopoverBody>
-        </Popover>
+  return (
+    <div>
+      {/* Share button */}
+      <div id="share-it" className="btn-share-result" onClick={onClickShare}>
+        <img src={shareButton} alt="share" />
+        <span className="text-share">{shareText}</span>
       </div>
-    );
-  }
-}
+
+      {/* Share popup that displays upon share button click when native sharing isn't available */}
+      <Popover placement="top" isOpen={sharePopoverIsOpen} target="share-it">
+        <PopoverBody>
+          <div className="share">
+            <a
+              data-id={constants.SOCIAL_MEDIA_TWITTER}
+              onClick={shareWebFallback}
+            >
+              <i className="fa fa-lg fa-twitter" aria-hidden="true" />
+            </a>
+            <a
+              target="_blank"
+              href={facebookShareUrl}
+              data-id={constants.SOCIAL_MEDIA_FACEBOOK}
+              rel="noreferrer"
+            >
+              <i className="fa fa-lg fa-facebook" aria-hidden="true" />
+            </a>
+          </div>
+        </PopoverBody>
+      </Popover>
+    </div>
+  );
+};

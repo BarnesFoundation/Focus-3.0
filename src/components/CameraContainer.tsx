@@ -9,6 +9,7 @@ import { StorableSearch, ImageSearchResponse } from "../classes/searchResponse";
 import { SearchRequestService } from "../services/SearchRequestService";
 import { loadImage } from "./CameraHelper";
 import * as constants from "../constants";
+import { ARTWORK, EXHIBITION } from "../constants/routes";
 
 const Container = posed.div({
   enter: { opacity: 1 },
@@ -25,7 +26,7 @@ type CameraContainerState = {
   sessionYieldedMatch: boolean;
 };
 
-class CameraContainer extends Component<
+export class CameraContainerComponent extends Component<
   CameraContainerProps,
   CameraContainerState
 > {
@@ -144,30 +145,22 @@ class CameraContainer extends Component<
 
     // Get the record and art url from it
     const record = response["data"]["records"][0];
-    const { art_url: artUrl, id, objectId } = record;
+    const { art_url: artUrl, id } = record;
+    const specialExhibition: boolean = response["data"]["specialExhibition"];
 
-    // If artUrl and id are present, the record is from the Barnes collection
-    if (artUrl && id) {
-      // Load the image background first so that it gets cached for faster displaying
-      const matchImage = loadImage(`${artUrl}?w=${width - 80}`);
-      const matchImageBg = loadImage(
-        `${artUrl}?q=0&auto=compress&crop=faces,entropy&fit=crop&w=${width}`
-      );
+    // Load the image background first so that it gets cached for faster displaying
+    const matchImage = loadImage(`${artUrl}?w=${width - 80}`);
+    const matchImageBg = loadImage(
+      `${artUrl}?q=0&auto=compress&crop=faces,entropy&fit=crop&w=${width}`
+    );
 
-      Promise.all([matchImage, matchImageBg]).then(() => {
-        // Navigate to the artwork page
-        this.props.history.push({
-          pathname: `/artwork/${id}`,
-          state: { result: response },
-        });
-      });
-      // If objectId is present, the record is from a special exhibition
-    } else if (objectId) {
+    Promise.all([matchImage, matchImageBg]).then(() => {
+      // Navigate to the artwork or exhibition page
       this.props.history.push({
-        pathname: `/se/${objectId}`,
-        state: { result: record },
+        pathname: `${specialExhibition ? EXHIBITION : ARTWORK}/${id}`,
+        state: { result: response },
       });
-    }
+    });
   }
 
   componentDidMount() {
@@ -193,4 +186,4 @@ class CameraContainer extends Component<
   }
 }
 
-export default compose(withRouter)(CameraContainer);
+export default compose(withRouter)(CameraContainerComponent);

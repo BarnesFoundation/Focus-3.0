@@ -1,20 +1,15 @@
 import React from "react";
 import { render, cleanup } from "@testing-library/react";
-import { HomeComponent } from "../../components/Home";
-
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useHistory: () => ({
-    push: () => null,
-  }),
-}));
+import { NoMatchOverlayComponent } from "../../components/NoMatchOverlay";
 
 afterEach(cleanup);
 
-describe("Home", () => {
+describe("NoMatchOverlay", () => {
   it("should match the snapshot", () => {
     const { container } = render(
-      <HomeComponent
+      <NoMatchOverlayComponent
+        displayOverlay={true}
+        handleScan={() => null}
         translations={null}
         loaded={true}
         getTranslation={(screen, textId) => textId + " " + screen}

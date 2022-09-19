@@ -61,5 +61,6 @@ Behind the scenes these two commands:
 Objects from special exhibitions can be added to the app by following these steps:
 
 1. Add a reference image for each object to [craftar](https://my.craftar.net/accounts/login/) and use the prefix `SPEX/` in the item name to denote that the object is part of a special exibition, eg: `SPEX/MOD-3-1-1`.
+2. Add content for each image in the "Focus" project in [Hygraph (formerly GraphCMS)](https://app.hygraph.com) and create a `SpecialExhibitionObject` entry for each object with the object id equaling the item name in craftar removing "SPEX/", eg: `MOD-3-1-1`.
 
 <!-- TODO write more instructions as things are implemented -->

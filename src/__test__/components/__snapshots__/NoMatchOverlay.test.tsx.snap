@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NoMatchOverlay should match the snapshot 1`] = `
+<div>
+  <span>
+    <div
+      class="no-match-overlay"
+      id="no-match-overlay"
+    >
+      <div
+        class="hint h2"
+      >
+        <span
+          style="white-space: pre-line;"
+        >
+          text_1 No_Result_page
+											text_2 No_Result_page
+											text_3 No_Result_page
+        </span>
+      </div>
+      <div
+        aria-roledescription="camera button"
+        class="scan-button"
+        id="camera-btn"
+        role="button"
+        style="position: absolute; bottom: 37px;"
+      >
+        <img
+          alt="scan"
+          aria-labelledby="camera-btn"
+          src="scan-button.svg"
+        />
+      </div>
+    </div>
+  </span>
+</div>
+`;
