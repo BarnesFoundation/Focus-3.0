@@ -63,7 +63,7 @@ const Routes = () => (
   </OrientationContextProvider>
 );
 
-class AppRouter extends Component {
+class AppRouter extends Component<{}, { intervalId?: NodeJS.Timer }> {
   constructor(props) {
     super(props);
 
