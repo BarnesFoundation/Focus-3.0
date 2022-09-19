@@ -277,13 +277,11 @@ export class CameraComponent extends Component<CameraProps, CameraState> {
       }, 10);
     } catch (error) {
       console.log("Error setting camera preview");
-      // TODO: re-enable the GA tracking
-      // ga("send", {
-      //   hitType: "event",
-      //   eventCategory: constants.GA_EVENT_CATEGORY.CAMERA,
-      //   eventAction: constants.GA_EVENT_ACTION.SCAN,
-      //   eventLabel: constants.GA_EVENT_LABEL.SCANNER_MOUNT_FAILURE,
-      // });
+
+      gtag("event", constants.GA_EVENT_ACTION.SCAN, {
+        event_category: constants.GA_EVENT_CATEGORY.CAMERA,
+        event_label: constants.GA_EVENT_LABEL.SCANNER_MOUNT_FAILURE,
+      });
     }
   };
 
