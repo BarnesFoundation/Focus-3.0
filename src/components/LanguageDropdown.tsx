@@ -26,16 +26,7 @@ export const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
 
   const selectItem = (item) => {
     onSelectLanguage(item);
-  };
-
-  const show = () => {
-    setListVisible(true);
-    document.addEventListener("click", hide);
-  };
-
-  const hide = () => {
     setListVisible(false);
-    document.removeEventListener("click", hide);
   };
 
   const getDropdownIcon = (dir) => {
@@ -56,7 +47,7 @@ export const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
         className="dd-header"
         aria-haspopup="true"
         id="language-btn"
-        onClick={show}
+        onClick={() => setListVisible(!listVisible)}
       >
         <div className="dd-header-title" aria-labelledby="language-btn">
           {getDropdownText(selected)}
