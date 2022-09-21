@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { withRouter } from "react-router";
 import { History, Match } from "react-router-dom";
 import { compose } from "redux";
@@ -189,7 +189,7 @@ export class ExhibitionObject extends Component<
       const newOffset = Math.max(
         Math.ceil(
           this.artworkRef.getBoundingClientRect().bottom -
-            constants.VIEWPORT_HEIGHT
+          constants.VIEWPORT_HEIGHT
         ),
         0
       );
@@ -294,7 +294,7 @@ export class ExhibitionObject extends Component<
     const artworkVerticalOffset = Math.max(
       Math.ceil(
         this.artworkRef.getBoundingClientRect().bottom -
-          constants.VIEWPORT_HEIGHT
+        constants.VIEWPORT_HEIGHT
       ),
       0
     );
@@ -410,38 +410,14 @@ export class ExhibitionObject extends Component<
     this.setState({ imgLoaded: true });
   };
 
-  /** Renders the email pin for the panel to get pinned on */
-  renderEmailPin = () => {
-    const duration = screen.height < 800 ? 800 : screen.height;
-    const offsettedDuration = duration + this.artworkScrollOffset - 150;
-
-    return (
-      <Scene
-        loglevel={0}
-        /** There is something weird going on with react-scrollmagic types that
-         * keeps giving us an error, but we can't change this component or update
-         * the dependency or else it breaks!
-         */
-        // @ts-ignore
-        pin={`#email-panel`}
-        triggerElement={`#email-panel`}
-        triggerHook="onEnter"
-        indicators={false}
-        duration={offsettedDuration}
-        offset="0"
-        pinSettings={{
-          pushFollowers: true,
-          spacerClass: "scrollmagic-pin-spacer-pt",
-        }}
-      >
-        <div id={`story-pin-enter`} />
-      </Scene>
-    );
-  };
-
-  /** For Android, scroll within the fixed container .sm-container because of card peek issue */
-  renderStoryContainer = () => {
-    const { showEmailForm } = this.state;
+  render() {
+    const {
+      artwork,
+      imgLoaded,
+      emailCaptureAck,
+      showEmailForm,
+      emailCardClickable,
+    } = this.state;
 
     // Props for the controller, add container prop for Android
     const controllerProps = { refreshInterval: 250 };
@@ -449,73 +425,17 @@ export class ExhibitionObject extends Component<
       controllerProps["container"] = ".sm-container";
     }
 
-    return (
-      <Controller {...controllerProps}>
-        {/* Render these components conditionally, otherwise render empty divs */}
-        {showEmailForm ? this.renderEmailPin() : <div />}
-      </Controller>
-    );
-  };
+    const duration = screen.height < 800 ? 800 : screen.height;
+    const offsetDuration = duration + this.artworkScrollOffset - 150;
 
-  /** Responsible for rendering the entirety of the page */
-  renderResult = () => {
-    const { emailCaptureAck, showEmailForm, emailCardClickable } = this.state;
-
-    return (
-      <SectionWipesStyled hasChildCards={!emailCaptureAck}>
-        <ResultCard
-          // @ts-ignore
-          artwork={this.state.artwork}
-          refCallbackInfo={this.refCallbackInfo}
-          setArtworkRef={this.setArtworkRef}
-          langOptions={this.props.langOptions}
-          selectedLanguage={this.state.selectedLanguage}
-          onSelectLanguage={this.onSelectLanguage}
-          shortDescContainer={this.shortDescContainer}
-          specialExhibition={this.state.result.data.specialExhibition}
-          getTranslation={this.props.getTranslation}
-        />
-
-        {this.renderStoryContainer()}
-
-        {/** Placeholder element to control email card enter when no stories are available. Only show when email has not been captured */}
-        {showEmailForm && (
-          <div
-            id="email-trigger-enter"
-            style={{ visibility: `hidden`, bottom: 0 }}
-          />
-        )}
-
-        {/** If email was captured, show just the scan button. Otherwise, render the email screen */}
-        {showEmailForm ? (
-          <EmailForm
-            withStory={false}
-            isEmailScreen={false}
-            onSubmitEmail={this.onSubmitEmail}
-            getTranslation={this.props.getTranslation}
-            getSize={this.onEmailHeightReady}
-            pointerEvents={emailCardClickable ? "auto" : "none"}
-            handleClickScroll={this.handleClickScroll}
-          />
-        ) : (
-          <div>
-            {" "}
-            <ScanButton />{" "}
-          </div>
-        )}
-      </SectionWipesStyled>
-    );
-  };
-
-  render() {
-    const { artwork, imgLoaded } = this.state;
     if (!artwork) {
       return null;
     }
+
     return (
       <div className={isAndroid ? "sm-container" : "ios-container"}>
         {!imgLoaded && (
-          <div style={{ visibility: `hidden` }}>
+          <div style={{ visibility: "hidden" }}>
             <img
               className="card-img-result"
               src={this.state.artwork.url}
@@ -524,7 +444,67 @@ export class ExhibitionObject extends Component<
             />
           </div>
         )}
-        {this.state.imgLoaded && this.renderResult()}
+        {this.state.imgLoaded && (
+          <SectionWipesStyled hasChildCards={!emailCaptureAck}>
+            <ResultCard
+              // @ts-ignore
+              artwork={this.state.artwork}
+              refCallbackInfo={this.refCallbackInfo}
+              setArtworkRef={this.setArtworkRef}
+              langOptions={this.props.langOptions}
+              selectedLanguage={this.state.selectedLanguage}
+              onSelectLanguage={this.onSelectLanguage}
+              shortDescContainer={this.shortDescContainer}
+              specialExhibition={this.state.result.data.specialExhibition}
+              getTranslation={this.props.getTranslation}
+            />
+
+            {/** If email was captured, show just the scan button. Otherwise, render the email screen */}
+            {showEmailForm ? (
+              <Fragment>
+                <Controller {...controllerProps}>
+                  <Scene
+                    loglevel={0}
+                    /** There is something weird going on with react-scrollmagic types that
+                     * keeps giving us an error, but we can't change this component or update
+                     * the dependency or else it breaks!
+                     */
+                    // @ts-ignore
+                    pin="#email-panel"
+                    triggerElement="#email-panel"
+                    triggerHook="onEnter"
+                    indicators={false}
+                    duration={offsetDuration}
+                    offset="0"
+                    pinSettings={{
+                      pushFollowers: true,
+                      spacerClass: "scrollmagic-pin-spacer-pt",
+                    }}
+                  >
+                    <div id={`story-pin-enter`} />
+                  </Scene>
+                </Controller>
+
+                {/** Placeholder element to control email card enter when no stories are available. Only show when email has not been captured */}
+                <div
+                  id="email-trigger-enter"
+                  style={{ visibility: "hidden", bottom: 0 }}
+                />
+                <EmailForm
+                  withStory={false}
+                  isEmailScreen={false}
+                  onSubmitEmail={this.onSubmitEmail}
+                  getTranslation={this.props.getTranslation}
+                  getSize={this.onEmailHeightReady}
+                  pointerEvents={emailCardClickable ? "auto" : "none"}
+                  handleClickScroll={this.handleClickScroll}
+                />
+              </Fragment>
+            ) : (
+              <ScanButton />
+            )}
+          </SectionWipesStyled>
+        )}
       </div>
     );
   }
