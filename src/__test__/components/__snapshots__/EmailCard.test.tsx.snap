@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EmailCard should match the snapshot when email card is clickable 1`] = `
+<React.Fragment>
+  <Controller
+    refreshInterval={250}
+  >
+    <Scene
+      duration={650}
+      indicators={false}
+      loglevel={0}
+      offset="0"
+      pin="#email-panel"
+      pinSettings={
+        Object {
+          "pushFollowers": true,
+          "spacerClass": "scrollmagic-pin-spacer-pt",
+        }
+      }
+      triggerElement="#email-panel"
+      triggerHook="onEnter"
+    >
+      <div
+        id="story-pin-enter"
+      />
+    </Scene>
+  </Controller>
+  <div
+    id="email-trigger-enter"
+    style={
+      Object {
+        "bottom": 0,
+        "visibility": "hidden",
+      }
+    }
+  />
+  <EmailForm
+    getSize={[Function]}
+    getTranslation={[Function]}
+    handleClickScroll={[Function]}
+    isEmailScreen={false}
+    onSubmitEmail={[Function]}
+    pointerEvents="auto"
+    withStory={false}
+  />
+</React.Fragment>
+`;
+
+exports[`EmailCard should match the snapshot when when email card is not clickable 1`] = `
+<React.Fragment>
+  <Controller
+    refreshInterval={250}
+  >
+    <Scene
+      duration={650}
+      indicators={false}
+      loglevel={0}
+      offset="0"
+      pin="#email-panel"
+      pinSettings={
+        Object {
+          "pushFollowers": true,
+          "spacerClass": "scrollmagic-pin-spacer-pt",
+        }
+      }
+      triggerElement="#email-panel"
+      triggerHook="onEnter"
+    >
+      <div
+        id="story-pin-enter"
+      />
+    </Scene>
+  </Controller>
+  <div
+    id="email-trigger-enter"
+    style={
+      Object {
+        "bottom": 0,
+        "visibility": "hidden",
+      }
+    }
+  />
+  <EmailForm
+    getSize={[Function]}
+    getTranslation={[Function]}
+    handleClickScroll={[Function]}
+    isEmailScreen={false}
+    onSubmitEmail={[Function]}
+    pointerEvents="none"
+    withStory={false}
+  />
+</React.Fragment>
+`;

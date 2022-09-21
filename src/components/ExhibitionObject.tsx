@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { withRouter } from "react-router";
 import { History, Match } from "react-router-dom";
 import { compose } from "redux";
@@ -11,10 +11,7 @@ import withTranslation, {
   WithTranslationState,
 } from "./withTranslation";
 
-import { EmailForm } from "./EmailForm";
-
 import { SearchRequestService } from "../services/SearchRequestService";
-import { Controller, Scene } from "react-scrollmagic";
 // @ts-ignore
 import styled, { css } from "styled-components";
 import { isTablet } from "react-device-detect";
@@ -29,6 +26,7 @@ import {
   constructStory,
 } from "../helpers/artWorkHelper";
 import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
+import { EmailCard } from "./EmailCard";
 
 /**
  * withRouter HOC provides props with location, history and match objects
@@ -311,32 +309,10 @@ export class ExhibitionObject extends Component<
   };
 
   /** Handles the tap-to-scroll functionality for cards */
-  handleClickScroll = (storyIndex, isStoryCard) => {
-    let landingPoint;
-
+  handleClickScroll = () => {
     // Determine the offset needed for the height of each story card and the amount it should peek up
     let heightOffset = screen.height < 800 ? 800 : screen.height;
-    let peekOffset = screen.height < 800 ? 158 : screen.height / 3;
-
-    // If the click originated from a story card
-    if (isStoryCard) {
-      // Amount needed for getting past the first card
-      let initial = Math.abs(this.sceneRefs[0].props.duration) + peekOffset;
-
-      if (storyIndex == 0) {
-        landingPoint = initial;
-      }
-
-      // Each subsequent card uses the initial offset plus its own height offset calculation
-      else {
-        landingPoint = initial + heightOffset * storyIndex + storyIndex * 25;
-      }
-    }
-
-    // For email clicks
-    else {
-      landingPoint = this.emailScene.scrollOffset() + heightOffset;
-    }
+    let landingPoint = this.emailScene.scrollOffset() + heightOffset;
 
     // For iOS, override the normal scrolling
     if (isIOS) {
@@ -425,9 +401,6 @@ export class ExhibitionObject extends Component<
       controllerProps["container"] = ".sm-container";
     }
 
-    const duration = screen.height < 800 ? 800 : screen.height;
-    const offsetDuration = duration + this.artworkScrollOffset - 150;
-
     if (!artwork) {
       return null;
     }
@@ -461,45 +434,14 @@ export class ExhibitionObject extends Component<
 
             {/** If email was captured, show just the scan button. Otherwise, render the email screen */}
             {showEmailForm ? (
-              <Fragment>
-                <Controller {...controllerProps}>
-                  <Scene
-                    loglevel={0}
-                    /** There is something weird going on with react-scrollmagic types that
-                     * keeps giving us an error, but we can't change this component or update
-                     * the dependency or else it breaks!
-                     */
-                    // @ts-ignore
-                    pin="#email-panel"
-                    triggerElement="#email-panel"
-                    triggerHook="onEnter"
-                    indicators={false}
-                    duration={offsetDuration}
-                    offset="0"
-                    pinSettings={{
-                      pushFollowers: true,
-                      spacerClass: "scrollmagic-pin-spacer-pt",
-                    }}
-                  >
-                    <div id={`story-pin-enter`} />
-                  </Scene>
-                </Controller>
-
-                {/** Placeholder element to control email card enter when no stories are available. Only show when email has not been captured */}
-                <div
-                  id="email-trigger-enter"
-                  style={{ visibility: "hidden", bottom: 0 }}
-                />
-                <EmailForm
-                  withStory={false}
-                  isEmailScreen={false}
-                  onSubmitEmail={this.onSubmitEmail}
-                  getTranslation={this.props.getTranslation}
-                  getSize={this.onEmailHeightReady}
-                  pointerEvents={emailCardClickable ? "auto" : "none"}
-                  handleClickScroll={this.handleClickScroll}
-                />
-              </Fragment>
+              <EmailCard
+                artworkScrollOffset={this.artworkScrollOffset}
+                emailCardClickable={emailCardClickable}
+                onSubmitEmail={this.onSubmitEmail}
+                onEmailHeightReady={this.onEmailHeightReady}
+                handleClickScroll={this.handleClickScroll}
+                getTranslation={this.props.getTranslation}
+              />
             ) : (
               <ScanButton />
             )}
