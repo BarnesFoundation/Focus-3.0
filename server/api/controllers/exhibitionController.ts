@@ -18,7 +18,6 @@ class ExhibitionController {
 
     // Manipulate the data to have save key/pairs as the ES results
     objectData[0]["art_url"] = objectData[0].image.url;
-    objectData[0]["shortDescription"] = objectData[0].shortDescription.html;
     objectData[0]["id"] = objectData[0].objectId;
 
     const session = request.session;
