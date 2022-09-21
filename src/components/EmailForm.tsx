@@ -48,7 +48,6 @@ export const EmailForm: React.FC<EmailFormProps> = ({
   const peekOffset = withStory ? 0 : peekOffsetValue;
 
   useEffect(() => {
-    console.log("EmailForm >> componentDidMount");
     // Register scroll listener
     window.addEventListener("scroll", onScroll, true);
 
