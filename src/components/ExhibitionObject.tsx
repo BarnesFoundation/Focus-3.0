@@ -1,4 +1,4 @@
-import React, { Component, CSSProperties } from "react";
+import React, { Component } from "react";
 import { withRouter } from "react-router";
 import { History, Match } from "react-router-dom";
 import { compose } from "redux";
@@ -17,7 +17,6 @@ import { SearchRequestService } from "../services/SearchRequestService";
 import { Controller, Scene } from "react-scrollmagic";
 // @ts-ignore
 import styled, { css } from "styled-components";
-import StoryItem from "./StoryItem";
 import { isTablet } from "react-device-detect";
 // @ts-ignore
 import ScrollMagic from "scrollmagic";
@@ -25,7 +24,6 @@ import { isAndroid, isIOS } from "react-device-detect";
 
 import { ScanButton } from "./ScanButton";
 import { ResultCard } from "./ResultCard";
-import { StoryTitle } from "./StoryTitle";
 import {
   constructResultAndInRoomSlider,
   constructStory,
@@ -57,31 +55,16 @@ type ExhibitionObjectProps = {
 } & WithTranslationState;
 
 type ExhibitionObjectState = {
-  showEmailScreen: boolean;
   emailCaptured: boolean;
   showEmailForm: boolean;
   emailCaptureAck: boolean;
   imgLoaded: boolean;
-  alsoInRoomResults: any[];
   email: string;
-  snapAttempts: number;
-  errors: { email: boolean };
-  showTitleBar: boolean;
-  storyDuration: number;
-  infoHeightUpdated: boolean;
-  infoCardDuration: number;
   emailCardClickable: boolean;
-  storyTopsClickable: {};
   result: ArtWorkRecordsResult;
   selectedLanguage: LanguageOptionType;
-  stories: any[];
-  storyId: string;
-  storyTitle: string;
-  showStory: boolean;
   artwork: ArtworkObject["artwork"];
   roomRecords: ArtworkObject["roomRecords"];
-  storyDurationsCurrent: any[];
-  storyOffsets: any[];
 };
 
 export class ExhibitionObject extends Component<
@@ -94,9 +77,7 @@ export class ExhibitionObject extends Component<
   emailSceneTrigger;
   artworkRef;
   infoCardRef;
-  emailCardRef;
   sceneRefs: {};
-  contentOffset: number;
   artworkScrollOffset: number;
   langOptions: LanguageOptionType[];
   artworkTimeoutCallback;
@@ -119,30 +100,19 @@ export class ExhibitionObject extends Component<
     // Refs that end up being assigned to
     this.artworkRef = null;
     this.infoCardRef = null;
-    this.emailCardRef = null;
     this.sceneRefs = {};
 
-    this.contentOffset = 67;
     this.artworkScrollOffset = 0;
 
     this.state = {
       ...props.location.state,
-      showEmailScreen: false,
       emailCaptured: false,
       showEmailForm: true,
       emailCaptureAck: false,
       imgLoaded: false,
-      alsoInRoomResults: [],
       email: localStorage.getItem(constants.SNAP_USER_EMAIL) || "",
-      snapAttempts:
-        parseInt(localStorage.getItem(constants.SNAP_ATTEMPTS)) || 1,
-      errors: { email: false },
       showTitleBar: false,
-      storyDuration: 250,
-      infoHeightUpdated: false,
-      infoCardDuration: 700,
       emailCardClickable: true,
-      storyTopsClickable: {},
     };
 
     this.artworkTimeoutCallback = null;
@@ -157,10 +127,7 @@ export class ExhibitionObject extends Component<
     const emailCaptured =
       localStorage.getItem(constants.SNAP_USER_EMAIL) !== null;
 
-    const durationCurArr = [];
     const durationNextArr = [];
-    const storyPositionArr = [];
-    const offsetArr = [];
     const durDefault = 300;
 
     if (!this.state.result) {
@@ -179,66 +146,42 @@ export class ExhibitionObject extends Component<
         console.log(artworkInfo);
       }
 
-      const { stories, storyId, storyTitle } = storyResponse;
       const { artwork, roomRecords } = constructResultAndInRoomSlider(
         artworkInfo,
         isTablet
       );
 
-      stories.forEach((story) => {
-        durationCurArr.push(durDefault);
-        offsetArr.push(durDefault);
-        storyPositionArr.push(false);
-      });
       durationNextArr.push(durDefault);
 
       this.setState({
         selectedLanguage: selectedLang[0],
-        stories: stories,
-        storyId: storyId,
-        storyTitle: storyTitle,
         result: artworkInfo,
-        showStory: artworkInfo.data.showStory,
         artwork: artwork,
         roomRecords: roomRecords,
         emailCaptured: emailCaptured,
         showEmailForm: !emailCaptured,
         emailCaptureAck: emailCaptured,
-        storyDurationsCurrent: durationCurArr,
-        storyOffsets: offsetArr,
       });
     } else {
       const { artwork, roomRecords } = constructResultAndInRoomSlider(
         this.state.result,
         isTablet
       );
-      const { stories, storyId, storyTitle } = await this.setupStory(imageId);
 
-      stories.forEach((story) => {
-        durationCurArr.push(durDefault);
-        offsetArr.push(durDefault);
-        storyPositionArr.push(false);
-      });
       durationNextArr.push(durDefault);
 
       this.setState({
         selectedLanguage: selectedLang[0],
-        stories: stories,
-        storyId: storyId,
-        storyTitle: storyTitle,
-        showStory: this.state.result.data.show_story,
         artwork: artwork,
         roomRecords: roomRecords,
         emailCaptured: emailCaptured,
         showEmailForm: !emailCaptured,
         emailCaptureAck: emailCaptured,
-        storyDurationsCurrent: durationCurArr,
-        storyOffsets: offsetArr,
       });
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(_prevProps, prevState) {
     if (!this.artworkRef) {
       return;
     }
@@ -257,10 +200,7 @@ export class ExhibitionObject extends Component<
         this.artworkScrollOffset
       );
       this.resetArtworkSceneSettings();
-
-      if (!this.state.showStory) {
-        this.resetEmailSceneTriggerSettings();
-      }
+      this.resetEmailSceneTriggerSettings();
     }
   }
 
@@ -308,7 +248,6 @@ export class ExhibitionObject extends Component<
     const imageId = this.getFocusedArtworkImageId();
     const artworkInfo = await this.sr.getArtworkInformation(imageId);
 
-    const { stories, storyId, storyTitle } = await this.setupStory(imageId);
     const { artwork, roomRecords } = artworkInfo
       ? constructResultAndInRoomSlider(artworkInfo, isTablet)
       : undefined;
@@ -316,9 +255,6 @@ export class ExhibitionObject extends Component<
     this.setState({
       result: artworkInfo,
       selectedLanguage,
-      stories,
-      storyId,
-      storyTitle,
       artwork,
       roomRecords,
     });
@@ -333,14 +269,6 @@ export class ExhibitionObject extends Component<
   setupStory = async (imageId) => {
     const storyInformation = await this.sr.getStoryItems(imageId);
     return constructStory(storyInformation);
-  };
-
-  onSelectInRoomArt = (aitrId) => {
-    localStorage.setItem(
-      constants.SNAP_ATTEMPTS,
-      (this.state.snapAttempts + 1).toString()
-    );
-    this.props.history.push({ pathname: `/artwork/${aitrId}` });
   };
 
   /** Updates state that email was captured and submits it to the server session */
@@ -458,7 +386,7 @@ export class ExhibitionObject extends Component<
       this.controller = new ScrollMagic.Controller(scrollContainer);
       this.artworkTimeoutCallback = setTimeout(() => {
         this.setupArtworkScene();
-        if (!this.state.showStory && !this.state.emailCaptured) {
+        if (!this.state.emailCaptured) {
           this.setupEmailSceneOnEnter();
         }
         if (!this.state.emailCaptured) {
@@ -468,31 +396,8 @@ export class ExhibitionObject extends Component<
     }
   };
 
-  onStoryReadComplete = () => {
-    const imageId = this.getFocusedArtworkImageId();
-    const { storyId } = this.state;
-    this.sr.markStoryAsRead(imageId, storyId);
-  };
-
-  onStoryHeightReady = (height, index) => {
-    if (index > -1) {
-      //console.log('Story durations based on height :: ', index, height);
-      var durationCurArr = this.state.storyDurationsCurrent;
-      durationCurArr[index] = index == 0 ? 0 : height;
-      this.setState({ storyDurationsCurrent: durationCurArr });
-    }
-  };
-
   onEmailHeightReady = (height) => {
     this.emailFormHeight = (height * 2) / 2.2;
-  };
-
-  storySceneCallback = (showTitle) => {
-    if (showTitle) {
-      this.setState({ showTitleBar: true });
-    } else {
-      this.setState({ showTitleBar: false });
-    }
   };
 
   refCallbackInfo = (element) => {
@@ -503,144 +408,6 @@ export class ExhibitionObject extends Component<
 
   onArtworkImgLoad = ({ target: img }) => {
     this.setState({ imgLoaded: true });
-  };
-
-  /** Renders each of the story cards */
-  renderStory = () => {
-    const { stories, storyTitle, showEmailForm } = this.state;
-
-    // Iterate through the available stories
-    return stories.map((story, index) => {
-      const storyIndex = index + 1;
-      const storyDuration = this.state.storyDurationsCurrent[index] * 5;
-      const storySceneOffset =
-        index > 0
-          ? this.state.storyOffsets[index] - 342
-          : this.state.infoCardDuration + 33;
-
-      // Amount that the story should peek
-      const peekHeight = isAndroid && index === 0 ? 123 : 67;
-      const peekOffset = screen.height < 800 ? 158 : screen.height / 3;
-      const pointerEvent = this.state.storyTopsClickable[index]
-        ? "none"
-        : "auto";
-      const peekOffsetStyle: CSSProperties = {
-        height: `${peekOffset}px`,
-        top: `-${peekHeight}px`,
-        pointerEvents: pointerEvent,
-      };
-
-      // When email form is not visible, set padding botttom to 200px on the last story card
-      const emailCapturedBottomStyle =
-        stories.length === index + 1 && !showEmailForm
-          ? { paddingBottom: `200px` }
-          : { paddingBottom: `0` };
-
-      return (
-        <Scene
-          loglevel={0}
-          indicators={false}
-          key={`storyitem${storyIndex}`}
-          triggerHook="onLeave"
-          pin
-          /** There is something weird going on with react-scrollmagic types that
-           * keeps giving us an error, but we can't change this component or update
-           * the dependency or else it breaks!
-           */
-          // @ts-ignore
-          pinSettings={{ pushFollowers: false }}
-          duration={storyDuration}
-          offset={storySceneOffset}
-          ref={(element) => {
-            if (element) {
-              this.sceneRefs[index] = element;
-            }
-          }}
-        >
-          {(progress, event) => (
-            <div>
-              <div
-                id={`story-card-${index}`}
-                className={`panel panel${storyIndex}`}
-                style={emailCapturedBottomStyle}
-              >
-                <div
-                  className={`story-title-click click-${index}`}
-                  id={`${index}`}
-                  style={peekOffsetStyle}
-                  onClick={() => {
-                    this.handleClickScroll(index, true);
-                  }}
-                />
-                <StoryItem
-                  key={`storyitem${storyIndex}`}
-                  progress={progress}
-                  sceneStatus={event}
-                  storyIndex={index}
-                  isLastStoryItem={index === stories.length - 1 ? true : false}
-                  story={story}
-                  storyTitle={storyTitle}
-                  selectedLanguage={this.state.selectedLanguage}
-                  onStoryReadComplete={this.onStoryReadComplete}
-                  getSize={this.onStoryHeightReady}
-                  statusCallback={this.storySceneCallback}
-                  onVisChange={this.onVisibilityChange}
-                />
-              </div>
-            </div>
-          )}
-        </Scene>
-      );
-    });
-  };
-
-  /** Changes whether or not the top of a story card is clickable */
-  onVisibilityChange = (isVisible, storyIndex) => {
-    this.setState((pState) => {
-      const storyTopsClickable = { ...pState.storyTopsClickable };
-      storyTopsClickable[storyIndex] = isVisible;
-
-      return {
-        ...pState,
-        storyTopsClickable,
-      };
-    });
-  };
-
-  /* Renders the pins for the story cards to get pinned on */
-  renderPinsEnter = () => {
-    const { stories } = this.state;
-
-    return stories.map((story, index) => {
-      const storyEnterPinDuration =
-        index > 0
-          ? this.state.storyDurationsCurrent[index - 1] / 4 - 50
-          : this.state.infoCardDuration + this.contentOffset + 33;
-
-      return (
-        <Scene
-          loglevel={0}
-          key={`storytriggerenter${index + 1}`}
-          /** There is something weird going on with react-scrollmagic types that
-           * keeps giving us an error, but we can't change this component or update
-           * the dependency or else it breaks!
-           */
-          // @ts-ignore
-          pin={`#story-card-${index}`}
-          triggerElement={`#story-card-${index}`}
-          triggerHook="onEnter"
-          indicators={false}
-          duration={storyEnterPinDuration}
-          offset="0"
-          pinSettings={{
-            pushFollowers: true,
-            spacerClass: "scrollmagic-pin-spacer-pt",
-          }}
-        >
-          <div id={`story-pin-enter-${index + 1}`} />
-        </Scene>
-      );
-    });
   };
 
   /** Renders the email pin for the panel to get pinned on */
@@ -674,8 +441,7 @@ export class ExhibitionObject extends Component<
 
   /** For Android, scroll within the fixed container .sm-container because of card peek issue */
   renderStoryContainer = () => {
-    const { showTitleBar, showStory, showEmailForm } = this.state;
-    const showEmailPin = !showStory && showEmailForm ? true : false;
+    const { showEmailForm } = this.state;
 
     // Props for the controller, add container prop for Android
     const controllerProps = { refreshInterval: 250 };
@@ -686,30 +452,17 @@ export class ExhibitionObject extends Component<
     return (
       <Controller {...controllerProps}>
         {/* Render these components conditionally, otherwise render empty divs */}
-        {showTitleBar ? (
-          <StoryTitle
-            langOptions={this.props.langOptions}
-            selectedLanguage={this.state.selectedLanguage}
-            onSelectLanguage={this.onSelectLanguage}
-          />
-        ) : (
-          <div />
-        )}
-        {showEmailPin ? this.renderEmailPin() : <div />}
-        {showStory ? this.renderPinsEnter() : <div />}
-        {showStory ? this.renderStory() : <div />}
+        {showEmailForm ? this.renderEmailPin() : <div />}
       </Controller>
     );
   };
 
   /** Responsible for rendering the entirety of the page */
   renderResult = () => {
-    const { showStory, emailCaptureAck, showEmailForm, emailCardClickable } =
-      this.state;
-    const hasChildCards = showStory || !emailCaptureAck;
+    const { emailCaptureAck, showEmailForm, emailCardClickable } = this.state;
 
     return (
-      <SectionWipesStyled hasChildCards={hasChildCards}>
+      <SectionWipesStyled hasChildCards={!emailCaptureAck}>
         <ResultCard
           // @ts-ignore
           artwork={this.state.artwork}
@@ -736,7 +489,7 @@ export class ExhibitionObject extends Component<
         {/** If email was captured, show just the scan button. Otherwise, render the email screen */}
         {showEmailForm ? (
           <EmailForm
-            withStory={showStory}
+            withStory={false}
             isEmailScreen={false}
             onSubmitEmail={this.onSubmitEmail}
             getTranslation={this.props.getTranslation}
