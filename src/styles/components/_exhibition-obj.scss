@@ -1,0 +1,15 @@
+.exhibition-obj {
+  position: absolute;
+  height: 100vh;
+
+  #search-result {
+    overflow: scroll;
+    position: relative;
+  }
+
+  .panel-email {
+    position: absolute;
+    z-index: 10;
+    bottom: -360px;
+  }
+}

@@ -29,25 +29,8 @@ import { constructResultAndInRoomSlider } from "../helpers/artWorkHelper";
 import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
 import { EmailCard } from "./EmailCard";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-
-/**
- * withRouter HOC provides props with location, history and match objects
- */
-const SectionWipesStyled = styled.div`
-  ${(props) =>
-    props.hasChildCards &&
-    css`
-      overflow: hidden;
-    `}
-  .panel {
-    height: auto;
-    min-height: 800px;
-    width: 100vw;
-  }
-  .panel.panel-fixed {
-    position: fixed;
-  }
-`;
+import { Controller, Scene } from "react-scrollmagic";
+import { EmailForm } from "./EmailForm";
 
 export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
   langOptions,
@@ -351,34 +334,60 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
               />
             </div>
           ) : (
-            <SectionWipesStyled hasChildCards={!emailCaptureAck}>
-              <ResultCard
-                // @ts-ignore
-                artwork={artwork}
-                infoCardRef={infoCardRef}
-                artWorkRef={artworkRef}
-                langOptions={langOptions}
-                selectedLanguage={selectedLanguage}
-                onSelectLanguage={onSelectLanguage}
-                descriptionRef={descriptionRef}
-                specialExhibition={result.data.specialExhibition}
-                getTranslation={getTranslation}
-              />
+            <div className="exhibition-obj">
+              <Controller>
+                <Scene pin>
+                  <ResultCard
+                    artwork={artwork}
+                    langOptions={langOptions}
+                    selectedLanguage={selectedLanguage}
+                    onSelectLanguage={onSelectLanguage}
+                    specialExhibition={result.data.specialExhibition}
+                    getTranslation={getTranslation}
+                  />
+                </Scene>
 
-              {/** If email was captured, show just the scan button. Otherwise, render the email screen */}
-              {showEmailForm ? (
-                <EmailCard
-                  artworkScrollOffset={artworkScrollOffset}
-                  emailCardClickable={emailCardClickable}
-                  onSubmitEmail={onSubmitEmail}
-                  onEmailHeightReady={onEmailHeightReady}
-                  handleClickScroll={handleClickScroll}
-                  getTranslation={getTranslation}
-                />
-              ) : (
-                <ScanButton />
-              )}
-            </SectionWipesStyled>
+                {showEmailForm ? (
+                  <Fragment>
+                    <Scene
+                      loglevel={0}
+                      triggerElement="#email-panel"
+                      triggerHook="onEnter"
+                      indicators={false}
+                      duration={
+                        (screen.height < 800 ? 800 : screen.height) +
+                        artworkScrollOffset -
+                        150
+                      }
+                      offset="0"
+                      pin={{
+                        pushFollowers: true,
+                        spacerClass: "scrollmagic-pin-spacer-pt",
+                      }}
+                    >
+                      <div id={`story-pin-enter`} />
+                    </Scene>
+
+                    {/** Placeholder element to control email card enter when no stories are available. Only show when email has not been captured */}
+                    <div
+                      id="email-trigger-enter"
+                      style={{ visibility: "hidden", bottom: 0 }}
+                    />
+                    <EmailForm
+                      withStory={false}
+                      isEmailScreen={false}
+                      onSubmitEmail={onSubmitEmail}
+                      getTranslation={getTranslation}
+                      getSize={onEmailHeightReady}
+                      pointerEvents={emailCardClickable ? "auto" : "none"}
+                      handleClickScroll={handleClickScroll}
+                    />
+                  </Fragment>
+                ) : (
+                  <ScanButton />
+                )}
+              </Controller>
+            </div>
           )}
         </div>
       )}
