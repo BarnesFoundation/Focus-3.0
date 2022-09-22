@@ -35,18 +35,12 @@ export const EmailCard: React.FC<EmailCardProps> = ({
       <Controller {...controllerProps}>
         <Scene
           loglevel={0}
-          /** There is something weird going on with react-scrollmagic types that
-           * keeps giving us an error, but we can't change this component or update
-           * the dependency or else it breaks!
-           */
-          // @ts-ignore
-          pin="#email-panel"
           triggerElement="#email-panel"
           triggerHook="onEnter"
           indicators={false}
           duration={offsetDuration}
           offset="0"
-          pinSettings={{
+          pin={{
             pushFollowers: true,
             spacerClass: "scrollmagic-pin-spacer-pt",
           }}

@@ -11,12 +11,15 @@ import { ContentBlock } from "./ContentBlock";
 
 export type ResultCardProps = {
   artwork: ArtworkObject["artwork"];
-  refCallbackInfo: (element: any) => void;
-  setArtworkRef: (element: any) => void;
+  refCallbackInfo?: (element: any) => void;
+  infoCardRef?: React.MutableRefObject<HTMLDivElement>;
+  setArtworkRef?: (element: any) => void;
+  artWorkRef?: React.MutableRefObject<HTMLDivElement>;
   langOptions: WithTranslationState["langOptions"];
   selectedLanguage: LanguageOptionType;
   onSelectLanguage: (item: LanguageOptionType) => void;
-  shortDescContainer: any;
+  shortDescContainer?: any;
+  descriptionRef?: React.MutableRefObject<HTMLDivElement>;
   specialExhibition: boolean;
   getTranslation: WithTranslationState["getTranslation"];
 };
@@ -24,11 +27,14 @@ export type ResultCardProps = {
 export const ResultCard: React.FC<ResultCardProps> = ({
   artwork,
   refCallbackInfo,
+  infoCardRef,
   setArtworkRef,
+  artWorkRef,
   langOptions,
   selectedLanguage,
   onSelectLanguage,
   shortDescContainer,
+  descriptionRef,
   specialExhibition,
   getTranslation,
 }) => {
@@ -41,7 +47,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
 
   return (
     <div className="container-fluid artwork-container" id="search-result">
-      <div className="row" ref={refCallbackInfo}>
+      <div className="row" ref={refCallbackInfo || infoCardRef}>
         <div className="artwork-top-bg">
           <img
             className="card-img-top"
@@ -87,7 +93,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
             <div
               className="card-body"
               id="focussed-artwork-body"
-              ref={setArtworkRef}
+              ref={setArtworkRef || artWorkRef}
             >
               <div className="share-wrapper">
                 {/* Language options button */}
@@ -111,7 +117,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
                 )}
               </div>
 
-              <div className="short-desc-container" ref={shortDescContainer}>
+              <div className="short-desc-container" ref={shortDescContainer || descriptionRef}>
                 {artwork.shortDescription && !artwork.content && (
                   <div
                     className="card-text paragraph"
@@ -121,16 +127,16 @@ export const ResultCard: React.FC<ResultCardProps> = ({
                     }}
                   ></div>
                 )}
-              </div>
 
-              {/* Add in new component for Content blocks */}
-              {artwork.content && (
-                <div className="card-content">
-                  {artwork.content.map((c, index) => (
-                    <ContentBlock contentBlock={c.contentBlock} key={index} />
-                  ))}
-                </div>
-              )}
+                {/* Add in new component for Content blocks */}
+                {artwork.content && (
+                  <div className="card-content">
+                    {artwork.content.map((c, index) => (
+                      <ContentBlock contentBlock={c.contentBlock} key={index} />
+                    ))}
+                  </div>
+                )}
+              </div>
 
               {(artwork.shortDescription || artwork.content) &&
                 selectedLanguage.code !== LANGUAGE_EN && (
