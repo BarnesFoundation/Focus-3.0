@@ -24,12 +24,12 @@ export type ArtWorkRecord = {
 };
 
 type Content = {
-  contentBlock: ContentBlock;
-}[];
+  contentBlock: ContentBlock[];
+};
 
-type ContentBlock = (Image | ImageComparison | TextBlock | Title)[];
+export type ContentBlock = Image | ImageComparison | TextBlock | Title;
 
-enum ContentBlockTypes {
+export enum ContentBlockTypes {
   IMAGE = "Image",
   IMAGE_COMPARISON = "ImageComparison",
   TEXT_BLOCK = "TextBlock",
@@ -98,7 +98,7 @@ export type ArtworkObject = {
     bg_url?: string;
     curatorialApproval?: boolean;
     unIdentified?: boolean;
-    content?: Content;
+    content?: Content[];
   };
   roomRecords: any[];
 };

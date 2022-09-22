@@ -1,0 +1,19 @@
+.content-block {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+
+  &__title-block {
+    padding-bottom: 16px;
+
+    &__title {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    &__subtitle {
+      font-size: 22px;
+      color:rgba(0, 0, 0, 0.5);
+    }
+  }
+}

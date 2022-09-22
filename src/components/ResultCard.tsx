@@ -7,6 +7,7 @@ import { LanguageOptionType, WithTranslationState } from "./withTranslation";
 import { ArtworkObject } from "../types/payloadTypes";
 import { LanguageDropdown } from "./LanguageDropdown";
 import { Share } from "./Share";
+import { ContentBlock } from "./ContentBlock";
 
 export type ResultCardProps = {
   artwork: ArtworkObject["artwork"];
@@ -73,9 +74,8 @@ export const ResultCard: React.FC<ResultCardProps> = ({
                         src={src}
                         alt="match_image"
                         role="img"
-                        aria-label={`${artwork.title} by ${artwork.artist}${
-                          artwork.culture ? `, ${artwork.culture}.` : "."
-                        } ${artwork.visualDescription}`}
+                        aria-label={`${artwork.title} by ${artwork.artist}${artwork.culture ? `, ${artwork.culture}.` : "."
+                          } ${artwork.visualDescription}`}
                       />
                     )}
                   </ProgressiveImage>
@@ -112,7 +112,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
               </div>
 
               <div className="short-desc-container" ref={shortDescContainer}>
-                {artwork.shortDescription && (
+                {artwork.shortDescription && !artwork.content && (
                   <div
                     className="card-text paragraph"
                     style={shortDescFontStyle}
@@ -122,7 +122,17 @@ export const ResultCard: React.FC<ResultCardProps> = ({
                   ></div>
                 )}
               </div>
-              {artwork.shortDescription &&
+
+              {/* Add in new component for Content blocks */}
+              {artwork.content && (
+                <div className="card-content">
+                  {artwork.content.map((c, index) => (
+                    <ContentBlock contentBlock={c.contentBlock} key={index} />
+                  ))}
+                </div>
+              )}
+
+              {(artwork.shortDescription || artwork.content) &&
                 selectedLanguage.code !== LANGUAGE_EN && (
                   <div className="google-translate-disclaimer">
                     <span>Translated with </span>
