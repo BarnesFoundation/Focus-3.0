@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import { useLocation } from "react-router-dom";
 import $ from "jquery";
+import classnames from "classnames";
 
 import * as constants from "../constants";
 import withTranslation, {
@@ -31,6 +32,7 @@ import { EmailCard } from "./EmailCard";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { Controller, Scene } from "react-scrollmagic";
 import { EmailForm } from "./EmailForm";
+import { EmailFormInput } from "./EmailFormInput";
 
 export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
   langOptions,
@@ -53,26 +55,15 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
     code: "En",
     selected: true,
   });
-  const [artworkScrollOffset, setArtworkScrollOffset] = useState(0);
-  const [artworkTimeoutCallback, setArtworkTimeoutCallback] =
-    useState<NodeJS.Timeout>();
   const [emailSubmitTimeoutCallback, setEmailSubmitTimeoutCallback] =
     useState<NodeJS.Timeout>();
   const [emailCardClickable, setEmailCardClickable] = useState(true);
   const [emailFormHeight, setEmailFormHeight] = useState<number>();
-  // Scrollmagic
-  const artworkScene = useRef<ScrollMagic.Scene>();
-  const emailScene = useRef<ScrollMagic.Scene>();
-  const emailSceneTrigger = useRef<ScrollMagic.Scene>();
-  const controller = useRef<ScrollMagic.Controller>();
+  const [emailFormOpen, setEmailFormOpen] = useState(false);
+  const resultCard = useRef<HTMLDivElement>();
 
   const location = useLocation();
   const { getLocalStorage } = useLocalStorage();
-
-  // Component Refs
-  const infoCardRef = useRef<HTMLDivElement>();
-  const artworkRef = useRef<HTMLDivElement>();
-  const descriptionRef = useRef<HTMLDivElement>();
 
   const onSelectLanguage = async (selectedLanguage: LanguageOptionType) => {
     // Scroll to top when language changes. This should help re-calculate correct offsets on language change
@@ -82,7 +73,6 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
     await updateSelectedLanguage(selectedLanguage);
 
     // Get the new language translations
-    // const imageId = this.getFocusedArtworkImageId();
     const artworkInfo = await sr.getSpecialExhibitionObject(imageId);
 
     const { artwork, roomRecords } = artworkInfo
@@ -98,90 +88,9 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
     setEmailFormHeight((height * 2) / 2.2);
   };
 
-  /** Sets up the ScrollMagic scene for the artwork result section */
-  const setupArtworkScene = useCallback(() => {
-    // Calculate the vertical offset for the artwork result
-    const artworkVerticalOffset = Math.max(
-      Math.ceil(
-        artworkRef.current.getBoundingClientRect().bottom -
-        constants.VIEWPORT_HEIGHT
-      ),
-      0
-    );
-    const offset = artworkVerticalOffset + 150;
-    setArtworkScrollOffset(offset);
-
-    artworkScene.current = new ScrollMagic.Scene({
-      triggerElement: "#search-result",
-      triggerHook: "onLeave",
-      duration: 0, // scroll distance
-      offset,
-    })
-      .setPin("#search-result", { pushFollowers: false }) // pins the element for the the scene's duration
-      .addTo(controller.current);
-  }, [controller]);
-
-  /** Sets up the ScrollMagic for the email panel */
-  const setupEmailScene = useCallback(() => {
-    emailScene.current = new ScrollMagic.Scene({
-      triggerElement: "#email-panel",
-      triggerHook: "onEnter",
-      duration: 0, // scroll distance
-      offset: emailFormHeight, // start this scene after scrolling for emailFormHeight px.
-    })
-      .on("leave", (event) => {
-        setEmailCardClickable(true);
-      })
-      .on("enter", (event) => {
-        setEmailCardClickable(false);
-      })
-      .addTo(controller.current);
-  }, [controller, emailFormHeight]);
-
-  /** Sets up the ScrollMagic scene for the email on-enter scene */
-  const setupEmailSceneOnEnter = useCallback(() => {
-    emailSceneTrigger.current = new ScrollMagic.Scene({
-      triggerElement: "#email-trigger-enter",
-      triggerHook: "onEnter",
-      duration: artworkScrollOffset - 150,
-    })
-      .on("leave", (event) => {
-        emailSceneTrigger.current.removePin();
-        emailSceneTrigger.current.refresh();
-      })
-      .addTo(controller.current);
-  }, [artworkScrollOffset, controller]);
-
-  const resetArtworkSceneSettings = useCallback(() => {
-    artworkScene.current.removePin(true);
-    artworkScene.current.offset(artworkScrollOffset);
-    artworkScene.current.setPin("#search-result");
-    artworkScene.current.refresh();
-  }, [artworkScene, artworkScrollOffset]);
-
-  const resetEmailSceneTriggerSettings = useCallback(() => {
-    if (emailSceneTrigger.current) {
-      emailSceneTrigger.current.removePin();
-      emailSceneTrigger.current.duration(artworkScrollOffset - 100);
-      emailSceneTrigger.current.setPin("#email-trigger-enter");
-      emailSceneTrigger.current.refresh();
-    }
-  }, [artworkScrollOffset, emailSceneTrigger]);
-
   /** Handles the tap-to-scroll functionality for cards */
   const handleClickScroll = () => {
-    // Determine the offset needed for the height of each story card and the amount it should peek up
-    let heightOffset = screen.height < 800 ? 800 : screen.height;
-    let landingPoint = emailScene.current.scrollOffset() + heightOffset;
-
-    // For iOS, override the normal scrolling
-    if (isIOS) {
-      controller.current.scrollTo((nextStoryPoint) => {
-        $("html, body").animate({ scrollTop: nextStoryPoint });
-      });
-    }
-
-    controller.current.scrollTo(landingPoint);
+    setEmailFormOpen(!emailFormOpen);
   };
 
   /** Updates state that email was captured and submits it to the server session */
@@ -230,95 +139,18 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
       setShowEmailForm(!emailRecorded);
       setEmailCaptureAck(emailRecorded);
       setSelectedLanguage((await getSelectedLanguage())[0]);
-
-      const scrollContainer = isAndroid ? { container: ".sm-container" } : {};
-      controller.current = new ScrollMagic.Controller(scrollContainer);
     };
 
     componentWillMount();
   }, []);
 
-  // Update scrollmagic scene settings on component update
   useEffect(() => {
-    if (!artworkRef.current) {
-      return;
-    } else {
-      setupArtworkScene();
-
-      const newOffset = Math.max(
-        Math.ceil(
-          artworkRef.current.getBoundingClientRect().bottom -
-          constants.VIEWPORT_HEIGHT
-        ),
-        0
-      );
-      const offset = newOffset + 100;
-      setArtworkScrollOffset(offset);
-      console.log(
-        "Setting new offset to Artwork scene on componentDidUpdate: ",
-        Math.ceil(artworkRef.current.getBoundingClientRect().height),
-        artworkScrollOffset
-      );
-
-      const timeout = setTimeout(() => {
-        setupArtworkScene();
-        if (!emailCaptured) {
-          setupEmailSceneOnEnter();
-          setupEmailScene();
-        }
-      }, 0);
-
-      setArtworkTimeoutCallback(timeout);
-
-      if (artworkScene) resetArtworkSceneSettings();
-      resetEmailSceneTriggerSettings();
+    debugger;
+    if (resultCard.current) {
+      debugger;
+      console.log(resultCard.current?.getBoundingClientRect());
     }
-  }, [
-    artworkRef,
-    selectedLanguage,
-    setupArtworkScene,
-    artworkScrollOffset,
-    emailCaptured,
-    resetArtworkSceneSettings,
-    resetEmailSceneTriggerSettings,
-    setupEmailScene,
-    setupEmailSceneOnEnter,
-    artworkScene,
-  ]);
-
-  // Clean up scrollmagic on unmount
-  useEffect(() => {
-    return () => {
-      if (artworkTimeoutCallback) clearTimeout(artworkTimeoutCallback);
-      setArtworkTimeoutCallback(null);
-
-      if (emailSubmitTimeoutCallback) clearTimeout(emailSubmitTimeoutCallback);
-      setEmailSubmitTimeoutCallback(null);
-
-      if (artworkScene.current) {
-        artworkScene.current.remove();
-        artworkScene.current.destroy(true);
-        artworkScene.current = null;
-      }
-
-      if (emailScene.current) {
-        emailScene.current.remove();
-        emailScene.current.destroy(true);
-        emailScene.current = null;
-      }
-
-      if (emailSceneTrigger.current) {
-        emailSceneTrigger.current.remove();
-        emailSceneTrigger.current.destroy(true);
-        emailSceneTrigger.current = null;
-      }
-
-      if (controller.current) {
-        controller.current.destroy(true);
-        controller.current = null;
-      }
-    };
-  }, []);
+  }, [resultCard]);
 
   return (
     <Fragment>
@@ -335,58 +167,36 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
             </div>
           ) : (
             <div className="exhibition-obj">
-              <Controller>
-                <Scene pin>
-                  <ResultCard
-                    artwork={artwork}
-                    langOptions={langOptions}
-                    selectedLanguage={selectedLanguage}
-                    onSelectLanguage={onSelectLanguage}
-                    specialExhibition={result.data.specialExhibition}
+              <div className="result-card" ref={resultCard}>
+                <ResultCard
+                  artwork={artwork}
+                  langOptions={langOptions}
+                  selectedLanguage={selectedLanguage}
+                  onSelectLanguage={onSelectLanguage}
+                  specialExhibition={result.data.specialExhibition}
+                  getTranslation={getTranslation}
+                />
+              </div>
+
+              {showEmailForm ? (
+                <div
+                  className={classnames("email-card", {
+                    "email-card__open": emailFormOpen,
+                  })}
+                >
+                  <EmailForm
+                    withStory={false}
+                    isEmailScreen={false}
+                    onSubmitEmail={onSubmitEmail}
                     getTranslation={getTranslation}
+                    getSize={onEmailHeightReady}
+                    pointerEvents={emailCardClickable ? "auto" : "none"}
+                    handleClickScroll={handleClickScroll}
                   />
-                </Scene>
-
-                {showEmailForm ? (
-                  <Fragment>
-                    <Scene
-                      loglevel={0}
-                      triggerElement="#email-panel"
-                      triggerHook="onEnter"
-                      indicators={false}
-                      duration={
-                        (screen.height < 800 ? 800 : screen.height) +
-                        artworkScrollOffset -
-                        150
-                      }
-                      offset="0"
-                      pin={{
-                        pushFollowers: true,
-                        spacerClass: "scrollmagic-pin-spacer-pt",
-                      }}
-                    >
-                      <div id={`story-pin-enter`} />
-                    </Scene>
-
-                    {/** Placeholder element to control email card enter when no stories are available. Only show when email has not been captured */}
-                    <div
-                      id="email-trigger-enter"
-                      style={{ visibility: "hidden", bottom: 0 }}
-                    />
-                    <EmailForm
-                      withStory={false}
-                      isEmailScreen={false}
-                      onSubmitEmail={onSubmitEmail}
-                      getTranslation={getTranslation}
-                      getSize={onEmailHeightReady}
-                      pointerEvents={emailCardClickable ? "auto" : "none"}
-                      handleClickScroll={handleClickScroll}
-                    />
-                  </Fragment>
-                ) : (
-                  <ScanButton />
-                )}
-              </Controller>
+                </div>
+              ) : (
+                <ScanButton />
+              )}
             </div>
           )}
         </div>

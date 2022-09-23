@@ -1,15 +1,23 @@
 .exhibition-obj {
-  position: absolute;
-  height: 100vh;
-
   #search-result {
     overflow: scroll;
     position: relative;
   }
 
-  .panel-email {
-    position: absolute;
+  .email-card {
+    position: fixed;
     z-index: 10;
-    bottom: -360px;
+    cursor: pointer;
+    width: 100vw;
+    transition: all 1s ease 1s;
+
+    &.email-card__open {
+      bottom: 0px;
+      transition: all 1s ease 1s;
+    }
+
+    &.email-card__block {
+      
+    }
   }
 }
