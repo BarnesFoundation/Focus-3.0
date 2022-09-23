@@ -190,9 +190,25 @@
       position: fixed;
       bottom: -412px;
       width: 100vw;
+      transition: all .25s ease .1s;
+      z-index: 10;
 
       &.open {
         bottom: 0px;
+        transition: all .25s ease .1s;
+      }
+
+      &.completed {
+        bottom: -1000px;
+        transition: all .25s ease .1s;
+      }
+    }
+
+    .scan-button {
+      transition: position 1s ease 1s;
+
+      &.floating {
+        transition: position 1s ease 1s;
       }
     }
   }

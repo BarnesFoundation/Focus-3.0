@@ -7,7 +7,6 @@ import CameraContainer from "../components/CameraContainer";
 import Artwork from "../components/Artwork";
 import { ExhibitionObject } from "../components/ExhibitionObject";
 import StoryPage from "../components/StoryPage";
-import { Test } from "../components/Test";
 import { OrientationContextProvider } from "../contexts/OrientationContext";
 import {
   SNAP_APP_RESET_INTERVAL,
@@ -57,7 +56,6 @@ const Routes = () => (
                 exact={false}
                 key="story"
               />
-              <Route path={"/test/:imageId?"} component={Test} key="test" />
             </Switch>
           </RouteContainer>
         </PoseGroup>

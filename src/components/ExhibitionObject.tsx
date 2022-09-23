@@ -1,38 +1,25 @@
-import React, {
-  Component,
-  Fragment,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import $ from "jquery";
 import classnames from "classnames";
+import { isTablet } from "react-device-detect";
+import { isAndroid } from "react-device-detect";
 
+import { SearchRequestService } from "../services/SearchRequestService";
 import * as constants from "../constants";
 import withTranslation, {
   LanguageOptionType,
   WithTranslationState,
 } from "./withTranslation";
-
-import { SearchRequestService } from "../services/SearchRequestService";
-// @ts-ignore
-import styled, { css } from "styled-components";
-import { isTablet } from "react-device-detect";
-// @ts-ignore
-import ScrollMagic from "scrollmagic";
-import { isAndroid, isIOS } from "react-device-detect";
-
-import { ScanButton } from "./ScanButton";
-import { ResultCard } from "./ResultCard";
 import { constructResultAndInRoomSlider } from "../helpers/artWorkHelper";
 import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
-import { EmailCard } from "./EmailCard";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import { Controller, Scene } from "react-scrollmagic";
 import { EmailForm } from "./EmailForm";
-import { EmailFormInput } from "./EmailFormInput";
+import ProgressiveImage from "react-progressive-image";
+import { LanguageDropdown } from "./LanguageDropdown";
+import { Share } from "./Share";
+import { ContentBlock } from "./ContentBlock";
+import google_logo from "../images/google_translate.svg";
+import { ScanButton } from "./ScanButton";
 
 export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
   langOptions,
@@ -49,6 +36,9 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
   const [imgLoaded, setImgLoaded] = useState(false);
   const [emailCaptured, setEmailCaptured] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(true);
+  // Add timeout to auto dismiss the email submission thank you
+  // check that email error rendering correctly
+  // Check all fns and delete unused stuff
   const [emailCaptureAck, setEmailCaptureAck] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageOptionType>({
     name: "English",
@@ -64,6 +54,10 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
 
   const location = useLocation();
   const { getLocalStorage } = useLocalStorage();
+
+  const [formOpen, setFormOpen] = useState(false);
+  const startYCard2 = useRef<number>();
+  const startYTrigger = useRef<number>();
 
   const onSelectLanguage = async (selectedLanguage: LanguageOptionType) => {
     // Scroll to top when language changes. This should help re-calculate correct offsets on language change
@@ -88,24 +82,33 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
     setEmailFormHeight((height * 2) / 2.2);
   };
 
-  /** Handles the tap-to-scroll functionality for cards */
-  const handleClickScroll = () => {
-    setEmailFormOpen(!emailFormOpen);
-  };
-
   /** Updates state that email was captured and submits it to the server session */
   const onSubmitEmail = (email) => {
     setEmailCaptured(true);
-    setEmailCaptureAck(true);
 
     // Store the email
     sr.submitBookmarksEmail(email);
 
     // Close the email card after 4 seconds
-    const timeout = setTimeout(() => {
+    setTimeout(() => {
+      setFormOpen(false);
       setEmailCaptureAck(true);
     }, 4000);
-    setEmailSubmitTimeoutCallback(timeout);
+  };
+
+  const handleClick = () => {
+    if (!formOpen) setFormOpen(true);
+  };
+
+  const handleStartSwipe = (event) => {
+    const touch = event.changedTouches[0];
+    startYCard2.current = touch.pageY;
+  };
+
+  const handleSwipeDismiss = (event) => {
+    const touch = event.changedTouches[0];
+    const endY = touch.pageY;
+    if (endY > startYCard2.current) setFormOpen(false);
   };
 
   // Set state and get object data on component initialization
@@ -145,17 +148,47 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
   }, []);
 
   useEffect(() => {
-    debugger;
-    if (resultCard.current) {
-      debugger;
-      console.log(resultCard.current?.getBoundingClientRect());
-    }
-  }, [resultCard]);
+    if (!artwork || !imgLoaded || !showEmailForm) return;
+
+    // Add handlers for card-2 swipe down interaction
+    const content = document.getElementById("card-content");
+    content.addEventListener("touchstart", handleStartSwipe);
+    content.addEventListener("touchend", handleSwipeDismiss);
+    content.addEventListener("wheel", (e) => {
+      if (e.deltaY < 0) {
+        setFormOpen(false);
+      }
+    });
+
+    // Disable scrolling inside element
+    const card2 = document.getElementById("card-2");
+    card2.addEventListener("touchmove", (e) => e.preventDefault());
+
+    // Trigger to open card-2 once bottom of content is reached
+    const trigger = document.getElementById("card-2__trigger");
+    trigger.addEventListener("wheel", (e) => {
+      if (e.deltaY > 0) {
+        setFormOpen(true);
+      }
+    });
+    trigger.addEventListener("touchstart", (e) => {
+      startYTrigger.current = e.changedTouches[0].pageY;
+    });
+    trigger.addEventListener("touchend", (e) => {
+      if (e.changedTouches[0].pageY < startYTrigger.current) setFormOpen(true);
+    });
+  }, [artwork, imgLoaded, showEmailForm]);
 
   return (
-    <Fragment>
+    <div
+      id="container"
+      className={classnames(
+        "exhibition-obj",
+        isAndroid ? "sm-container" : "ios-container"
+      )}
+    >
       {artwork && (
-        <div className={isAndroid ? "sm-container" : "ios-container"}>
+        <div id="card-content" className="exhibition-obj__content">
           {!imgLoaded ? (
             <div style={{ visibility: "hidden" }}>
               <img
@@ -166,23 +199,201 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
               />
             </div>
           ) : (
-            <div className="exhibition-obj">
-              <div className="result-card" ref={resultCard}>
-                <ResultCard
-                  artwork={artwork}
-                  langOptions={langOptions}
-                  selectedLanguage={selectedLanguage}
-                  onSelectLanguage={onSelectLanguage}
-                  specialExhibition={result.data.specialExhibition}
-                  getTranslation={getTranslation}
-                />
-              </div>
+            <Fragment>
+              <div id="card-1" className="exhibition-obj__content__result">
+                <div className="row">
+                  <div className="artwork-top-bg">
+                    <img
+                      className="card-img-top"
+                      src={artwork.bg_url}
+                      alt="match_image_background"
+                      aria-hidden={true}
+                    />
+                  </div>
+                  <div className="col-12 col-md-12">
+                    <div
+                      id="result-card"
+                      className="card"
+                      data-title={artwork.title}
+                      data-artist={artwork.artist}
+                      data-id={artwork.id}
+                      data-invno={artwork.invno}
+                      data-nodesc-invno={
+                        !artwork.shortDescription ? artwork.invno : ""
+                      }
+                    >
+                      <div className="card-top-container">
+                        <div className="card-img-overlay">
+                          <div className="card-header h1">Focused Artwork</div>
+                          <div className="card-img-result">
+                            {/* @ts-ignore */}
+                            <ProgressiveImage
+                              src={artwork.url}
+                              placeholder={artwork.url_low_quality}
+                            >
+                              {(src) => (
+                                <img
+                                  src={src}
+                                  alt="match_image"
+                                  role="img"
+                                  aria-label={`${artwork.title} by ${artwork.artist
+                                    }${artwork.culture
+                                      ? `, ${artwork.culture}.`
+                                      : "."
+                                    } ${artwork.visualDescription}`}
+                                />
+                              )}
+                            </ProgressiveImage>
+                          </div>
+                          <div className="card-artist">{artwork.artist}</div>
+                          <div className="card-title">{artwork.title}</div>
+                        </div>
+                      </div>
+                      <div className="card-body" id="focussed-artwork-body">
+                        <div className="share-wrapper">
+                          {/* Language options button */}
+                          <div className="language-dropdown-wrapper">
+                            <div className="language-dropdown">
+                              <LanguageDropdown
+                                langOptions={langOptions}
+                                selected={selectedLanguage}
+                                onSelectLanguage={onSelectLanguage}
+                              />
+                            </div>
+                          </div>
 
+                          {/* Share options button for Barnes Collection objects */}
+                          {/* TODO: determine if we want share button for special exhibition objects */}
+                          {!result.data.specialExhibition && (
+                            <Share
+                              shareText={getTranslation(
+                                "Result_page",
+                                "text_1"
+                              )}
+                              artwork={artwork}
+                            />
+                          )}
+                        </div>
+
+                        <div className="short-desc-container">
+                          {/* Add in new component for Content blocks */}
+                          {artwork.content && (
+                            <div className="card-content">
+                              {artwork.content.map((c, index) => (
+                                <ContentBlock
+                                  contentBlock={c.contentBlock}
+                                  key={index}
+                                />
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {(artwork.shortDescription || artwork.content) &&
+                          selectedLanguage.code !== constants.LANGUAGE_EN && (
+                            <div className="google-translate-disclaimer">
+                              <span>Translated with </span>
+                              <img src={google_logo} alt="google_logo" />
+                            </div>
+                          )}
+                        <div className="card-info">
+                          <table className="detail-table">
+                            <tbody>
+                              <tr>
+                                <td className="text-left item-label">{`${getTranslation(
+                                  "Result_page",
+                                  "text_3"
+                                )}:`}</td>
+                                <td className="text-left item-info">
+                                  {artwork.artist}{" "}
+                                  {!artwork.unIdentified && artwork.nationality
+                                    ? `(${artwork.nationality}, ${artwork.birthDate} - ${artwork.deathDate})`
+                                    : ""}
+                                </td>
+                              </tr>
+                              {artwork.unIdentified && (
+                                <tr>
+                                  <td className="text-left item-label">
+                                    {`${getTranslation(
+                                      "Result_page",
+                                      "text_10"
+                                    )}:`}
+                                  </td>
+                                  <td className="text-left item-info">
+                                    {artwork.culture}
+                                  </td>
+                                </tr>
+                              )}
+                              <tr>
+                                <td className="text-left item-label">{`${getTranslation(
+                                  "Result_page",
+                                  "text_4"
+                                )}:`}</td>
+                                <td className="text-left item-info">
+                                  {artwork.title}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="text-left item-label">{`${getTranslation(
+                                  "Result_page",
+                                  "text_5"
+                                )}:`}</td>
+                                <td className="text-left item-info">
+                                  {artwork.displayDate}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="text-left item-label">{`${getTranslation(
+                                  "Result_page",
+                                  "text_6"
+                                )}:`}</td>
+                                <td className="text-left item-info">
+                                  {artwork.medium}
+                                </td>
+                              </tr>
+                              <tr>
+                                <td className="text-left item-label">{`${getTranslation(
+                                  "Result_page",
+                                  "text_7"
+                                )}:`}</td>
+                                <td className="text-left item-info">
+                                  {artwork.dimensions}
+                                </td>
+                              </tr>
+                              {!artwork.curatorialApproval && (
+                                <tr>
+                                  <td className="text-left item-label">
+                                    {`${getTranslation(
+                                      "Result_page",
+                                      "text_8"
+                                    )}:`}
+                                  </td>
+                                  <td className="text-left item-info">
+                                    {getTranslation("Result_page", "text_9")}
+                                  </td>
+                                </tr>
+                              )}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="card-2__trigger" />
+              </div>
               {showEmailForm ? (
                 <div
-                  className={classnames("email-card", {
-                    "email-card__open": emailFormOpen,
-                  })}
+                  id="card-2"
+                  className={classnames(
+                    "exhibition-obj__content__email",
+                    "card",
+                    {
+                      open: formOpen,
+                      completed: !formOpen && emailCaptured,
+                    }
+                  )}
+                  onClick={handleClick}
                 >
                   <EmailForm
                     withStory={false}
@@ -191,17 +402,18 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
                     getTranslation={getTranslation}
                     getSize={onEmailHeightReady}
                     pointerEvents={emailCardClickable ? "auto" : "none"}
-                    handleClickScroll={handleClickScroll}
+                    handleClickScroll={(storyIndex, isStoryCard) => null}
+                    alwaysFloatBtn={!emailCaptureAck}
                   />
                 </div>
               ) : (
-                <ScanButton />
+                <ScanButton float={false} />
               )}
-            </div>
+            </Fragment>
           )}
         </div>
       )}
-    </Fragment>
+    </div>
   );
 };
 
