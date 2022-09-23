@@ -36,21 +36,12 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
   const [imgLoaded, setImgLoaded] = useState(false);
   const [emailCaptured, setEmailCaptured] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(true);
-  // Add timeout to auto dismiss the email submission thank you
-  // check that email error rendering correctly
-  // Check all fns and delete unused stuff
   const [emailCaptureAck, setEmailCaptureAck] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageOptionType>({
     name: "English",
     code: "En",
     selected: true,
   });
-  const [emailSubmitTimeoutCallback, setEmailSubmitTimeoutCallback] =
-    useState<NodeJS.Timeout>();
-  const [emailCardClickable, setEmailCardClickable] = useState(true);
-  const [emailFormHeight, setEmailFormHeight] = useState<number>();
-  const [emailFormOpen, setEmailFormOpen] = useState(false);
-  const resultCard = useRef<HTMLDivElement>();
 
   const location = useLocation();
   const { getLocalStorage } = useLocalStorage();
@@ -76,10 +67,6 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
     setResult(artworkInfo);
     setSelectedLanguage(selectedLanguage);
     setArtwork(artwork);
-  };
-
-  const onEmailHeightReady = (height) => {
-    setEmailFormHeight((height * 2) / 2.2);
   };
 
   /** Updates state that email was captured and submits it to the server session */
@@ -236,11 +223,13 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
                                   src={src}
                                   alt="match_image"
                                   role="img"
-                                  aria-label={`${artwork.title} by ${artwork.artist
-                                    }${artwork.culture
+                                  aria-label={`${artwork.title} by ${
+                                    artwork.artist
+                                  }${
+                                    artwork.culture
                                       ? `, ${artwork.culture}.`
                                       : "."
-                                    } ${artwork.visualDescription}`}
+                                  } ${artwork.visualDescription}`}
                                 />
                               )}
                             </ProgressiveImage>
@@ -400,8 +389,8 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
                     isEmailScreen={false}
                     onSubmitEmail={onSubmitEmail}
                     getTranslation={getTranslation}
-                    getSize={onEmailHeightReady}
-                    pointerEvents={emailCardClickable ? "auto" : "none"}
+                    getSize={(height) => null}
+                    pointerEvents="auto"
                     handleClickScroll={(storyIndex, isStoryCard) => null}
                     alwaysFloatBtn={!emailCaptureAck}
                   />
