@@ -15,6 +15,11 @@ build:
 	# 3. Install the production node_modules
 	npm ci --production
 
+	# 4. Generate prisma client
+	# TODO - Find out if there's anyway to not hardcode the prisma version
+	# and have it use the version as specified from package.json instead
+	npx prisma@^3.14.0 generate
+
 # Removes the production node_modules and undoes the rename of development node_modules
 reset_node:
 	rm -rf node_modules
@@ -27,7 +32,7 @@ dev:
 	npm run deploy:dev
 
 dry_package: 
-	npx serverless package
+	npx serverless package --stage dry
 
 # Deploy to development
 deploy_dev: build dev reset_node

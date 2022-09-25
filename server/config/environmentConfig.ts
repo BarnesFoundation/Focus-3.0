@@ -50,11 +50,6 @@ const EnvironmentConfiguration = {
     secret: process.env.SESSION_SECRET,
   },
 
-  /** Configuration for Google related credentials */
-  google: {
-    projectId: process.env.GOOGLE_PROJECT_ID,
-  },
-
   imgix: {
     repo: process.env.IMGIX_REPO,
   },

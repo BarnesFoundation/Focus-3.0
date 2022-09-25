@@ -34,7 +34,10 @@
         "build-server": "tsc -p server/",
         "local-server": "NODE_DEBUG=email-templates nodemon dist/server/app.js",
         "watch-server": "tsc -w -p server",
-        "dev": " concurrently \"npm run watch-server\" \"npm run local-server\""
+        "dev": " concurrently \"npm run watch-server\" \"npm run local-server\"",
+		"deploy:dev": "npx serverless deploy --verbose --stage dev",
+		"deploy:prod": "npx serverless deploy --verbose --stage prod",
+		"prisma:generate": "prisma generate"
     },
     "eslintConfig": {
         "extends": [
