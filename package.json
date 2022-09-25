@@ -36,7 +36,8 @@
         "watch-server": "tsc -w -p server",
         "dev": " concurrently \"npm run watch-server\" \"npm run local-server\"",
 		"deploy:dev": "npx serverless deploy --verbose --stage dev",
-		"deploy:prod": "npx serverless deploy --verbose --stage prod"
+		"deploy:prod": "npx serverless deploy --verbose --stage prod",
+		"prisma:generate": "prisma generate"
     },
     "eslintConfig": {
         "extends": [
