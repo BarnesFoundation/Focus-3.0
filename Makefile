@@ -35,13 +35,23 @@ dry_package:
 	npx serverless package --stage dry
 
 # Deploy to development
-deploy_dev: build dev reset_node
+deploy_dev: set_env_dev build dev reset_node
 
 # Deploy to production
-deploy_prod: build prod reset_node
+deploy_prod: set_env_prod build prod reset_node
 
 # Test building deployment package
 deploy_dry: build dry_package reset_node
+
+# Set PUBLIC_URL for development
+# TODO - Try to pull this from the environment instead of hard-coding here
+# TODO - Sync built assets from `build` folder to the `build` directory in the S3 bucket
+set_env_dev: 
+	export PUBLIC_URL="https://focus-application-dev-serverlessdeploymentbucket-wyfkuk6n7ves.s3.amazonaws.com/build"
+
+# Set PUBLIC_URL for production
+set_env_prod: 
+	export PUBLIC_URL="https://focus-application-dev-serverlessdeploymentbucket-wyfkuk6n7ves.s3.amazonaws.com/build"
 
 ######################################
 #
