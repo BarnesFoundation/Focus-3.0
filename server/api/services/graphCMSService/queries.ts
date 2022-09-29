@@ -217,6 +217,10 @@ export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
 								subtitle
 								title
 							}
+							... on Video {
+								type
+								url
+							}
 						}
 					}
 				}

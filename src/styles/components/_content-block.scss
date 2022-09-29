@@ -62,7 +62,7 @@
 
   &__comparison {
     margin: 2rem 0;
-    
+
     &__caption {
       display: flex;
       flex-direction: row;
@@ -79,5 +79,9 @@
         flex-grow: 1;
       }
     }
+  }
+
+  &__video {
+    margin: 2rem 0;
   }
 }

@@ -27,13 +27,14 @@ type Content = {
   contentBlock: ContentBlock[];
 };
 
-export type ContentBlock = Image | ImageComparison | TextBlock | Title;
+export type ContentBlock = Image | ImageComparison | TextBlock | Title | Video;
 
 export enum ContentBlockTypes {
   IMAGE = "Image",
   IMAGE_COMPARISON = "ImageComparison",
   TEXT_BLOCK = "TextBlock",
   TITLE = "Title",
+  VIDEO = "Video",
 }
 
 type Image = {
@@ -63,6 +64,11 @@ type Title = {
   title?: string;
   subtitle?: string;
 };
+
+type Video = {
+  type: ContentBlockTypes.VIDEO;
+  url: string;
+}
 
 export type ArtWorkRecordsResult = {
   data: {

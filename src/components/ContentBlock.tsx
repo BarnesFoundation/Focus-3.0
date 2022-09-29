@@ -5,6 +5,7 @@ import {
   ReactCompareSlider,
   ReactCompareSliderImage,
 } from "react-compare-slider";
+import ReactPlayer from "react-player/lazy";
 import {
   ContentBlock as ContentBlockType,
   ContentBlockTypes,
@@ -122,6 +123,21 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => {
                 )}
               </div>
             </figure>
+          )}
+
+          {/* Video Block */}
+          {block.type === ContentBlockTypes.VIDEO && (
+            <ReactPlayer
+              className="content-block__video"
+              url={block.url}
+              volume={0}
+              muted={true}
+              width="100%"
+              height="fit-content"
+              playsinline={true}
+              pip={false}
+              controls={true}
+            />
           )}
         </Fragment>
       ))}
