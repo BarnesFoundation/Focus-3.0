@@ -99,6 +99,7 @@
         "query-string": "6.8.1",
         "react": "^16.8.6",
         "react-addons-css-transition-group": "^15.6.2",
+        "react-compare-slider": "^2.2.0",
         "react-crossfade-image": "^1.1.1",
         "react-device-detect": "^2.2.2",
         "react-dom": "^16.8.6",

@@ -265,7 +265,7 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
                         </div>
 
                         <div className="short-desc-container">
-                          {/* Add in new component for Content blocks */}
+                          {/* Content blocks from Hygraph CMS */}
                           {artwork.content && (
                             <div className="card-content">
                               {artwork.content.map((c, index) => (

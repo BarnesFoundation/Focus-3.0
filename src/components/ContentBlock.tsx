@@ -2,6 +2,10 @@ import React, { Fragment } from "react";
 import sanitizeHtml from "sanitize-html";
 import parse from "html-react-parser";
 import {
+  ReactCompareSlider,
+  ReactCompareSliderImage,
+} from "react-compare-slider";
+import {
   ContentBlock as ContentBlockType,
   ContentBlockTypes,
 } from "../types/payloadTypes";
@@ -52,7 +56,6 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => {
     <div className="content-block">
       {contentBlock.map((block, index) => (
         <Fragment key={index}>
-          <div>{block.type}</div>
           {/* Title Block */}
           {block.type === ContentBlockTypes.TITLE && (
             <div className="content-block__title-block">
@@ -88,6 +91,38 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => {
           )}
 
           {/* Image Comparison Slider Block */}
+          {block.type === ContentBlockTypes.IMAGE_COMPARISON && (
+            <figure className="content-block__comparison">
+              <ReactCompareSlider
+                itemOne={
+                  <ReactCompareSliderImage
+                    src={block.leftImage.image.url}
+                    alt={block.leftImage.altText ? block.leftImage.altText : ""}
+                  />
+                }
+                itemTwo={
+                  <ReactCompareSliderImage
+                    src={block.rightImage.image.url}
+                    alt={
+                      block.rightImage.altText ? block.rightImage.altText : ""
+                    }
+                  />
+                }
+              />
+              <div className="content-block__comparison__caption">
+                {block.leftImage.caption && (
+                  <figcaption className="caption-left">
+                    Left: {block.leftImage.caption}
+                  </figcaption>
+                )}
+                {block.rightImage.caption && (
+                  <figcaption className="caption-right">
+                    Right: {block.rightImage.caption}
+                  </figcaption>
+                )}
+              </div>
+            </figure>
+          )}
         </Fragment>
       ))}
     </div>

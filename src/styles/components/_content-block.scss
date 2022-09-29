@@ -59,4 +59,25 @@
       max-width: 100%;
     }
   }
+
+  &__comparison {
+    margin: 2rem 0;
+    
+    &__caption {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      justify-content: space-between;
+
+      .caption-left {
+        text-align: left;
+        flex-grow: 1;
+      }
+
+      .caption-right {
+        text-align: right;
+        flex-grow: 1;
+      }
+    }
+  }
 }
