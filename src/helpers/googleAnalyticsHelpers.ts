@@ -83,14 +83,11 @@ export const logiPhoneModel = () => {
 
   // If the iPhone model was determined
   if (iPhoneModel) {
-    // TODO: Uncomment this when GA bug is fixed: https://barnesfoundation.atlassian.net/browse/FOC-26
     // Log it to Google Analytics
-    // ga("send", {
-    //   hitType: "event",
-    //   eventCategory: GA_EVENT_CATEGORY.CAMERA,
-    //   eventAction: GA_EVENT_ACTION.DEVICE_INFO,
-    //   eventLabel: iPhoneModel,
-    // });
+    gtag("event", GA_EVENT_ACTION.DEVICE_INFO, {
+      event_category: GA_EVENT_CATEGORY.CAMERA,
+      event_label: iPhoneModel,
+    });
   }
 };
 
@@ -101,13 +98,10 @@ export const shouldLogPermissionGrantTime = (startTime) => {
   const permissionGrantTime = Date.now() - startTime;
 
   if (permissionGrantTime > 900) {
-    // TODO: Uncomment this when GA bug is fixed: https://barnesfoundation.atlassian.net/browse/FOC-26
-    // Camera permission dialog was shown
-    // ga("send", {
-    //   hitType: "event",
-    //   eventCategory: GA_EVENT_CATEGORY.CAMERA,
-    //   eventAction: GA_EVENT_ACTION.CAMERA_PERMISSION,
-    //   eventLabel: GA_EVENT_LABEL.PERMISSION_GRANTED,
-    // });
+    // Log camera permission dialog
+    gtag("event", GA_EVENT_ACTION.CAMERA_PERMISSION, {
+      event_category: GA_EVENT_CATEGORY.CAMERA,
+      event_label: GA_EVENT_LABEL.PERMISSION_GRANTED,
+    });
   }
 };
