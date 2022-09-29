@@ -15,13 +15,35 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => {
     return parse(
       sanitizeHtml(html, {
         allowedTags: [
-          "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "li", "ol", "p",
-          "ul", "a", "br", "code", "em", "span", "strong", "u", "table",
-          "tbody", "td", "tfoot", "th", "thead", "tr",
+          "h1",
+          "h2",
+          "h3",
+          "h4",
+          "h5",
+          "h6",
+          "blockquote",
+          "li",
+          "ol",
+          "p",
+          "ul",
+          "a",
+          "br",
+          "code",
+          "em",
+          "span",
+          "strong",
+          "u",
+          "table",
+          "tbody",
+          "td",
+          "tfoot",
+          "th",
+          "thead",
+          "tr",
         ],
         allowedAttributes: {
-          a: ["href", "target"]
-        }
+          a: ["href", "target"],
+        },
       })
     );
   };
@@ -53,6 +75,19 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => {
               {formatHtml(block.textBlock.html)}
             </div>
           )}
+
+          {/* Image Block */}
+          {block.type === ContentBlockTypes.IMAGE && (
+            <figure className="content-block__image">
+              <img
+                src={block.image.url}
+                alt={block.altText ? block.altText : ""}
+              />
+              {block.caption && <figcaption>{block.caption}</figcaption>}
+            </figure>
+          )}
+
+          {/* Image Comparison Slider Block */}
         </Fragment>
       ))}
     </div>

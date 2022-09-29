@@ -39,7 +39,7 @@
 
     table {
       margin: 2rem 0;
-
+      
       td {
         border: 1px solid #8c8c8c;
         padding: 0.6rem;
@@ -48,6 +48,15 @@
           margin-bottom: unset;
         }
       }
+    }
+  }
+
+  &__image {
+    width: 100%;
+    margin: 2rem 0;
+
+    img {
+      max-width: 100%;
     }
   }
 }
