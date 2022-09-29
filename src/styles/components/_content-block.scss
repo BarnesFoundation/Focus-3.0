@@ -16,4 +16,38 @@
       color:rgba(0, 0, 0, 0.5);
     }
   }
+
+  &__text {
+    ul, 
+    ol {
+      padding-left: 40px;
+    }
+
+    h2 {
+      text-align: unset;
+    }
+
+    blockquote {
+      margin-left: 1rem;
+      padding: 0.25rem 1rem;
+      border-left: 2px solid #8c8c8c;
+    }
+
+    code {
+      color: #f75033;
+    }
+
+    table {
+      margin: 2rem 0;
+
+      td {
+        border: 1px solid #8c8c8c;
+        padding: 0.6rem;
+        
+        p {
+          margin-bottom: unset;
+        }
+      }
+    }
+  }
 }

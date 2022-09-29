@@ -1,5 +1,6 @@
 import React, { Fragment } from "react";
 import sanitizeHtml from "sanitize-html";
+import parse from "html-react-parser";
 import {
   ContentBlock as ContentBlockType,
   ContentBlockTypes,
@@ -10,6 +11,21 @@ type ContentBlockProps = {
 };
 
 export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => {
+  const formatHtml = (html) => {
+    return parse(
+      sanitizeHtml(html, {
+        allowedTags: [
+          "h1", "h2", "h3", "h4", "h5", "h6", "blockquote", "li", "ol", "p",
+          "ul", "a", "br", "code", "em", "span", "strong", "u", "table",
+          "tbody", "td", "tfoot", "th", "thead", "tr",
+        ],
+        allowedAttributes: {
+          a: ["href", "target"]
+        }
+      })
+    );
+  };
+
   return (
     <div className="content-block">
       {contentBlock.map((block, index) => (
@@ -33,7 +49,9 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => {
 
           {/* Text Block */}
           {block.type === ContentBlockTypes.TEXT_BLOCK && (
-            <Fragment>{sanitizeHtml(block.textBlock.html)}</Fragment>
+            <div className="content-block__text">
+              {formatHtml(block.textBlock.html)}
+            </div>
           )}
         </Fragment>
       ))}
