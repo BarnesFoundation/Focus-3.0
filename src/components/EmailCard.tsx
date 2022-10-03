@@ -3,6 +3,11 @@ import { Controller, Scene } from "react-scrollmagic";
 import { isAndroid } from "react-device-detect";
 
 import { EmailForm } from "./EmailForm";
+import {
+  ARTWORK_OFFSET,
+  DEFAULT_DURATION,
+  REFRESH_INTERVAL,
+} from "../constants";
 
 type EmailCardProps = {
   artworkScrollOffset: number;
@@ -22,13 +27,14 @@ export const EmailCard: React.FC<EmailCardProps> = ({
   getTranslation,
 }) => {
   // Props for the controller, add container prop for Android
-  const controllerProps = { refreshInterval: 250 };
+  const controllerProps = { refreshInterval: REFRESH_INTERVAL };
   if (isAndroid) {
     controllerProps["container"] = ".sm-container";
   }
 
-  const duration = screen.height < 800 ? 800 : screen.height;
-  const offsetDuration = duration + artworkScrollOffset - 150;
+  const duration =
+    screen.height < DEFAULT_DURATION ? DEFAULT_DURATION : screen.height;
+  const offsetDuration = duration + artworkScrollOffset - ARTWORK_OFFSET;
 
   return (
     <Fragment>

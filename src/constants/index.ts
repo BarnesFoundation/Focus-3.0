@@ -49,6 +49,11 @@ export const VIEWPORT_HEIGHT = Math.max(
   document.documentElement.clientHeight,
   window.innerHeight || 0
 );
+
+export const REFRESH_INTERVAL = 250;
+export const DEFAULT_DURATION = 800;
+export const ARTWORK_OFFSET = 150;
+
 export const LANGUAGE_EN = "En";
 
 export const SCROLL_DIR = {
