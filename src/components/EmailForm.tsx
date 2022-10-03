@@ -50,8 +50,8 @@ export const EmailForm: React.FC<EmailFormProps> = ({
   const peekOffset = withStory ? 0 : peekOffsetValue;
 
   useEffect(() => {
-    setFloatScanBtn(alwaysFloatBtn)
-  }, [alwaysFloatBtn, floatScanBtn])
+    setFloatScanBtn(alwaysFloatBtn);
+  }, [alwaysFloatBtn]);
 
   useEffect(() => {
     // Register scroll listener
