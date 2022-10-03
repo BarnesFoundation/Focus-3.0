@@ -60,15 +60,13 @@ class SearchRequestService {
   };
 
   submitBookmarksEmail = async (email) => {
-    const payload: { email?: string } = {};
-    payload.email = email;
+    const payload = { email };
     //payload.language = localStorage.getItem(SNAP_LANGUAGE_PREFERENCE) || 'en';
     await axios.post(constants.SUBMIT_BOOKMARKS_EMAIL_URL, payload);
   };
 
-  saveLanguagePreference = async (lang) => {
-    const payload: { language?: string } = {};
-    payload.language = lang;
+  saveLanguagePreference = async (language) => {
+    const payload = { language };
     await axios.post(constants.SAVE_LANGUAGE_PREFERENCE_URL, payload);
   };
 
