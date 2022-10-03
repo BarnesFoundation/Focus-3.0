@@ -720,7 +720,7 @@ export class Artwork extends Component<
           getTranslation={this.props.getTranslation}
         />
 
-        {this.renderStoryContainer()}
+        {showStory && this.renderStoryContainer()}
 
         {/** Placeholder element to control email card enter when no stories are available. Only show when email has not been captured */}
         {showEmailForm && (
