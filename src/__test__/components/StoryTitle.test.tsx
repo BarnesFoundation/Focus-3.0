@@ -28,7 +28,7 @@ describe("StoryTitle", () => {
     renderer.render(
       <StoryTitle
         langOptions={null}
-        selectedLanguage={"En"}
+        selectedLanguage={{ code: null, name: null, selected: true }}
         onSelectLanguage={() => null}
       />,
       container

@@ -4,8 +4,7 @@ import ShallowRenderer from "react-test-renderer/shallow";
 import { configure } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 
-import StoryItem from "../../components/StoryItem";
-import { StoryItemProps } from "../../withTranslation";
+import StoryItem, { StoryItemProps } from "../../components/StoryItem";
 
 let container;
 configure({ adapter: new Adapter() }); //enzyme - react 16 hooks support
