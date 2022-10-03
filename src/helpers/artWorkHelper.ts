@@ -1,3 +1,5 @@
+import sanitizeHtml from "sanitize-html";
+import parse from "html-react-parser";
 import {
   ArtworkObject,
   ArtWorkRecordsResult,
@@ -20,7 +22,6 @@ export const constructResultAndInRoomSlider = (
       const w = screen.width;
       const h = isTablet ? screen.height : 95;
       const artUrlParams = `?w=${w - 120}`;
-      const cropParams = `?q=0&auto=compress&crop=faces,entropy&fit=crop&w=${w}`;
       const topCropParams = `?q=0&auto=compress&crop=top&fit=crop&h=${h}&w=${w}`;
       const lowQualityParams = `?q=0&auto=compress&w=${w - 120}`;
 
@@ -42,6 +43,7 @@ export const constructResultAndInRoomSlider = (
         displayDate,
         dimensions,
         visualDescription,
+        content,
       } = artObject;
 
       // Determine the flags
@@ -68,6 +70,7 @@ export const constructResultAndInRoomSlider = (
         displayDate,
         dimensions,
         visualDescription,
+        content,
 
         // Set the urls
         url: `${artObject.art_url}${artUrlParams}`,
@@ -100,4 +103,41 @@ export const constructStory = (storyInformation: StoryItemsResponse) => {
   }
 
   return { stories, storyId, storyTitle };
+};
+
+export const formatHtml = (html) => {
+  return parse(
+    sanitizeHtml(html, {
+      allowedTags: [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "blockquote",
+        "li",
+        "ol",
+        "p",
+        "ul",
+        "a",
+        "br",
+        "code",
+        "em",
+        "span",
+        "strong",
+        "u",
+        "table",
+        "tbody",
+        "td",
+        "tfoot",
+        "th",
+        "thead",
+        "tr",
+      ],
+      allowedAttributes: {
+        a: ["href", "target"],
+      },
+    })
+  );
 };

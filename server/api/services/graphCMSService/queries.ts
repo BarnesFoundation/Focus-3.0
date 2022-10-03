@@ -175,15 +175,58 @@ export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
 				people
 				title
 				visualDescription
-				shortDescription {
-					html
-				}
 				image {
 					url
 				}
+				content {
+					... on ContentBlock {
+						contentBlock {
+							... on Image {
+								type
+								caption
+								altText
+								image {
+									url
+								}
+							}
+							... on ImageComparison {
+								type
+								leftImage {
+									altText
+									caption
+									image {
+										url
+									}
+								}
+								rightImage {
+									altText
+									caption
+									image {
+										url
+									}
+								}
+							}
+							... on TextBlock {
+								type
+								textBlock {
+									html
+								}
+							}
+							... on Title {
+								type
+								subtitle
+								title
+							}
+							... on Video {
+								type
+								url
+							}
+						}
+					}
+				}
 			}
-      }
-			`,
+		}
+		`,
     variables: {
       objectId: objectId,
     },

@@ -24,6 +24,7 @@ type EmailFormProps = {
   isEmailScreen: any;
   pointerEvents: "auto" | "none";
   handleClickScroll: (storyIndex: any, isStoryCard: boolean) => void;
+  alwaysFloatBtn?: boolean;
 };
 
 export const EmailForm: React.FC<EmailFormProps> = ({
@@ -34,10 +35,11 @@ export const EmailForm: React.FC<EmailFormProps> = ({
   isEmailScreen,
   pointerEvents,
   handleClickScroll,
+  alwaysFloatBtn = false,
 }) => {
   const sr = new SearchRequestService();
   const [email, setEmail] = useState("");
-  const [floatScanBtn, setFloatScanBtn] = useState(false);
+  const [floatScanBtn, setFloatScanBtn] = useState(alwaysFloatBtn);
   const [emailCaptured, setEmailCaptured] = useState(false);
   const [verificationPending, setVerificationPending] = useState(false);
   const [error, setError] = useState(false);
@@ -48,7 +50,10 @@ export const EmailForm: React.FC<EmailFormProps> = ({
   const peekOffset = withStory ? 0 : peekOffsetValue;
 
   useEffect(() => {
-    console.log("EmailForm >> componentDidMount");
+    setFloatScanBtn(alwaysFloatBtn);
+  }, [alwaysFloatBtn]);
+
+  useEffect(() => {
     // Register scroll listener
     window.addEventListener("scroll", onScroll, true);
 
@@ -74,9 +79,11 @@ export const EmailForm: React.FC<EmailFormProps> = ({
       return;
     }
     const emailFormTop = emailRef.current.getBoundingClientRect().top;
-    setFloatScanBtn(
-      emailFormTop <= TOP_OFFSET * VIEWPORT_HEIGHT ? true : false
-    );
+    if (!alwaysFloatBtn) {
+      setFloatScanBtn(
+        emailFormTop <= TOP_OFFSET * VIEWPORT_HEIGHT ? true : false
+      );
+    }
     setScrollInProgress(false);
   };
 

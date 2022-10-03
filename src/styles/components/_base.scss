@@ -102,6 +102,17 @@ p {
     font-family: "Calibre-Regular", sans-serif;
 }
 
+a {
+    font-family: "Calibre-Regular", sans-serif;
+    color: #8c8c8c;
+    text-decoration: underline;
+
+    &:hover {
+        color: #282828;
+        cursor: pointer;
+    }
+}
+
 .landscape-wrapper {
     position: fixed;
     top: 0;

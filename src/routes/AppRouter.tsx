@@ -5,6 +5,7 @@ import posed, { PoseGroup } from "react-pose";
 import { Home } from "../components/Home";
 import CameraContainer from "../components/CameraContainer";
 import Artwork from "../components/Artwork";
+import { ExhibitionObject } from "../components/ExhibitionObject";
 import StoryPage from "../components/StoryPage";
 import { OrientationContextProvider } from "../contexts/OrientationContext";
 import {
@@ -46,7 +47,7 @@ const Routes = () => (
               />
               <Route
                 path={`${ROUTES.EXHIBITION}/:imageId?`}
-                component={Artwork}
+                component={ExhibitionObject}
                 key="artwork"
               />
               <Route

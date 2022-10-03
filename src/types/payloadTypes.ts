@@ -20,7 +20,55 @@ export type ArtWorkRecord = {
   visualDescription: string;
   curatorialApproval: string;
   art_url: string;
+  content: Content;
 };
+
+type Content = {
+  contentBlock: ContentBlock[];
+};
+
+export type ContentBlock = Image | ImageComparison | TextBlock | Title | Video;
+
+export enum ContentBlockTypes {
+  IMAGE = "Image",
+  IMAGE_COMPARISON = "ImageComparison",
+  TEXT_BLOCK = "TextBlock",
+  TITLE = "Title",
+  VIDEO = "Video",
+}
+
+type Image = {
+  type: ContentBlockTypes.IMAGE;
+  caption?: string;
+  altText?: string;
+  image: {
+    url: string;
+  };
+};
+
+type ImageComparison = {
+  type: ContentBlockTypes.IMAGE_COMPARISON;
+  rightImage: Image;
+  leftImage: Image;
+};
+
+type TextBlock = {
+  type: ContentBlockTypes.TEXT_BLOCK;
+  textBlock: {
+    html: string;
+  };
+};
+
+type Title = {
+  type: ContentBlockTypes.TITLE;
+  title?: string;
+  subtitle?: string;
+};
+
+type Video = {
+  type: ContentBlockTypes.VIDEO;
+  url: string;
+}
 
 export type ArtWorkRecordsResult = {
   data: {
@@ -56,6 +104,7 @@ export type ArtworkObject = {
     bg_url?: string;
     curatorialApproval?: boolean;
     unIdentified?: boolean;
+    content?: Content[];
   };
   roomRecords: any[];
 };
