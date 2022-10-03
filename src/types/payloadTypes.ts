@@ -16,11 +16,11 @@ export type ArtWorkRecord = {
   nationality: string;
   ensembleIndex: string;
   classification: string;
-  shortDescription: string;
+  shortDescription?: string;
   visualDescription: string;
   curatorialApproval: string;
   art_url: string;
-  content: Content;
+  content?: Content;
 };
 
 type Content = {
@@ -68,7 +68,7 @@ type Title = {
 type Video = {
   type: ContentBlockTypes.VIDEO;
   url: string;
-}
+};
 
 export type ArtWorkRecordsResult = {
   data: {

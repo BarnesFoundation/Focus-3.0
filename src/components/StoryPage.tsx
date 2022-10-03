@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
+import { Match, Location } from "react-router-dom";
 import { Controller, Scene } from "react-scrollmagic";
 import { compose } from "redux";
 // @ts-ignore
@@ -9,7 +10,10 @@ import StoryItem from "../components/StoryItem";
 import { SearchRequestService } from "../services/SearchRequestService";
 import * as constants from "../constants";
 import withOrientation from "./withOrientation";
-import withTranslation from "./withTranslation";
+import withTranslation, {
+  LanguageOptionType,
+  WithTranslationState,
+} from "./withTranslation";
 
 const SectionWipesStyled = styled.div`
   overflow: hidden;
@@ -26,7 +30,22 @@ const SectionWipesStyled = styled.div`
   }
 `;
 
-class StoryPage extends Component {
+type StoryPageProps = {
+  match: Match;
+  location: Location;
+} & WithTranslationState;
+
+type StoryPageState = {
+  stories: any[];
+  storyTitle?: string;
+  storyId?: any;
+  selectedLanguage?: LanguageOptionType;
+};
+
+class StoryPage extends Component<StoryPageProps, StoryPageState> {
+  sr: SearchRequestService;
+  langOptions: LanguageOptionType[];
+
   constructor(props) {
     super(props);
 
@@ -171,4 +190,8 @@ class StoryPage extends Component {
   }
 }
 
-export default compose(withOrientation, withTranslation, withRouter)(StoryPage);
+export default compose<StoryPage>(
+  withOrientation,
+  withTranslation,
+  withRouter
+)(StoryPage);

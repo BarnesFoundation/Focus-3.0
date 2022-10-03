@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { compose } from "redux";
-import { cropPhoto } from "./CameraHelper";
 import * as constants from "../constants";
 import withOrientation from "./withOrientation";
 import { shouldLogPermissionGrantTime } from "../helpers/googleAnalyticsHelpers";
@@ -278,6 +277,7 @@ export class CameraComponent extends Component<CameraProps, CameraState> {
     } catch (error) {
       console.log("Error setting camera preview");
 
+      // @ts-ignore
       gtag("event", constants.GA_EVENT_ACTION.SCAN, {
         event_category: constants.GA_EVENT_CATEGORY.CAMERA,
         event_label: constants.GA_EVENT_LABEL.SCANNER_MOUNT_FAILURE,

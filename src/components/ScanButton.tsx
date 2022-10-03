@@ -23,5 +23,5 @@ export const ScanButton: React.FC<ScanButtonProps> = ({ float }) => {
         <img src={scan_button} alt="scan" aria-labelledby="camera-btn" />
       </div>
     </div>
-  )
-}
+  );
+};

@@ -12,7 +12,7 @@ import {
 import { isAndroid } from "react-device-detect";
 import VizSensor from "react-visibility-sensor";
 
-type StoryItemProps = {
+export type StoryItemProps = {
   sceneStatus: {
     type: string;
     state: string;

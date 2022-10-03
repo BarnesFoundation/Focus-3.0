@@ -1,11 +1,17 @@
 import close_icon from "../images/cross.svg";
 import kf_logo from "../images/knight-foundation-logo.svg";
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, History } from "react-router-dom";
 import { compose } from "redux";
 import withOrientation from "./withOrientation";
+import { WithTranslationState } from "./withTranslation";
 
-class AboutComponent extends Component {
+type AboutProps = {
+  history: History;
+  onCloseAbout;
+} & WithTranslationState;
+
+class AboutComponent extends Component<AboutProps, {}> {
   constructor(props) {
     super(props);
   }
@@ -19,7 +25,7 @@ class AboutComponent extends Component {
       <div className="about-wrapper">
         <div>
           <div className="kf-logo">
-            <img src={kf_logo} />
+            <img src={kf_logo} alt="Knight Foundation" />
           </div>
           <div className="about-text h2">
             <div className="kf-credit-line">
@@ -47,4 +53,7 @@ class AboutComponent extends Component {
   }
 }
 
-export default compose(withOrientation, withRouter)(AboutComponent);
+export default compose<AboutComponent>(
+  withOrientation,
+  withRouter
+)(AboutComponent);
