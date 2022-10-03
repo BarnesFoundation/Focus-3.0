@@ -1,3 +1,5 @@
+import sanitizeHtml from "sanitize-html";
+import parse from "html-react-parser";
 import {
   ArtworkObject,
   ArtWorkRecordsResult,
@@ -101,4 +103,41 @@ export const constructStory = (storyInformation: StoryItemsResponse) => {
   }
 
   return { stories, storyId, storyTitle };
+};
+
+export const formatHtml = (html) => {
+  return parse(
+    sanitizeHtml(html, {
+      allowedTags: [
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "blockquote",
+        "li",
+        "ol",
+        "p",
+        "ul",
+        "a",
+        "br",
+        "code",
+        "em",
+        "span",
+        "strong",
+        "u",
+        "table",
+        "tbody",
+        "td",
+        "tfoot",
+        "th",
+        "thead",
+        "tr",
+      ],
+      allowedAttributes: {
+        a: ["href", "target"],
+      },
+    })
+  );
 };
