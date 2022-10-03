@@ -33,6 +33,6 @@ export const UnsupportedDialogueComponent: React.FC<
   );
 };
 
-export const UnsupportedDialogue = withTranslation(
+export const UnsupportedDialogue = withTranslation<UnsupportedDialogueProps>(
   UnsupportedDialogueComponent
 );
