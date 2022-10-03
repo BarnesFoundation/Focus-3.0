@@ -278,13 +278,14 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
                           )}
                         </div>
 
-                        {(artwork.shortDescription || artwork.content) &&
+                        {artwork.content &&
                           selectedLanguage.code !== constants.LANGUAGE_EN && (
                             <div className="google-translate-disclaimer">
                               <span>Translated with </span>
                               <img src={google_logo} alt="google_logo" />
                             </div>
                           )}
+
                         <div className="card-info">
                           <table className="detail-table">
                             <tbody>
