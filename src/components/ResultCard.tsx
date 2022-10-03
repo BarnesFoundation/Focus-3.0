@@ -12,14 +12,11 @@ import { ContentBlock } from "./ContentBlock";
 export type ResultCardProps = {
   artwork: ArtworkObject["artwork"];
   refCallbackInfo?: (element: any) => void;
-  infoCardRef?: React.MutableRefObject<HTMLDivElement>;
   setArtworkRef?: (element: any) => void;
-  artWorkRef?: React.MutableRefObject<HTMLDivElement>;
   langOptions: WithTranslationState["langOptions"];
   selectedLanguage: LanguageOptionType;
   onSelectLanguage: (item: LanguageOptionType) => void;
   shortDescContainer?: any;
-  descriptionRef?: React.MutableRefObject<HTMLDivElement>;
   specialExhibition: boolean;
   getTranslation: WithTranslationState["getTranslation"];
 };
@@ -27,14 +24,11 @@ export type ResultCardProps = {
 export const ResultCard: React.FC<ResultCardProps> = ({
   artwork,
   refCallbackInfo,
-  infoCardRef,
   setArtworkRef,
-  artWorkRef,
   langOptions,
   selectedLanguage,
   onSelectLanguage,
   shortDescContainer,
-  descriptionRef,
   specialExhibition,
   getTranslation,
 }) => {
@@ -47,7 +41,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
 
   return (
     <div className="container-fluid artwork-container" id="search-result">
-      <div className="row" ref={refCallbackInfo || infoCardRef}>
+      <div className="row" ref={refCallbackInfo}>
         <div className="artwork-top-bg">
           <img
             className="card-img-top"
@@ -80,8 +74,9 @@ export const ResultCard: React.FC<ResultCardProps> = ({
                         src={src}
                         alt="match_image"
                         role="img"
-                        aria-label={`${artwork.title} by ${artwork.artist}${artwork.culture ? `, ${artwork.culture}.` : "."
-                          } ${artwork.visualDescription}`}
+                        aria-label={`${artwork.title} by ${artwork.artist}${
+                          artwork.culture ? `, ${artwork.culture}.` : "."
+                        } ${artwork.visualDescription}`}
                       />
                     )}
                   </ProgressiveImage>
@@ -93,7 +88,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
             <div
               className="card-body"
               id="focussed-artwork-body"
-              ref={setArtworkRef || artWorkRef}
+              ref={setArtworkRef}
             >
               <div className="share-wrapper">
                 {/* Language options button */}
@@ -117,7 +112,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
                 )}
               </div>
 
-              <div className="short-desc-container" ref={shortDescContainer || descriptionRef}>
+              <div className="short-desc-container" ref={shortDescContainer}>
                 {artwork.shortDescription && !artwork.content && (
                   <div
                     className="card-text paragraph"
@@ -138,7 +133,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
                 )}
               </div>
 
-              {(artwork.shortDescription || artwork.content) &&
+              {artwork.shortDescription &&
                 selectedLanguage.code !== LANGUAGE_EN && (
                   <div className="google-translate-disclaimer">
                     <span>Translated with </span>
