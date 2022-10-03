@@ -4,6 +4,7 @@ import Slider from "react-slick";
 // @ts-ignore
 import CrossfadeImage from "react-crossfade-image";
 import ProgressiveImage from "react-progressive-image";
+import { WithTranslationState } from "./withTranslation";
 
 const sliderSettings = {
   className: "slider-container",
@@ -19,7 +20,24 @@ const sliderSettings = {
   slidesToScroll: 1,
 };
 
-class InRoomSlider extends Component {
+type InRoomSliderProps = {
+  alsoInRoomResults: any[];
+  onSelectInRoomArt;
+  blurValue: number;
+} & WithTranslationState;
+
+type InRoomSliderState = {
+  activeSlideIndex: number;
+};
+
+class InRoomSlider extends Component<InRoomSliderProps, InRoomSliderState> {
+  cropParamsHQ: string;
+  sliderCropParams: string;
+  sliderBackgroundCropParams: string;
+  matchImageParam: string;
+  touchThreshold: number;
+  firstClientX;
+
   constructor(props) {
     super(props);
 
@@ -58,6 +76,7 @@ class InRoomSlider extends Component {
     const slider = document.getElementById("aitr-slider");
     slider.removeEventListener("touchstart", this._touchStart);
     slider.removeEventListener("touchmove", this._onTouchMove, {
+      // @ts-ignore
       passive: false,
     });
   }
@@ -130,6 +149,7 @@ class InRoomSlider extends Component {
                 onClick={() => this._handleOnClick(record.id)}
               >
                 {/* <img src={record.art_url + this.sliderCropParams} /> */}
+                {/* @ts-ignore */}
                 <ProgressiveImage
                   delay={2000}
                   src={record.art_url + this.cropParamsHQ}

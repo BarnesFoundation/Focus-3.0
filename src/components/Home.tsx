@@ -13,8 +13,7 @@ import kf_logo from "../images/knight-foundation-logo.svg";
 
 import { logiPhoneModel } from "../helpers/googleAnalyticsHelpers";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import withTranslation from "./withTranslation";
-import { WithTranslationState } from "../withTranslation";
+import withTranslation, { WithTranslationState } from "./withTranslation";
 
 export const HomeComponent: React.FC<WithTranslationState> = ({
   getTranslation,
@@ -103,11 +102,13 @@ export const HomeComponent: React.FC<WithTranslationState> = ({
     <div className="home-wrapper" id="home-wrapper" style={homeContainerStyle}>
       {/* Show the unsupported browser dialog if the browser is not supported */}
       {unsupportedIOSBrowser ? (
+        // @ts-ignore
         <UnsupportedDialogue unsupportedIOSBrowser={true} />
       ) : null}
 
       {/* Show the unsupported iOS version dialog if the iOS version is not supported */}
       {unsupportedIOSVersion ? (
+        // @ts-ignore
         <UnsupportedDialogue unsupportedIOSVersion={true} />
       ) : null}
 

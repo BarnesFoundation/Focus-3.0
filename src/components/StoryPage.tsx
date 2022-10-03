@@ -144,6 +144,11 @@ class StoryPage extends Component<StoryPageProps, StoryPageState> {
               key={`storyitem${index + 1}`}
               triggerHook="onLeave"
               pin
+              /** There is something weird going on with react-scrollmagic types that
+               * keeps giving us an error, but we can't change this component or update
+               * the dependency or else it breaks!
+               */
+              // @ts-ignore
               pinSettings={{ pushFollowers: false }}
               duration={`1000`}
               offset={0}
@@ -163,11 +168,9 @@ class StoryPage extends Component<StoryPageProps, StoryPageState> {
                     }
                     story={story}
                     storyTitle={storyTitle}
-                    langOptions={undefined}
                     selectedLanguage={this.state.selectedLanguage}
                     onStoryReadComplete={this.onStoryReadComplete}
                     getSize={this.onStoryHeightReady}
-                    getTranslation={this.props.getTranslation}
                     storyEmailPage={true}
                   />
                 </div>
