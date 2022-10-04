@@ -110,7 +110,17 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
 
   return (
     <Fragment>
-      {stories && stories.stories.length ? <Artwork /> : <ExhibitionObject />}
+      {result &&
+        artwork &&
+        (result.data.showStory ? (
+          <Artwork />
+        ) : (
+          <ExhibitionObject
+            initArtwork={artwork}
+            initResult={result}
+            imageId={imageId}
+          />
+        ))}
     </Fragment>
   );
 };

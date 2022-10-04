@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
 import classnames from "classnames";
 import { isTablet } from "react-device-detect";
 import { isAndroid } from "react-device-detect";
@@ -21,7 +20,16 @@ import { ContentBlock } from "./ContentBlock";
 import google_logo from "../images/google_translate.svg";
 import { ScanButton } from "./ScanButton";
 
-export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
+type ExhibitionObjectProps = {
+  initArtwork: ArtworkObject["artwork"];
+  initResult: ArtWorkRecordsResult;
+  imageId: string;
+} & WithTranslationState;
+
+export const ExhibitionObjectComponent: React.FC<ExhibitionObjectProps> = ({
+  initArtwork,
+  initResult,
+  imageId,
   langOptions,
   getSelectedLanguage,
   getTranslation,
@@ -30,9 +38,8 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
   // Initialize the search request services
   const sr = new SearchRequestService();
   // Component state
-  const [imageId, setImageId] = useState<string>();
-  const [artwork, setArtwork] = useState<ArtworkObject["artwork"]>();
-  const [result, setResult] = useState<ArtWorkRecordsResult>();
+  const [artwork, setArtwork] = useState<ArtworkObject["artwork"]>(initArtwork);
+  const [result, setResult] = useState<ArtWorkRecordsResult>(initResult);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [emailCaptured, setEmailCaptured] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(true);
@@ -43,7 +50,6 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
     selected: true,
   });
 
-  const location = useLocation();
   const { getLocalStorage } = useLocalStorage();
 
   const [formOpen, setFormOpen] = useState(false);
@@ -101,29 +107,6 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
   // Set state and get object data on component initialization
   useEffect(() => {
     const componentWillMount = async () => {
-      let artworkInfo: ArtWorkRecordsResult;
-      let imageId: string;
-
-      // Check if result data is stored in location state from camera component
-      if (location.state?.result) {
-        imageId = location.state.result.data.records[0].id;
-        artworkInfo = location.state.result;
-      } else {
-        // If result data is not in state, get image ID from path and get data from server
-        const [_n, _path, id] = location.pathname.split("/");
-        imageId = id;
-        artworkInfo = await sr.getSpecialExhibitionObject(imageId);
-      }
-
-      const { artwork, roomRecords } = constructResultAndInRoomSlider(
-        artworkInfo,
-        isTablet
-      );
-
-      setResult(artworkInfo);
-      setArtwork(artwork);
-      setImageId(imageId);
-
       const emailRecorded = getLocalStorage(constants.SNAP_USER_EMAIL) !== null;
       setEmailCaptured(emailRecorded);
       setShowEmailForm(!emailRecorded);
@@ -135,7 +118,7 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
   }, []);
 
   useEffect(() => {
-    if (!artwork || !imgLoaded || !showEmailForm) return;
+    if (!imgLoaded || !showEmailForm) return;
 
     // Add handlers for card-2 swipe down interaction
     const content = document.getElementById("card-content");
@@ -174,237 +157,234 @@ export const ExhibitionObjectComponent: React.FC<WithTranslationState> = ({
         isAndroid ? "sm-container" : "ios-container"
       )}
     >
-      {artwork && (
-        <div id="card-content" className="exhibition-obj__content">
-          {!imgLoaded ? (
-            <div style={{ visibility: "hidden" }}>
-              <img
-                className="card-img-result"
-                src={artwork.url}
-                alt="match_image"
-                onLoad={({ target: img }) => setImgLoaded(true)}
-              />
-            </div>
-          ) : (
-            <Fragment>
-              <div id="card-1" className="exhibition-obj__content__result">
-                <div className="row">
-                  <div className="artwork-top-bg">
-                    <img
-                      className="card-img-top"
-                      src={artwork.bg_url}
-                      alt="match_image_background"
-                      aria-hidden={true}
-                    />
-                  </div>
-                  <div className="col-12 col-md-12">
-                    <div
-                      id="result-card"
-                      className="card"
-                      data-title={artwork.title}
-                      data-artist={artwork.artist}
-                      data-id={artwork.id}
-                      data-invno={artwork.invno}
-                      data-nodesc-invno={
-                        !artwork.shortDescription ? artwork.invno : ""
-                      }
-                    >
-                      <div className="card-top-container">
-                        <div className="card-img-overlay">
-                          <div className="card-header h1">Focused Artwork</div>
-                          <div className="card-img-result">
-                            {/* @ts-ignore */}
-                            <ProgressiveImage
-                              src={artwork.url}
-                              placeholder={artwork.url_low_quality}
-                            >
-                              {(src) => (
-                                <img
-                                  src={src}
-                                  alt="match_image"
-                                  role="img"
-                                  aria-label={`${artwork.title} by ${
-                                    artwork.artist
-                                  }${
-                                    artwork.culture
-                                      ? `, ${artwork.culture}.`
-                                      : "."
-                                  } ${artwork.visualDescription}`}
-                                />
-                              )}
-                            </ProgressiveImage>
-                          </div>
-                          <div className="card-artist">{artwork.artist}</div>
-                          <div className="card-title">{artwork.title}</div>
-                        </div>
-                      </div>
-                      <div className="card-body" id="focussed-artwork-body">
-                        <div className="share-wrapper">
-                          {/* Language options button */}
-                          <div className="language-dropdown-wrapper">
-                            <div className="language-dropdown">
-                              <LanguageDropdown
-                                langOptions={langOptions}
-                                selected={selectedLanguage}
-                                onSelectLanguage={onSelectLanguage}
+      <div id="card-content" className="exhibition-obj__content">
+        {!imgLoaded ? (
+          <div style={{ visibility: "hidden" }}>
+            <img
+              className="card-img-result"
+              src={artwork.url}
+              alt="match_image"
+              onLoad={({ target: img }) => setImgLoaded(true)}
+            />
+          </div>
+        ) : (
+          <Fragment>
+            <div id="card-1" className="exhibition-obj__content__result">
+              <div className="row">
+                <div className="artwork-top-bg">
+                  <img
+                    className="card-img-top"
+                    src={artwork.bg_url}
+                    alt="match_image_background"
+                    aria-hidden={true}
+                  />
+                </div>
+                <div className="col-12 col-md-12">
+                  <div
+                    id="result-card"
+                    className="card"
+                    data-title={artwork.title}
+                    data-artist={artwork.artist}
+                    data-id={artwork.id}
+                    data-invno={artwork.invno}
+                    data-nodesc-invno={
+                      !artwork.shortDescription ? artwork.invno : ""
+                    }
+                  >
+                    <div className="card-top-container">
+                      <div className="card-img-overlay">
+                        <div className="card-header h1">Focused Artwork</div>
+                        <div className="card-img-result">
+                          {/* @ts-ignore */}
+                          <ProgressiveImage
+                            src={artwork.url}
+                            placeholder={artwork.url_low_quality}
+                          >
+                            {(src) => (
+                              <img
+                                src={src}
+                                alt="match_image"
+                                role="img"
+                                aria-label={`${artwork.title} by ${
+                                  artwork.artist
+                                }${
+                                  artwork.culture
+                                    ? `, ${artwork.culture}.`
+                                    : "."
+                                } ${artwork.visualDescription}`}
                               />
-                            </div>
-                          </div>
-
-                          {/* Share options button for Barnes Collection objects */}
-                          {/* TODO: determine if we want share button for special exhibition objects */}
-                          {!result.data.specialExhibition && (
-                            <Share
-                              shareText={getTranslation(
-                                "Result_page",
-                                "text_1"
-                              )}
-                              artwork={artwork}
+                            )}
+                          </ProgressiveImage>
+                        </div>
+                        <div className="card-artist">{artwork.artist}</div>
+                        <div className="card-title">{artwork.title}</div>
+                      </div>
+                    </div>
+                    <div className="card-body" id="focussed-artwork-body">
+                      <div className="share-wrapper">
+                        {/* Language options button */}
+                        <div className="language-dropdown-wrapper">
+                          <div className="language-dropdown">
+                            <LanguageDropdown
+                              langOptions={langOptions}
+                              selected={selectedLanguage}
+                              onSelectLanguage={onSelectLanguage}
                             />
-                          )}
+                          </div>
                         </div>
 
-                        <div className="short-desc-container">
-                          {/* Content blocks from Hygraph CMS */}
-                          {artwork.content && (
-                            <div className="card-content">
-                              {artwork.content.map((c, index) => (
-                                <ContentBlock
-                                  contentBlock={c.contentBlock}
-                                  key={index}
-                                />
-                              ))}
-                            </div>
-                          )}
-                        </div>
+                        {/* Share options button for Barnes Collection objects */}
+                        {/* TODO: determine if we want share button for special exhibition objects */}
+                        {!result.data.specialExhibition && (
+                          <Share
+                            shareText={getTranslation("Result_page", "text_1")}
+                            artwork={artwork}
+                          />
+                        )}
+                      </div>
 
-                        {artwork.content &&
-                          selectedLanguage.code !== constants.LANGUAGE_EN && (
-                            <div className="google-translate-disclaimer">
-                              <span>Translated with </span>
-                              <img src={google_logo} alt="google_logo" />
-                            </div>
-                          )}
+                      <div className="short-desc-container">
+                        {/* Content blocks from Hygraph CMS */}
+                        {artwork.content && (
+                          <div className="card-content">
+                            {artwork.content.map((c, index) => (
+                              <ContentBlock
+                                contentBlock={c.contentBlock}
+                                key={index}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
 
-                        <div className="card-info">
-                          <table className="detail-table">
-                            <tbody>
+                      {artwork.content &&
+                        selectedLanguage.code !== constants.LANGUAGE_EN && (
+                          <div className="google-translate-disclaimer">
+                            <span>Translated with </span>
+                            <img src={google_logo} alt="google_logo" />
+                          </div>
+                        )}
+
+                      <div className="card-info">
+                        <table className="detail-table">
+                          <tbody>
+                            <tr>
+                              <td className="text-left item-label">{`${getTranslation(
+                                "Result_page",
+                                "text_3"
+                              )}:`}</td>
+                              <td className="text-left item-info">
+                                {artwork.artist}{" "}
+                                {!artwork.unIdentified && artwork.nationality
+                                  ? `(${artwork.nationality}, ${artwork.birthDate} - ${artwork.deathDate})`
+                                  : ""}
+                              </td>
+                            </tr>
+                            {artwork.unIdentified && (
                               <tr>
-                                <td className="text-left item-label">{`${getTranslation(
-                                  "Result_page",
-                                  "text_3"
-                                )}:`}</td>
+                                <td className="text-left item-label">
+                                  {`${getTranslation(
+                                    "Result_page",
+                                    "text_10"
+                                  )}:`}
+                                </td>
                                 <td className="text-left item-info">
-                                  {artwork.artist}{" "}
-                                  {!artwork.unIdentified && artwork.nationality
-                                    ? `(${artwork.nationality}, ${artwork.birthDate} - ${artwork.deathDate})`
-                                    : ""}
+                                  {artwork.culture}
                                 </td>
                               </tr>
-                              {artwork.unIdentified && (
-                                <tr>
-                                  <td className="text-left item-label">
-                                    {`${getTranslation(
-                                      "Result_page",
-                                      "text_10"
-                                    )}:`}
-                                  </td>
-                                  <td className="text-left item-info">
-                                    {artwork.culture}
-                                  </td>
-                                </tr>
-                              )}
+                            )}
+                            <tr>
+                              <td className="text-left item-label">{`${getTranslation(
+                                "Result_page",
+                                "text_4"
+                              )}:`}</td>
+                              <td className="text-left item-info">
+                                {artwork.title}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td className="text-left item-label">{`${getTranslation(
+                                "Result_page",
+                                "text_5"
+                              )}:`}</td>
+                              <td className="text-left item-info">
+                                {artwork.displayDate}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td className="text-left item-label">{`${getTranslation(
+                                "Result_page",
+                                "text_6"
+                              )}:`}</td>
+                              <td className="text-left item-info">
+                                {artwork.medium}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td className="text-left item-label">{`${getTranslation(
+                                "Result_page",
+                                "text_7"
+                              )}:`}</td>
+                              <td className="text-left item-info">
+                                {artwork.dimensions}
+                              </td>
+                            </tr>
+                            {!artwork.curatorialApproval && (
                               <tr>
-                                <td className="text-left item-label">{`${getTranslation(
-                                  "Result_page",
-                                  "text_4"
-                                )}:`}</td>
+                                <td className="text-left item-label">
+                                  {`${getTranslation(
+                                    "Result_page",
+                                    "text_8"
+                                  )}:`}
+                                </td>
                                 <td className="text-left item-info">
-                                  {artwork.title}
+                                  {getTranslation("Result_page", "text_9")}
                                 </td>
                               </tr>
-                              <tr>
-                                <td className="text-left item-label">{`${getTranslation(
-                                  "Result_page",
-                                  "text_5"
-                                )}:`}</td>
-                                <td className="text-left item-info">
-                                  {artwork.displayDate}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="text-left item-label">{`${getTranslation(
-                                  "Result_page",
-                                  "text_6"
-                                )}:`}</td>
-                                <td className="text-left item-info">
-                                  {artwork.medium}
-                                </td>
-                              </tr>
-                              <tr>
-                                <td className="text-left item-label">{`${getTranslation(
-                                  "Result_page",
-                                  "text_7"
-                                )}:`}</td>
-                                <td className="text-left item-info">
-                                  {artwork.dimensions}
-                                </td>
-                              </tr>
-                              {!artwork.curatorialApproval && (
-                                <tr>
-                                  <td className="text-left item-label">
-                                    {`${getTranslation(
-                                      "Result_page",
-                                      "text_8"
-                                    )}:`}
-                                  </td>
-                                  <td className="text-left item-info">
-                                    {getTranslation("Result_page", "text_9")}
-                                  </td>
-                                </tr>
-                              )}
-                            </tbody>
-                          </table>
-                        </div>
+                            )}
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div id="card-2__trigger" />
               </div>
-              {showEmailForm ? (
-                <div
-                  id="card-2"
-                  className={classnames(
-                    "exhibition-obj__content__email",
-                    "card",
-                    {
-                      open: formOpen,
-                      completed: !formOpen && emailCaptured,
-                    }
-                  )}
-                  onClick={handleClick}
-                >
-                  <EmailForm
-                    withStory={false}
-                    isEmailScreen={false}
-                    onSubmitEmail={onSubmitEmail}
-                    getTranslation={getTranslation}
-                    getSize={(height) => null}
-                    pointerEvents="auto"
-                    handleClickScroll={(storyIndex, isStoryCard) => null}
-                    alwaysFloatBtn={!emailCaptureAck}
-                  />
-                </div>
-              ) : (
-                <ScanButton float={false} />
-              )}
-            </Fragment>
-          )}
-        </div>
-      )}
+              <div id="card-2__trigger" />
+            </div>
+            {showEmailForm ? (
+              <div
+                id="card-2"
+                className={classnames(
+                  "exhibition-obj__content__email",
+                  "card",
+                  {
+                    open: formOpen,
+                    completed: !formOpen && emailCaptured,
+                  }
+                )}
+                onClick={handleClick}
+              >
+                <EmailForm
+                  withStory={false}
+                  isEmailScreen={false}
+                  onSubmitEmail={onSubmitEmail}
+                  getTranslation={getTranslation}
+                  getSize={(height) => null}
+                  pointerEvents="auto"
+                  handleClickScroll={(storyIndex, isStoryCard) => null}
+                  alwaysFloatBtn={!emailCaptureAck}
+                />
+              </div>
+            ) : (
+              <ScanButton float={false} />
+            )}
+          </Fragment>
+        )}
+      </div>
     </div>
   );
 };
 
-export const ExhibitionObject = withTranslation(ExhibitionObjectComponent);
+export const ExhibitionObject = withTranslation<ExhibitionObjectProps>(
+  ExhibitionObjectComponent
+);

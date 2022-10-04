@@ -77,7 +77,7 @@ export type ArtWorkRecordsResult = {
     records: ArtWorkRecord[];
     roomRecords;
     message: string;
-    show_story: boolean;
+    showStory: boolean;
     specialExhibition: boolean;
   };
   success: boolean;
