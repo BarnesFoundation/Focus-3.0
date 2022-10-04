@@ -7,6 +7,8 @@ import {
   relatedStoriesByTitleQuery,
   allStoriesQuery,
   getObjectByObjectIdQuery,
+  getCollectionContentByInvno,
+  getContentAndStories,
 } from "./queries";
 import { GraphQLQuery, RelatedStory } from "./types";
 import { isEmpty } from "../../utils/isEmpty";
@@ -155,5 +157,38 @@ export default class GraphCMSService {
       data: { specialExhibitionObjects },
     } = await GraphCMSService.makeGraphQLRequest(query);
     return specialExhibitionObjects;
+  }
+
+  /** Retrieves content for a collection object from Graph CMS as identified by the object's inventory number */
+  public static async findCollectionObjByInvno(
+    inventoryNumber: string
+  ): Promise<any> {
+    const query = getCollectionContentByInvno(inventoryNumber);
+    const {
+      data: { collectionObjects },
+    } = await GraphCMSService.makeGraphQLRequest(query);
+    return collectionObjects;
+  }
+
+  /** Retrieves content and stories for a collection object from GraphCMS by object id and inventory number */
+  public static async findContentAndStories(
+    objectId: string,
+    inventoryNumber: string
+  ): Promise<any> {
+    const query = getContentAndStories(objectId, inventoryNumber);
+    const {
+      data: { collectionObjects, storiesForObjectIds },
+    } = await GraphCMSService.makeGraphQLRequest(query);
+
+    // Check these two parts of the response for the story
+    const retrievedStory = storiesForObjectIds[0]?.relatedStories;
+    const storyInformation = { storyId: null, hasStory: false };
+
+    if (retrievedStory) {
+      storyInformation.storyId = retrievedStory[0].id;
+      storyInformation.hasStory = true;
+    }
+
+    return { collectionObjects: collectionObjects[0], storyInformation };
   }
 }

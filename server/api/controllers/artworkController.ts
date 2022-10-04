@@ -17,14 +17,27 @@ class ArtworkController {
     const preferredLanguage = request.session.lang_pref;
 
     if (artworkInformation) {
-      // Fetch the story and translate the content if needed
-      const storyInformation = await GraphCMSService.hasStory(artworkId);
+      // Fetch the story and content
+      // const storyInformation = await GraphCMSService.hasStory(artworkId);
+      const { collectionObjects, storyInformation } =
+        await GraphCMSService.findContentAndStories(
+          artworkId,
+          artworkInformation["invno"]
+        );
 
-      // Translate the short description
-      artworkInformation["shortDescription"] = await TranslateService.translate(
-        artworkInformation["shortDescription"],
-        preferredLanguage
-      );
+      // Translate the short description if needed
+      if (preferredLanguage !== "en") {
+        // TODO: add in helper for iterating through content to translate here and for exhibition endpoints
+        artworkInformation["shortDescription"] =
+          await TranslateService.translate(
+            artworkInformation["shortDescription"],
+            preferredLanguage
+          );
+      }
+
+      if (collectionObjects) {
+        artworkInformation["content"] = collectionObjects["content"]
+      }
 
       // Add the Imgix URL for the artwork
       artworkInformation["art_url"] = generateImgixUrl(
