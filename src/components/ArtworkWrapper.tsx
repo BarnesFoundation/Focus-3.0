@@ -10,8 +10,15 @@ import withTranslation, {
   LanguageOptionType,
   WithTranslationState,
 } from "./withTranslation";
-import { constructResultAndInRoomSlider, constructStory } from "../helpers/artWorkHelper";
-import { ArtworkObject, ArtWorkRecordsResult, StoryResponse } from "../types/payloadTypes";
+import {
+  constructResultAndInRoomSlider,
+  constructStory,
+} from "../helpers/artWorkHelper";
+import {
+  ArtworkObject,
+  ArtWorkRecordsResult,
+  StoryResponse,
+} from "../types/payloadTypes";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { EmailForm } from "./EmailForm";
 import ProgressiveImage from "react-progressive-image";
@@ -20,6 +27,8 @@ import { Share } from "./Share";
 import { ContentBlock } from "./ContentBlock";
 import google_logo from "../images/google_translate.svg";
 import { ScanButton } from "./ScanButton";
+import Artwork from "./Artwork";
+import { ExhibitionObject } from "./ExhibitionObject";
 
 export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
   getSelectedLanguage,
@@ -100,8 +109,10 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
   }, []);
 
   return (
-    <Fragment></Fragment>
-  )
+    <Fragment>
+      {stories && stories.stories.length ? <Artwork /> : <ExhibitionObject />}
+    </Fragment>
+  );
 };
 
 export const ArtworkWrapper = withTranslation(ArtworkWrapperComponent);
