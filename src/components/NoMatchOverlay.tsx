@@ -45,4 +45,6 @@ export const NoMatchOverlayComponent: React.FC<NoMatchOverlayProps> = ({
   );
 };
 
-export const NoMatchOverlay = withTranslation(NoMatchOverlayComponent);
+export const NoMatchOverlay = withTranslation<NoMatchOverlayProps>(
+  NoMatchOverlayComponent
+);

@@ -6,7 +6,10 @@ import $ from "jquery";
 
 import * as constants from "../constants";
 import withOrientation from "./withOrientation";
-import withTranslation, { LanguageOptionType, WithTranslationState } from "./withTranslation";
+import withTranslation, {
+  LanguageOptionType,
+  WithTranslationState,
+} from "./withTranslation";
 
 import { EmailForm } from "./EmailForm";
 
@@ -80,7 +83,6 @@ type ArtworkComponentState = {
   storyDurationsCurrent: any[];
   storyOffsets: any[];
 };
-
 
 export class Artwork extends Component<
   ArtworkComponentProps,

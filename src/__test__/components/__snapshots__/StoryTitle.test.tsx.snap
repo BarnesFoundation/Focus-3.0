@@ -12,7 +12,13 @@ exports[`StoryTitle should match the snapshot 1`] = `
       isStoryItemDropDown={true}
       langOptions={null}
       onSelectLanguage={[Function]}
-      selected="En"
+      selected={
+        Object {
+          "code": null,
+          "name": null,
+          "selected": true,
+        }
+      }
     />
   </div>
 </div>

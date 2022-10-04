@@ -29,7 +29,7 @@ describe("LanguageDropdown", () => {
       <LanguageDropdown
         onSelectLanguage={(item) => null}
         isStoryItemDropDown={null}
-        selected={{ code: null, name: null }}
+        selected={{ code: null, name: null, selected: true }}
         langOptions={null}
       />,
       container

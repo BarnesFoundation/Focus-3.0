@@ -60,15 +60,13 @@ class SearchRequestService {
   };
 
   submitBookmarksEmail = async (email) => {
-    const payload = {};
-    payload.email = email;
+    const payload = { email };
     //payload.language = localStorage.getItem(SNAP_LANGUAGE_PREFERENCE) || 'en';
     await axios.post(constants.SUBMIT_BOOKMARKS_EMAIL_URL, payload);
   };
 
-  saveLanguagePreference = async (lang) => {
-    const payload = {};
-    payload.language = lang;
+  saveLanguagePreference = async (language) => {
+    const payload = { language };
     await axios.post(constants.SAVE_LANGUAGE_PREFERENCE_URL, payload);
   };
 
@@ -142,7 +140,9 @@ class SearchRequestService {
   /** Retrieves special exhibition object details from Hygraph/GraphCMS */
   getSpecialExhibitionObject = async (objectId) => {
     try {
-      const response = await axios.get(constants.EXHIBITION_OBJECT_URL(objectId));
+      const response = await axios.get(
+        constants.EXHIBITION_OBJECT_URL(objectId)
+      );
       return response.data;
     } catch (error) {
       console.log("An error occurred while retrieving story from the server");
@@ -159,11 +159,11 @@ class SearchRequestService {
     // If it is a special exhibition object, get info from CMS
     if (imageId.split("/")[0] === "SPEX") {
       data = await this.getSpecialExhibitionObject(imageId.split("/")[1]);
-    // Otherwise search for item in ElasticSearch
+      // Otherwise search for item in ElasticSearch
     } else {
       // Retrieve artwork information
       data = await this.getArtworkInformation(imageId);
-    };
+    }
 
     // Retrieve artwork information
     const esResponse = await this.getArtworkInformation(imageId);

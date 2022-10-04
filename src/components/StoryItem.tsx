@@ -12,12 +12,12 @@ import {
 import { isAndroid } from "react-device-detect";
 import VizSensor from "react-visibility-sensor";
 
-type StoryItemProps = {
+export type StoryItemProps = {
   sceneStatus: {
     type: string;
     state: string;
   };
-  statusCallback: (showTitle: boolean) => void;
+  statusCallback?: (showTitle: boolean) => void;
   storyIndex: number;
   onStoryReadComplete: () => void;
   getSize: (scrollOffset: number, storyIndex: number) => void;
@@ -43,7 +43,7 @@ type StoryItemProps = {
     };
   };
   storyTitle: string;
-  onVisChange: (isVisible: boolean, storyIndex: number) => void;
+  onVisChange?: (isVisible: boolean, storyIndex: number) => void;
   selectedLanguage: {
     code: string;
   };
@@ -117,7 +117,7 @@ class StoryItem extends React.Component<StoryItemProps, StoryItemState> {
         this.props.sceneStatus.state != nextProps.sceneStatus.state ||
         this.props.sceneStatus.type === "enter"
       ) {
-        this.props.statusCallback(showTitle);
+        if (this.props.statusCallback) this.props.statusCallback(showTitle);
         this.setState({ showTitle: !showTitle });
       }
     }

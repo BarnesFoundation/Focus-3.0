@@ -8,23 +8,18 @@ describe("ResultCard", () => {
   it("should match the snapshot for a Barnes collection object", () => {
     const { container } = render(
       <ResultCard
-        translations={null}
-        loaded={true}
         getTranslation={(screen, textId) => textId + " " + screen}
-        updateTranslations={() => Promise.resolve(null)}
         langOptions={[]}
-        getSelectedLanguage={() => Promise.resolve([])}
-        updateSelectedLanguage={(language) => null}
         artwork={{
           bg_url: "bg_url",
           title: "title",
           artist: "artist",
-          id: "id",
+          id: 123,
           invno: "invno",
         }}
-        refCallbackInfo={createRef()}
-        setArtworkRef={createRef()}
-        selectedLanguage={"EN"}
+        refCallbackInfo={(element: any) => null}
+        setArtworkRef={(element: any) => null}
+        selectedLanguage={{ code: null, name: null, selected: true }}
         onSelectLanguage={() => null}
         shortDescContainer={createRef()}
         specialExhibition={false}
@@ -37,23 +32,18 @@ describe("ResultCard", () => {
   it("should match the snapshot for a special exhibition object", () => {
     const { container } = render(
       <ResultCard
-        translations={null}
-        loaded={true}
         getTranslation={(screen, textId) => textId + " " + screen}
-        updateTranslations={() => Promise.resolve(null)}
         langOptions={[]}
-        getSelectedLanguage={() => Promise.resolve([])}
-        updateSelectedLanguage={(language) => null}
         artwork={{
           bg_url: "bg_url",
           title: "title",
           artist: "artist",
-          id: "id",
+          id: 123,
           invno: "invno",
         }}
-        refCallbackInfo={createRef()}
-        setArtworkRef={createRef()}
-        selectedLanguage={"EN"}
+        refCallbackInfo={(element: any) => null}
+        setArtworkRef={(element: any) => null}
+        selectedLanguage={{ code: null, name: null, selected: true }}
         onSelectLanguage={() => null}
         shortDescContainer={createRef()}
         specialExhibition={false}

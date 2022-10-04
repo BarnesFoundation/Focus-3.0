@@ -151,7 +151,13 @@ export const EmailForm: React.FC<EmailFormProps> = ({
       <div
         id="email-form"
         className="email-container"
-        style={withStory ? withStoryStyles : emailCaptured ? {} : { top: `-${peekOffsetValue}px` }}
+        style={
+          withStory
+            ? withStoryStyles
+            : emailCaptured
+            ? {}
+            : { top: `-${peekOffsetValue}px` }
+        }
         ref={emailRef}
       >
         {/* Render the scan button and whether or not it should float */}

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router";
+import { Match, Location } from "react-router-dom";
 import { Controller, Scene } from "react-scrollmagic";
 import { compose } from "redux";
 // @ts-ignore
@@ -9,7 +10,10 @@ import StoryItem from "../components/StoryItem";
 import { SearchRequestService } from "../services/SearchRequestService";
 import * as constants from "../constants";
 import withOrientation from "./withOrientation";
-import withTranslation from "./withTranslation";
+import withTranslation, {
+  LanguageOptionType,
+  WithTranslationState,
+} from "./withTranslation";
 
 const SectionWipesStyled = styled.div`
   overflow: hidden;
@@ -26,7 +30,22 @@ const SectionWipesStyled = styled.div`
   }
 `;
 
-class StoryPage extends Component {
+type StoryPageProps = {
+  match: Match;
+  location: Location;
+} & WithTranslationState;
+
+type StoryPageState = {
+  stories: any[];
+  storyTitle?: string;
+  storyId?: any;
+  selectedLanguage?: LanguageOptionType;
+};
+
+class StoryPage extends Component<StoryPageProps, StoryPageState> {
+  sr: SearchRequestService;
+  langOptions: LanguageOptionType[];
+
   constructor(props) {
     super(props);
 
@@ -125,6 +144,11 @@ class StoryPage extends Component {
               key={`storyitem${index + 1}`}
               triggerHook="onLeave"
               pin
+              /** There is something weird going on with react-scrollmagic types that
+               * keeps giving us an error, but we can't change this component or update
+               * the dependency or else it breaks!
+               */
+              // @ts-ignore
               pinSettings={{ pushFollowers: false }}
               duration={`1000`}
               offset={0}
@@ -144,11 +168,9 @@ class StoryPage extends Component {
                     }
                     story={story}
                     storyTitle={storyTitle}
-                    langOptions={undefined}
                     selectedLanguage={this.state.selectedLanguage}
                     onStoryReadComplete={this.onStoryReadComplete}
                     getSize={this.onStoryHeightReady}
-                    getTranslation={this.props.getTranslation}
                     storyEmailPage={true}
                   />
                 </div>
@@ -171,4 +193,8 @@ class StoryPage extends Component {
   }
 }
 
-export default compose(withOrientation, withTranslation, withRouter)(StoryPage);
+export default compose<StoryPage>(
+  withOrientation,
+  withTranslation,
+  withRouter
+)(StoryPage);

@@ -9,16 +9,15 @@ import {
 /* Reset application if lastSnapTimestamp is more than 24 hours */
 export const resetApplication = () => {
   // Get last snap timestamp from local storage
-  let lastSnapTimestamp = parseInt(localStorage.getItem(SNAP_LAST_TIMESTAMP));
+  const lastSnapTimestamp = parseInt(localStorage.getItem(SNAP_LAST_TIMESTAMP));
 
   if (lastSnapTimestamp) {
     // Check if the last snap timestamp was more than the interval time ago
-    let ttl =
-      lastSnapTimestamp + parseInt(SNAP_APP_RESET_INTERVAL) - Date.now();
+    const ttl = lastSnapTimestamp + SNAP_APP_RESET_INTERVAL - Date.now();
 
     // Reset the application if so
     if (ttl <= 0) {
-      localStorage.setItem(SNAP_LAST_TIMESTAMP, Date.now());
+      localStorage.setItem(SNAP_LAST_TIMESTAMP, Date.now().toString());
 
       localStorage.removeItem(SNAP_LANGUAGE_PREFERENCE);
       localStorage.removeItem(SNAP_USER_EMAIL);

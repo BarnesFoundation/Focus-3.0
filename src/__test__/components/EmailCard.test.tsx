@@ -30,7 +30,7 @@ describe("EmailCard", () => {
         onSubmitEmail={(email: string) => null}
         onEmailHeightReady={(height: any) => null}
         getTranslation={(args: any) => null}
-        handleClickScroll={(storyIndex: any, isStoryCard: boolean) => null}
+        handleClickScroll={() => null}
         artworkScrollOffset={0}
         emailCardClickable={false}
       />,
@@ -48,7 +48,7 @@ describe("EmailCard", () => {
         onSubmitEmail={(email: string) => null}
         onEmailHeightReady={(height: any) => null}
         getTranslation={(args: any) => null}
-        handleClickScroll={(storyIndex: any, isStoryCard: boolean) => null}
+        handleClickScroll={() => null}
         artworkScrollOffset={0}
         emailCardClickable={true}
       />,

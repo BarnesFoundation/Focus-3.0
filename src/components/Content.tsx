@@ -49,7 +49,7 @@ const tweenProps = {
   },
 };
 
-const FadeInTimeline = ({ progress }) => {
+const FadeInTimeline: React.FC<{ progress: number }> = ({ progress }) => {
   return (
     <Timeline totalProgress={progress * 2} paused>
       <Tween {...tweenProps}>
@@ -81,6 +81,10 @@ const SectionWipes = () => (
           <span>Panel</span>
         </div>
       </Scene>
+      {/* There is something weird going on with react-scrollmagic types that
+          keeps giving us an error, but we can't change this component or update
+          the dependency or else it breaks! */}
+      {/* @ts-ignore  */}
       <Scene pin pinSettings={{ pushFollowers: false }} duration="2000">
         {(progress) => (
           <div className="panel green">

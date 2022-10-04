@@ -84,6 +84,7 @@ export const logiPhoneModel = () => {
   // If the iPhone model was determined
   if (iPhoneModel) {
     // Log it to Google Analytics
+    // @ts-ignore
     gtag("event", GA_EVENT_ACTION.DEVICE_INFO, {
       event_category: GA_EVENT_CATEGORY.CAMERA,
       event_label: iPhoneModel,
@@ -99,6 +100,7 @@ export const shouldLogPermissionGrantTime = (startTime) => {
 
   if (permissionGrantTime > 900) {
     // Log camera permission dialog
+    // @ts-ignore
     gtag("event", GA_EVENT_ACTION.CAMERA_PERMISSION, {
       event_category: GA_EVENT_CATEGORY.CAMERA,
       event_label: GA_EVENT_LABEL.PERMISSION_GRANTED,

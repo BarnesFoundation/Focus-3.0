@@ -9,7 +9,7 @@ import landscape_bg from "../images/barnes-landscape-background.png";
 
 type OrientationContextType = {
   orientationSupported: boolean;
-}
+};
 
 export const OrientationContext = createContext<OrientationContextType>({
   orientationSupported: null,
@@ -82,7 +82,7 @@ export const OrientationContextProvider: React.FC<{
                 <div className="app-usage-msg h2">
                   {translations
                     ? translations["Orientation_Error_Screen"]["text_1"]
-                      .translated_content
+                        .translated_content
                     : UNSUPPORTED_ORIENTATION_ALERT_MESSAGE}
                 </div>
               </div>
@@ -91,25 +91,25 @@ export const OrientationContextProvider: React.FC<{
 
           {(location.pathname.includes(ROUTES.ARTWORK) ||
             location.pathname === ROUTES.SCAN) && (
-              <div>
-                <div
-                  className="app-usage-alert"
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
-                >
-                  <div className="app-usage-msg h2">
-                    {translations
-                      ? translations["Orientation_Error_Screen"]["text_1"]
+            <div>
+              <div
+                className="app-usage-alert"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="app-usage-msg h2">
+                  {translations
+                    ? translations["Orientation_Error_Screen"]["text_1"]
                         .translated_content
-                      : UNSUPPORTED_ORIENTATION_ALERT_MESSAGE}
-                  </div>
+                    : UNSUPPORTED_ORIENTATION_ALERT_MESSAGE}
                 </div>
-                <div className="landscape-wrapper">{children}</div>
               </div>
-            )}
+              <div className="landscape-wrapper">{children}</div>
+            </div>
+          )}
         </Fragment>
       )}
     </OrientationContext.Provider>

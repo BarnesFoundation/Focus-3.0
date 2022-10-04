@@ -10,8 +10,7 @@ exports[`EmailCard should match the snapshot when email card is clickable 1`] = 
       indicators={false}
       loglevel={0}
       offset="0"
-      pin="#email-panel"
-      pinSettings={
+      pin={
         Object {
           "pushFollowers": true,
           "spacerClass": "scrollmagic-pin-spacer-pt",
@@ -56,8 +55,7 @@ exports[`EmailCard should match the snapshot when when email card is not clickab
       indicators={false}
       loglevel={0}
       offset="0"
-      pin="#email-panel"
-      pinSettings={
+      pin={
         Object {
           "pushFollowers": true,
           "spacerClass": "scrollmagic-pin-spacer-pt",

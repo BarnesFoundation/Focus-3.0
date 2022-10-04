@@ -1,23 +1,34 @@
 import React, { Component } from "react";
+import { Match } from "react-router-dom";
 import landscape_bg from "../images/barnes-landscape-background.png";
 import { isIOS, isSafari } from "react-device-detect";
 import {
   UNSUPPORTED_ORIENTATION_ALERT_MESSAGE,
   SNAP_LANGUAGE_TRANSLATION,
 } from "../constants";
+import { HOME, SCAN, ARTWORK } from "../constants/routes";
+
+type WithOrientationProps = {
+  match: Match;
+};
+
+type WithOrientationState = {
+  orientationSupported: boolean;
+};
 
 const withOrientation = (WrappedComponent) =>
-  class WithOrientation extends Component {
+  class WithOrientation extends Component<
+    WithOrientationProps,
+    WithOrientationState
+  > {
+    translations;
+
     constructor(props) {
       super(props);
 
       this.state = {
         orientationSupported: true,
       };
-
-      this.HOME_SCREEN = "/";
-      this.CAMERA_SCREEN = "/scan";
-      this.RESULTS_SCREEN = "/artwork";
 
       let translations = null;
       try {
@@ -67,35 +78,34 @@ const withOrientation = (WrappedComponent) =>
             <WrappedComponent {...this.props} />
           )}
 
-          {!this.state.orientationSupported &&
-            this.props.match.url === this.HOME_SCREEN && (
-              <div className="home-wrapper" id="home-wrapper">
-                <img
-                  src={landscape_bg}
-                  alt="landscape_bg"
-                  style={{ width: width, height: height }}
-                />
-                <div
-                  className="app-usage-alert"
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                  }}
-                >
-                  <div className="app-usage-msg h2">
-                    {this.translations
-                      ? this.translations["Orientation_Error_Screen"]["text_1"]
-                          .translated_content
-                      : UNSUPPORTED_ORIENTATION_ALERT_MESSAGE}
-                  </div>
+          {!this.state.orientationSupported && this.props.match.url === HOME && (
+            <div className="home-wrapper" id="home-wrapper">
+              <img
+                src={landscape_bg}
+                alt="landscape_bg"
+                style={{ width: width, height: height }}
+              />
+              <div
+                className="app-usage-alert"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <div className="app-usage-msg h2">
+                  {this.translations
+                    ? this.translations["Orientation_Error_Screen"]["text_1"]
+                        .translated_content
+                    : UNSUPPORTED_ORIENTATION_ALERT_MESSAGE}
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
           {!this.state.orientationSupported &&
-            (this.props.match.url.indexOf(this.RESULTS_SCREEN) > -1 ||
-              this.props.match.url === this.CAMERA_SCREEN) && (
+            (this.props.match.url.indexOf(ARTWORK) > -1 ||
+              this.props.match.url === SCAN) && (
               <div>
                 <div
                   className="app-usage-alert"

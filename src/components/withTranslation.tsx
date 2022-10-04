@@ -27,18 +27,18 @@ export type LanguageOptionType =
   | Korean;
 
 export type WithTranslationState = {
-  translations;
-  loaded: boolean;
-  getTranslation: (screen: string, textId: string) => string;
-  updateTranslations: () => Promise<void>;
-  langOptions: LanguageOptionType[];
-  getSelectedLanguage: () => Promise<LanguageOptionType[]>;
-  updateSelectedLanguage: (language: LanguageOptionType) => Promise<void>;
+  translations?;
+  loaded?: boolean;
+  getTranslation?: (screen: string, textId: string) => string;
+  updateTranslations?: () => Promise<void>;
+  langOptions?: LanguageOptionType[];
+  getSelectedLanguage?: () => Promise<LanguageOptionType[]>;
+  updateSelectedLanguage?: (language: LanguageOptionType) => Promise<void>;
 };
 
-const withTranslation = (WrappedComponent) => {
+function withTranslation<WrappedComponentProps>(WrappedComponent) {
   return class WithTranslation extends React.Component<
-    {},
+    WrappedComponentProps,
     WithTranslationState
   > {
     sr: SearchRequestService;
@@ -149,5 +149,6 @@ const withTranslation = (WrappedComponent) => {
       );
     }
   };
-};
+}
+
 export default withTranslation;
