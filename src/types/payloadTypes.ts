@@ -135,3 +135,9 @@ export type StoryItemsResponse = {
     link: string;
   };
 };
+
+export type StoryResponse = {
+  stories: StoryItemType[];
+  storyId: string;
+  storyTitle: string;
+};

@@ -5,6 +5,7 @@ import {
   ArtWorkRecordsResult,
   StoryItemsResponse,
   StoryItemType,
+  StoryResponse,
 } from "../types/payloadTypes";
 
 export const constructResultAndInRoomSlider = (
@@ -92,7 +93,9 @@ export const constructResultAndInRoomSlider = (
   return { artwork, roomRecords };
 };
 
-export const constructStory = (storyInformation: StoryItemsResponse) => {
+export const constructStory = (
+  storyInformation: StoryItemsResponse
+): StoryResponse => {
   let stories: StoryItemType[] = [],
     storyId: string = undefined,
     storyTitle: string = undefined;
