@@ -5,7 +5,7 @@ import {
   ReactCompareSliderImage,
 } from "react-compare-slider";
 import ReactPlayer from "react-player/lazy";
-import { formatHtml } from "../helpers/artWorkHelper";
+import { formatHtml, formatHtmlCaption } from "../helpers/artWorkHelper";
 import {
   ContentBlock as ContentBlockType,
   ContentBlockTypes,
@@ -22,7 +22,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
         // Title Block
         case ContentBlockTypes.TITLE:
           return (
-            <div className="content-block__title-block">
+            <div className="content-block__title-block" key={index}>
               {block.title && (
                 <div className="content-block__title-block__title">
                   {block.title}
@@ -39,7 +39,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
         // Text Block
         case ContentBlockTypes.TEXT_BLOCK:
           return (
-            <div className="content-block__text">
+            <div className="content-block__text" key={index}>
               {formatHtml(block.textBlock.html)}
             </div>
           );
@@ -47,19 +47,21 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
         // Image Block
         case ContentBlockTypes.IMAGE:
           return (
-            <figure className="content-block__image">
+            <figure className="content-block__image" key={index}>
               <img
                 src={block.image.url}
                 alt={block.altText ? block.altText : ""}
               />
-              {block.caption && <figcaption>{block.caption}</figcaption>}
+              {block.caption?.html && (
+                <figcaption>{formatHtmlCaption(block.caption.html)}</figcaption>
+              )}
             </figure>
           );
 
         // Image Comparison Slider Block
         case ContentBlockTypes.IMAGE_COMPARISON:
           return (
-            <figure className="content-block__comparison">
+            <figure className="content-block__comparison" key={index}>
               <ReactCompareSlider
                 itemOne={
                   <ReactCompareSliderImage
@@ -77,14 +79,14 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
                 }
               />
               <div className="content-block__comparison__caption">
-                {block.leftImage.caption && (
+                {block.leftImage.caption?.html && (
                   <figcaption className="caption-left">
-                    Left: {block.leftImage.caption}
+                    Left: {formatHtmlCaption(block.leftImage.caption.html)}
                   </figcaption>
                 )}
-                {block.rightImage.caption && (
+                {block.rightImage.caption?.html && (
                   <figcaption className="caption-right">
-                    Right: {block.rightImage.caption}
+                    Right: {formatHtmlCaption(block.rightImage.caption.html)}
                   </figcaption>
                 )}
               </div>
@@ -104,6 +106,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
               playsinline={true}
               pip={false}
               controls={true}
+              key={index}
             />
           );
 

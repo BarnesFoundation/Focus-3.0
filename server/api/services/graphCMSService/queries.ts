@@ -183,7 +183,9 @@ export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
 						contentBlock {
 							... on Image {
 								type
-								caption
+								caption {
+									html
+								}
 								altText
 								image {
 									url
@@ -193,14 +195,18 @@ export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
 								type
 								leftImage {
 									altText
-									caption
+									caption {
+										html
+									}
 									image {
 										url
 									}
 								}
 								rightImage {
 									altText
-									caption
+									caption {
+										html
+									}
 									image {
 										url
 									}

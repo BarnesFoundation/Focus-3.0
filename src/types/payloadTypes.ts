@@ -39,7 +39,9 @@ export enum ContentBlockTypes {
 
 type Image = {
   type: ContentBlockTypes.IMAGE;
-  caption?: string;
+  caption?: {
+    html: string;
+  }
   altText?: string;
   image: {
     url: string;

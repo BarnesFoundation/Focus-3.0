@@ -141,3 +141,14 @@ export const formatHtml = (html) => {
     })
   );
 };
+
+export const formatHtmlCaption = (html) => {
+  return parse(
+    sanitizeHtml(html, {
+      allowedTags: ["p", "a", "br", "em", "span", "strong", "u"],
+      allowedAttributes: {
+        a: ["href", "target"],
+      },
+    })
+  );
+};
