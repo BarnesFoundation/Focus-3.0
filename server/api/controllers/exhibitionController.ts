@@ -29,6 +29,11 @@ class ExhibitionController {
       preferredLanguage
     );
 
+    objectData[0]["content"] = await TranslateService.translateContent(
+      objectData[0]["content"],
+      preferredLanguage
+    );
+
     const responseObject = {
       data: {
         records: objectData,
