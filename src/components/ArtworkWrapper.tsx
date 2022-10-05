@@ -32,6 +32,7 @@ import { ExhibitionObject } from "./ExhibitionObject";
 
 export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
   getSelectedLanguage,
+  updateSelectedLanguage,
 }) => {
   // Initialize the search request services
   const sr = new SearchRequestService();
@@ -39,6 +40,7 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
   const [imageId, setImageId] = useState<string>();
   const [artwork, setArtwork] = useState<ArtworkObject["artwork"]>();
   const [result, setResult] = useState<ArtWorkRecordsResult>();
+  const [specialExhibition, setSpecialExhibition] = useState<boolean>();
   const [stories, setStories] = useState<StoryResponse>();
   const [imgLoaded, setImgLoaded] = useState(false);
   const [emailCaptured, setEmailCaptured] = useState(false);
@@ -60,6 +62,35 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
   const setupStory = async (imageId) => {
     const storyInformation = await sr.getStoryItems(imageId);
     return constructStory(storyInformation);
+  };
+
+  const onSelectLanguage = async (selectedLanguage: LanguageOptionType) => {
+    // Scroll to top when language changes. This should help re-calculate correct offsets on language change
+    window.scroll({ top: 0, behavior: "smooth" });
+
+    // Update local storage with the new set language and then update the server session
+    await updateSelectedLanguage(selectedLanguage);
+
+    let artworkInfo: ArtWorkRecordsResult;
+    let storyResponse: StoryResponse;
+
+    // Get the new language translations
+    if (specialExhibition) {
+      artworkInfo = await sr.getSpecialExhibitionObject(imageId);
+    } else {
+      artworkInfo = await sr.getArtworkInformation(imageId);
+
+      if (artworkInfo.data.showStory) storyResponse = await setupStory(imageId);
+    }
+
+    const { artwork, roomRecords } = artworkInfo
+      ? constructResultAndInRoomSlider(artworkInfo, isTablet)
+      : undefined;
+
+    setResult(artworkInfo);
+    setArtwork(artwork);
+    setStories(storyResponse);
+    setSelectedLanguage(selectedLanguage);
   };
 
   // Set state and get object data on component initialization
@@ -97,6 +128,7 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
       setArtwork(artwork);
       setStories(storyResponse);
       setImageId(imageId);
+      setSpecialExhibition(artworkInfo.data.specialExhibition);
 
       const emailRecorded = getLocalStorage(constants.SNAP_USER_EMAIL) !== null;
       setEmailCaptured(emailRecorded);
@@ -116,9 +148,11 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
           <Artwork />
         ) : (
           <ExhibitionObject
-            initArtwork={artwork}
-            initResult={result}
+            artwork={artwork}
+            result={result}
             imageId={imageId}
+            onSelectLanguage={onSelectLanguage}
+            selectedLanguage={selectedLanguage}
           />
         ))}
     </Fragment>

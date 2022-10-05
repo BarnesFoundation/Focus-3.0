@@ -21,15 +21,19 @@ import google_logo from "../images/google_translate.svg";
 import { ScanButton } from "./ScanButton";
 
 type ExhibitionObjectProps = {
-  initArtwork: ArtworkObject["artwork"];
-  initResult: ArtWorkRecordsResult;
+  artwork: ArtworkObject["artwork"];
+  result: ArtWorkRecordsResult;
   imageId: string;
+  onSelectLanguage: (selectedLanguage: LanguageOptionType) => void;
+  selectedLanguage: LanguageOptionType;
 } & WithTranslationState;
 
 export const ExhibitionObjectComponent: React.FC<ExhibitionObjectProps> = ({
-  initArtwork,
-  initResult,
+  artwork,
+  result,
   imageId,
+  onSelectLanguage,
+  selectedLanguage,
   langOptions,
   getSelectedLanguage,
   getTranslation,
@@ -38,42 +42,16 @@ export const ExhibitionObjectComponent: React.FC<ExhibitionObjectProps> = ({
   // Initialize the search request services
   const sr = new SearchRequestService();
   // Component state
-  const [artwork, setArtwork] = useState<ArtworkObject["artwork"]>(initArtwork);
-  const [result, setResult] = useState<ArtWorkRecordsResult>(initResult);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [emailCaptured, setEmailCaptured] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(true);
   const [emailCaptureAck, setEmailCaptureAck] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState<LanguageOptionType>({
-    name: "English",
-    code: "En",
-    selected: true,
-  });
 
   const { getLocalStorage } = useLocalStorage();
 
   const [formOpen, setFormOpen] = useState(false);
   const startYCard2 = useRef<number>();
   const startYTrigger = useRef<number>();
-
-  const onSelectLanguage = async (selectedLanguage: LanguageOptionType) => {
-    // Scroll to top when language changes. This should help re-calculate correct offsets on language change
-    window.scroll({ top: 0, behavior: "smooth" });
-
-    // Update local storage with the new set language and then update the server session
-    await updateSelectedLanguage(selectedLanguage);
-
-    // Get the new language translations
-    const artworkInfo = await sr.getSpecialExhibitionObject(imageId);
-
-    const { artwork, roomRecords } = artworkInfo
-      ? constructResultAndInRoomSlider(artworkInfo, isTablet)
-      : undefined;
-
-    setResult(artworkInfo);
-    setSelectedLanguage(selectedLanguage);
-    setArtwork(artwork);
-  };
 
   /** Updates state that email was captured and submits it to the server session */
   const onSubmitEmail = (email) => {
