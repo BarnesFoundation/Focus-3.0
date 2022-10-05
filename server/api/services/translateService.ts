@@ -28,6 +28,23 @@ const LANGUAGE_SHORT_CODE_COLUMN_MAP = {
 };
 
 export default class TranslateService {
+  private static async awsTranslate(
+    originalText: string,
+    targetLanguage: string
+  ): Promise<string> {
+
+    if (!originalText) return originalText;
+
+    const { TranslatedText } = await translateClient.send(
+      new TranslateTextCommand({
+        SourceLanguageCode: "en",
+        Text: originalText,
+        TargetLanguageCode: targetLanguage,
+      })
+    );
+    return TranslatedText;
+  }
+
   public static async translate(
     originalText: string,
     targetLanguage: string | null
@@ -40,14 +57,7 @@ export default class TranslateService {
     }
 
     try {
-      const { TranslatedText } = await translateClient.send(
-        new TranslateTextCommand({
-          SourceLanguageCode: "en",
-          Text: originalText,
-          TargetLanguageCode: targetLanguage,
-        })
-      );
-      return TranslatedText;
+      return await this.awsTranslate(originalText, targetLanguage);
     } catch (error) {
       console.error(
         `Failed to translate content "${originalText}" to language "${targetLanguage}`,
@@ -126,11 +136,11 @@ export default class TranslateService {
 
           switch (block.type) {
             case "Image":
-              translatedBlock["caption"]["html"] = await this.translate(
+              translatedBlock["caption"]["html"] = await this.awsTranslate(
                 block["caption"]["html"],
                 targetLanguage
               );
-              translatedBlock["altText"] = await this.translate(
+              translatedBlock["altText"] = await this.awsTranslate(
                 block["altText"],
                 targetLanguage
               );
@@ -138,38 +148,40 @@ export default class TranslateService {
 
             case "ImageComparison":
               translatedBlock["leftImage"]["caption"]["html"] =
-                await this.translate(
+                await this.awsTranslate(
                   block["leftImage"]["caption"]["html"],
                   targetLanguage
                 );
-              translatedBlock["rightImage"]["altText"] = await this.translate(
-                block["rightImage"]["altText"],
-                targetLanguage
-              );
+              translatedBlock["rightImage"]["altText"] =
+                await this.awsTranslate(
+                  block["rightImage"]["altText"],
+                  targetLanguage
+                );
               translatedBlock["rightImage"]["caption"]["html"] =
                 await this.translate(
                   block["rightImage"]["caption"]["html"],
                   targetLanguage
                 );
-              translatedBlock["rightImage"]["altText"] = await this.translate(
-                block["rightImage"]["altText"],
-                targetLanguage
-              );
+              translatedBlock["rightImage"]["altText"] =
+                await this.awsTranslate(
+                  block["rightImage"]["altText"],
+                  targetLanguage
+                );
               break;
 
             case "TextBlock":
-              translatedBlock["textBlock"]["html"] = await this.translate(
+              translatedBlock["textBlock"]["html"] = await this.awsTranslate(
                 block["textBlock"]["html"],
                 targetLanguage
               );
               break;
 
             case "Title":
-              translatedBlock["title"] = await this.translate(
+              translatedBlock["title"] = await this.awsTranslate(
                 block["title"],
                 targetLanguage
               );
-              translatedBlock["subtitle"] = await this.translate(
+              translatedBlock["subtitle"] = await this.awsTranslate(
                 block["subtitle"],
                 targetLanguage
               );

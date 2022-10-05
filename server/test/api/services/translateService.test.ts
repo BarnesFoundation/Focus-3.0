@@ -105,7 +105,8 @@ describe("TranslateService", () => {
               type: "Image",
             },
           ],
-        }, {
+        },
+        {
           contentBlock: [
             {
               subtitle: null,
@@ -155,16 +156,16 @@ describe("TranslateService", () => {
               url: "www.example.com",
             },
           ],
-        }
+        },
       ]);
     });
 
     it("should return original content when there is an error with AWS Translate Client", async () => {
       translateClientMock.on(TranslateTextCommand).rejects(new Error("Oops!"));
 
-      expect(await TranslateService.translateContent(originalContent, "es")).toEqual(
-        originalContent
-      );
+      expect(
+        await TranslateService.translateContent(originalContent, "es")
+      ).toEqual(originalContent);
     });
   });
 });
