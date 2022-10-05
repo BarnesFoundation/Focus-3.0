@@ -10,7 +10,7 @@ import { Share } from "./Share";
 import { ContentBlock } from "./ContentBlock";
 
 export type ResultCardProps = {
-  artwork: ArtworkObject["artwork"];
+  artwork: ArtworkObject;
   refCallbackInfo?: (element: any) => void;
   setArtworkRef?: (element: any) => void;
   langOptions: WithTranslationState["langOptions"];
