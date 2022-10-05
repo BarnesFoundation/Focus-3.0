@@ -21,7 +21,11 @@ import { ScanButton } from "./ScanButton";
 import { ResultCard } from "./ResultCard";
 import { StoryTitle } from "./StoryTitle";
 import { constructStory } from "../helpers/artWorkHelper";
-import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
+import {
+  ArtworkObject,
+  ArtWorkRecordsResult,
+  StoryItemType,
+} from "../types/payloadTypes";
 import { SearchRequestService } from "../services/SearchRequestService";
 
 /**
@@ -60,12 +64,12 @@ type ArtworkWithStoryState = {
   showTitleBar: boolean;
   emailCardClickable: boolean;
   storyTopsClickable: {};
-  stories?: any[];
+  stories?: StoryItemType[];
   storyId?: string;
   storyTitle?: string;
   showStory?: boolean;
-  storyDurationsCurrent?: any[];
-  storyOffsets?: any[];
+  storyDurationsCurrent?: number[];
+  storyOffsets?: number[];
   loaded: boolean;
 };
 
@@ -74,16 +78,16 @@ export class ArtworkWithStory extends Component<
   ArtworkWithStoryState
 > {
   sr: SearchRequestService;
-  artworkScene;
-  emailScene;
-  emailSceneTrigger;
-  artworkRef;
-  infoCardRef;
-  sceneRefs: {};
+  artworkScene: ScrollMagic.Scene;
+  emailScene: ScrollMagic.Scene;
+  emailSceneTrigger: ScrollMagic.Scene;
+  artworkRef: HTMLDivElement;
+  infoCardRef: HTMLDivElement;
+  sceneRefs: Scene[];
   artworkScrollOffset: number;
   langOptions: LanguageOptionType[];
   artworkTimeoutCallback;
-  controller;
+  controller: ScrollMagic.Controller;
   emailFormHeight: number;
 
   constructor(props) {
@@ -100,7 +104,7 @@ export class ArtworkWithStory extends Component<
     // Refs that end up being assigned to
     this.artworkRef = null;
     this.infoCardRef = null;
-    this.sceneRefs = {};
+    this.sceneRefs = [];
 
     this.artworkScrollOffset = 0;
     this.artworkTimeoutCallback = null;
@@ -115,10 +119,10 @@ export class ArtworkWithStory extends Component<
   }
 
   async componentWillMount() {
-    const durationCurArr = [];
-    const durationNextArr = [];
-    const storyPositionArr = [];
-    const offsetArr = [];
+    const durationCurArr: number[] = [];
+    const durationNextArr: number[] = [];
+    const storyPositionArr: boolean[] = [];
+    const offsetArr: number[] = [];
     const durDefault = 300;
 
     const { stories, storyId, storyTitle } = await this.setupStory(
@@ -143,7 +147,10 @@ export class ArtworkWithStory extends Component<
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(
+    prevProps: ArtworkWithStoryProps,
+    _prevState: ArtworkWithStoryState
+  ) {
     if (!this.artworkRef) {
       return;
     }
@@ -151,7 +158,7 @@ export class ArtworkWithStory extends Component<
       const newOffset = Math.max(
         Math.ceil(
           this.artworkRef.getBoundingClientRect().bottom -
-          constants.VIEWPORT_HEIGHT
+            constants.VIEWPORT_HEIGHT
         ),
         0
       );
@@ -213,7 +220,7 @@ export class ArtworkWithStory extends Component<
     });
   };
 
-  setupStory = async (imageId) => {
+  setupStory = async (imageId: string) => {
     const storyInformation = await this.sr.getStoryItems(imageId);
     return constructStory(storyInformation);
   };
@@ -224,7 +231,7 @@ export class ArtworkWithStory extends Component<
     const artworkVerticalOffset = Math.max(
       Math.ceil(
         this.artworkRef.getBoundingClientRect().bottom -
-        constants.VIEWPORT_HEIGHT
+          constants.VIEWPORT_HEIGHT
       ),
       0
     );
@@ -241,7 +248,7 @@ export class ArtworkWithStory extends Component<
   };
 
   /** Handles the tap-to-scroll functionality for cards */
-  handleClickScroll = (storyIndex, isStoryCard) => {
+  handleClickScroll = (storyIndex: number, isStoryCard: boolean) => {
     let landingPoint;
 
     // Determine the offset needed for the height of each story card and the amount it should peek up
@@ -251,7 +258,12 @@ export class ArtworkWithStory extends Component<
     // If the click originated from a story card
     if (isStoryCard) {
       // Amount needed for getting past the first card
-      let initial = Math.abs(this.sceneRefs[0].props.duration) + peekOffset;
+      const duration: number =
+        typeof this.sceneRefs[0].props.duration === "string"
+          ? parseInt(this.sceneRefs[0].props.duration)
+          : this.sceneRefs[0].props.duration;
+
+      let initial = Math.abs(duration) + peekOffset;
 
       if (storyIndex == 0) {
         landingPoint = initial;
@@ -309,7 +321,7 @@ export class ArtworkWithStory extends Component<
       .addTo(this.controller);
   };
 
-  setArtworkRef = (elem) => {
+  setArtworkRef = (elem: HTMLDivElement) => {
     if (elem) {
       this.artworkRef = elem;
       const scrollContainer = isAndroid ? { container: ".sm-container" } : {};
@@ -331,7 +343,7 @@ export class ArtworkWithStory extends Component<
     this.sr.markStoryAsRead(this.props.imageId, storyId);
   };
 
-  onStoryHeightReady = (height, index) => {
+  onStoryHeightReady = (height: number, index: number) => {
     if (index > -1) {
       //console.log('Story durations based on height :: ', index, height);
       var durationCurArr = this.state.storyDurationsCurrent;
@@ -340,11 +352,11 @@ export class ArtworkWithStory extends Component<
     }
   };
 
-  onEmailHeightReady = (height) => {
+  onEmailHeightReady = (height: number) => {
     this.emailFormHeight = (height * 2) / 2.2;
   };
 
-  storySceneCallback = (showTitle) => {
+  storySceneCallback = (showTitle: boolean) => {
     if (showTitle) {
       this.setState({ showTitleBar: true });
     } else {
@@ -352,13 +364,13 @@ export class ArtworkWithStory extends Component<
     }
   };
 
-  refCallbackInfo = (element) => {
+  refCallbackInfo = (element: HTMLDivElement) => {
     if (element) {
       this.infoCardRef = element;
     }
   };
 
-  onArtworkImgLoad = ({ target: img }) => {
+  onArtworkImgLoad = ({ target: _img }) => {
     this.setState({ imgLoaded: true });
   };
 
@@ -453,7 +465,7 @@ export class ArtworkWithStory extends Component<
   };
 
   /** Changes whether or not the top of a story card is clickable */
-  onVisibilityChange = (isVisible, storyIndex) => {
+  onVisibilityChange = (isVisible: boolean, storyIndex: number) => {
     this.setState((pState) => {
       const storyTopsClickable = { ...pState.storyTopsClickable };
       storyTopsClickable[storyIndex] = isVisible;

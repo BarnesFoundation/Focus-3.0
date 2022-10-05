@@ -44,7 +44,7 @@ export const ArtworkDefaultComponent: React.FC<ArtworkDefaultProps> = ({
   const startYTrigger = useRef<number>();
 
   /** Updates state that email was captured and submits it to the server session */
-  const handleSubmitEmail = (email) => {
+  const handleSubmitEmail = (email: string) => {
     onSubmitEmail(email, () => setFormOpen(false));
   };
 
@@ -52,12 +52,12 @@ export const ArtworkDefaultComponent: React.FC<ArtworkDefaultProps> = ({
     if (!formOpen) setFormOpen(true);
   };
 
-  const handleStartSwipe = (event) => {
+  const handleStartSwipe = (event: TouchEvent) => {
     const touch = event.changedTouches[0];
     startYCard2.current = touch.pageY;
   };
 
-  const handleSwipeDismiss = (event) => {
+  const handleSwipeDismiss = (event: TouchEvent) => {
     const touch = event.changedTouches[0];
     const endY = touch.pageY;
     if (endY > startYCard2.current) setFormOpen(false);
@@ -78,19 +78,19 @@ export const ArtworkDefaultComponent: React.FC<ArtworkDefaultProps> = ({
 
     // Disable scrolling inside element
     const card2 = document.getElementById("card-2");
-    card2.addEventListener("touchmove", (e) => e.preventDefault());
+    card2.addEventListener("touchmove", (e: TouchEvent) => e.preventDefault());
 
     // Trigger to open card-2 once bottom of content is reached
     const trigger = document.getElementById("card-2__trigger");
-    trigger.addEventListener("wheel", (e) => {
+    trigger.addEventListener("wheel", (e: WheelEvent) => {
       if (e.deltaY > 0) {
         setFormOpen(true);
       }
     });
-    trigger.addEventListener("touchstart", (e) => {
+    trigger.addEventListener("touchstart", (e: TouchEvent) => {
       startYTrigger.current = e.changedTouches[0].pageY;
     });
-    trigger.addEventListener("touchend", (e) => {
+    trigger.addEventListener("touchend", (e: TouchEvent) => {
       if (e.changedTouches[0].pageY < startYTrigger.current) setFormOpen(true);
     });
   }, [artwork, imgLoaded, showEmailForm]);
