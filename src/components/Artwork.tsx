@@ -225,7 +225,7 @@ export class Artwork extends Component<
         stories: stories,
         storyId: storyId,
         storyTitle: storyTitle,
-        showStory: this.state.result.data.show_story,
+        showStory: this.state.result.data.showStory,
         artwork: artwork,
         roomRecords: roomRecords,
         emailCaptured: emailCaptured,
