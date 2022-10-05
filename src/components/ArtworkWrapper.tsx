@@ -25,7 +25,6 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
   const [artwork, setArtwork] = useState<ArtworkObject>();
   const [result, setResult] = useState<ArtWorkRecordsResult>();
   const [specialExhibition, setSpecialExhibition] = useState<boolean>();
-  const [imgLoaded, setImgLoaded] = useState(false);
   const [emailCaptured, setEmailCaptured] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(true);
   const [emailCaptureAck, setEmailCaptureAck] = useState(false);
@@ -37,10 +36,6 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
 
   const location = useLocation();
   const { getLocalStorage } = useLocalStorage();
-
-  const [formOpen, setFormOpen] = useState(false);
-  const startYCard2 = useRef<number>();
-  const startYTrigger = useRef<number>();
 
   const onSelectLanguage = async (selectedLanguage: LanguageOptionType) => {
     // Scroll to top when language changes. This should help re-calculate correct offsets on language change
