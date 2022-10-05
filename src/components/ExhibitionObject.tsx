@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import classnames from "classnames";
-import { isTablet } from "react-device-detect";
 import { isAndroid } from "react-device-detect";
 
 import { SearchRequestService } from "../services/SearchRequestService";
@@ -9,7 +8,6 @@ import withTranslation, {
   LanguageOptionType,
   WithTranslationState,
 } from "./withTranslation";
-import { constructResultAndInRoomSlider } from "../helpers/artWorkHelper";
 import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
 import { useLocalStorage } from "../hooks/useLocalStorage";
 import { EmailForm } from "./EmailForm";
@@ -21,7 +19,7 @@ import google_logo from "../images/google_translate.svg";
 import { ScanButton } from "./ScanButton";
 
 type ExhibitionObjectProps = {
-  artwork: ArtworkObject["artwork"];
+  artwork: ArtworkObject;
   result: ArtWorkRecordsResult;
   imageId: string;
   onSelectLanguage: (selectedLanguage: LanguageOptionType) => void;
@@ -89,7 +87,7 @@ export const ExhibitionObjectComponent: React.FC<ExhibitionObjectProps> = ({
       setEmailCaptured(emailRecorded);
       setShowEmailForm(!emailRecorded);
       setEmailCaptureAck(emailRecorded);
-      setSelectedLanguage((await getSelectedLanguage())[0]);
+      // setSelectedLanguage((await getSelectedLanguage())[0]);
     };
 
     componentWillMount();

@@ -15,7 +15,6 @@ export const constructResultAndInRoomSlider = (
   const { success } = artworkResult;
 
   let artwork = {};
-  let roomRecords = [];
 
   if (success) {
     // If the artwork result has records
@@ -83,14 +82,8 @@ export const constructResultAndInRoomSlider = (
         unIdentified,
       };
     }
-    // Get the room records array
-    const rr = artworkResult["data"]["roomRecords"] || [];
-
-    if (rr?.length > 0) {
-      roomRecords = rr;
-    }
   }
-  return { artwork, roomRecords };
+  return artwork;
 };
 
 export const constructStory = (

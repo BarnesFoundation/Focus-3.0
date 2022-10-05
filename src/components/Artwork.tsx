@@ -54,7 +54,7 @@ const SectionWipesStyled = styled.div`
 type ArtworkComponentProps = {
   match: Match;
   history: History;
-  artwork: ArtworkObject["artwork"];
+  artwork: ArtworkObject;
   result: ArtWorkRecordsResult;
   imageId: string;
   onSelectLanguage: (selectedLanguage: LanguageOptionType) => void;
@@ -81,7 +81,6 @@ type ArtworkComponentState = {
   storyId: string;
   storyTitle: string;
   showStory: boolean;
-  roomRecords: ArtworkObject["roomRecords"];
   storyDurationsCurrent: any[];
   storyOffsets: any[];
   loaded: boolean;
@@ -166,10 +165,6 @@ export class Artwork extends Component<
     const { stories, storyId, storyTitle } = await this.setupStory(
       this.props.imageId
     );
-    const { artwork, roomRecords } = constructResultAndInRoomSlider(
-      this.props.result,
-      isTablet
-    );
 
     stories.forEach((story) => {
       durationCurArr.push(durDefault);
@@ -183,7 +178,6 @@ export class Artwork extends Component<
       storyId: storyId,
       storyTitle: storyTitle,
       showStory: this.props.result.data.showStory,
-      roomRecords: roomRecords,
       emailCaptured: emailCaptured,
       showEmailForm: !emailCaptured,
       emailCaptureAck: emailCaptured,
@@ -194,6 +188,7 @@ export class Artwork extends Component<
   }
 
   componentDidUpdate(prevProps, prevState) {
+    console.log(this.artworkRef);
     if (!this.artworkRef) {
       return;
     }
@@ -257,15 +252,11 @@ export class Artwork extends Component<
     const { stories, storyId, storyTitle } = await this.setupStory(
       this.props.imageId
     );
-    const { artwork, roomRecords } = this.props.result
-      ? constructResultAndInRoomSlider(this.props.result, isTablet)
-      : undefined;
 
     this.setState({
       stories,
       storyId,
       storyTitle,
-      roomRecords,
     });
   };
 

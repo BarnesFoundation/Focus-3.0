@@ -1,8 +1,6 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import classnames from "classnames";
 import { isTablet } from "react-device-detect";
-import { isAndroid } from "react-device-detect";
 
 import { SearchRequestService } from "../services/SearchRequestService";
 import * as constants from "../constants";
@@ -10,23 +8,9 @@ import withTranslation, {
   LanguageOptionType,
   WithTranslationState,
 } from "./withTranslation";
-import {
-  constructResultAndInRoomSlider,
-  constructStory,
-} from "../helpers/artWorkHelper";
-import {
-  ArtworkObject,
-  ArtWorkRecordsResult,
-  StoryResponse,
-} from "../types/payloadTypes";
+import { constructResultAndInRoomSlider } from "../helpers/artWorkHelper";
+import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import { EmailForm } from "./EmailForm";
-import ProgressiveImage from "react-progressive-image";
-import { LanguageDropdown } from "./LanguageDropdown";
-import { Share } from "./Share";
-import { ContentBlock } from "./ContentBlock";
-import google_logo from "../images/google_translate.svg";
-import { ScanButton } from "./ScanButton";
 import Artwork from "./Artwork";
 import { ExhibitionObject } from "./ExhibitionObject";
 
@@ -38,7 +22,7 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
   const sr = new SearchRequestService();
   // Component state
   const [imageId, setImageId] = useState<string>();
-  const [artwork, setArtwork] = useState<ArtworkObject["artwork"]>();
+  const [artwork, setArtwork] = useState<ArtworkObject>();
   const [result, setResult] = useState<ArtWorkRecordsResult>();
   const [specialExhibition, setSpecialExhibition] = useState<boolean>();
   const [imgLoaded, setImgLoaded] = useState(false);
@@ -74,7 +58,7 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
       artworkInfo = await sr.getArtworkInformation(imageId);
     }
 
-    const { artwork, roomRecords } = artworkInfo
+    const artwork = artworkInfo
       ? constructResultAndInRoomSlider(artworkInfo, isTablet)
       : undefined;
 
@@ -99,16 +83,13 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
         imageId = id;
 
         if (path === "artwork") {
-          artworkInfo = await sr.getArtworkInformation(imageId)
+          artworkInfo = await sr.getArtworkInformation(imageId);
         } else if (path === "exhibition") {
           artworkInfo = await sr.getSpecialExhibitionObject(imageId);
         }
       }
 
-      const { artwork, roomRecords } = constructResultAndInRoomSlider(
-        artworkInfo,
-        isTablet
-      );
+      const artwork = constructResultAndInRoomSlider(artworkInfo, isTablet);
 
       setResult(artworkInfo);
       setArtwork(artwork);
