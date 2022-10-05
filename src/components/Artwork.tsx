@@ -1,6 +1,5 @@
 import React, { Component, CSSProperties } from "react";
 import { withRouter } from "react-router";
-import { History, Match } from "react-router-dom";
 import { compose } from "redux";
 import $ from "jquery";
 import ScrollMagic from "scrollmagic";
@@ -45,8 +44,6 @@ const SectionWipesStyled = styled.div`
 `;
 
 type ArtworkComponentProps = {
-  match: Match;
-  history: History;
   artwork: ArtworkObject;
   result: ArtWorkRecordsResult;
   imageId: string;
