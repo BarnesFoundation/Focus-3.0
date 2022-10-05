@@ -52,7 +52,9 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
                 src={block.image.url}
                 alt={block.altText ? block.altText : ""}
               />
-              {block.caption && <figcaption>{block.caption}</figcaption>}
+              {block.caption?.html && (
+                <figcaption>{formatHtml(block.caption.html)}</figcaption>
+              )}
             </figure>
           );
 
@@ -77,14 +79,14 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
                 }
               />
               <div className="content-block__comparison__caption">
-                {block.leftImage.caption && (
+                {block.leftImage.caption?.html && (
                   <figcaption className="caption-left">
-                    Left: {block.leftImage.caption}
+                    Left: {formatHtml(block.leftImage.caption.html)}
                   </figcaption>
                 )}
-                {block.rightImage.caption && (
+                {block.rightImage.caption?.html && (
                   <figcaption className="caption-right">
-                    Right: {block.rightImage.caption}
+                    Right: {formatHtml(block.rightImage.caption.html)}
                   </figcaption>
                 )}
               </div>
