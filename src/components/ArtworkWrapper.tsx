@@ -41,7 +41,6 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
   const [artwork, setArtwork] = useState<ArtworkObject["artwork"]>();
   const [result, setResult] = useState<ArtWorkRecordsResult>();
   const [specialExhibition, setSpecialExhibition] = useState<boolean>();
-  const [stories, setStories] = useState<StoryResponse>();
   const [imgLoaded, setImgLoaded] = useState(false);
   const [emailCaptured, setEmailCaptured] = useState(false);
   const [showEmailForm, setShowEmailForm] = useState(true);
@@ -59,11 +58,6 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
   const startYCard2 = useRef<number>();
   const startYTrigger = useRef<number>();
 
-  const setupStory = async (imageId) => {
-    const storyInformation = await sr.getStoryItems(imageId);
-    return constructStory(storyInformation);
-  };
-
   const onSelectLanguage = async (selectedLanguage: LanguageOptionType) => {
     // Scroll to top when language changes. This should help re-calculate correct offsets on language change
     window.scroll({ top: 0, behavior: "smooth" });
@@ -72,15 +66,12 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
     await updateSelectedLanguage(selectedLanguage);
 
     let artworkInfo: ArtWorkRecordsResult;
-    let storyResponse: StoryResponse;
 
     // Get the new language translations
     if (specialExhibition) {
       artworkInfo = await sr.getSpecialExhibitionObject(imageId);
     } else {
       artworkInfo = await sr.getArtworkInformation(imageId);
-
-      if (artworkInfo.data.showStory) storyResponse = await setupStory(imageId);
     }
 
     const { artwork, roomRecords } = artworkInfo
@@ -89,7 +80,6 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
 
     setResult(artworkInfo);
     setArtwork(artwork);
-    setStories(storyResponse);
     setSelectedLanguage(selectedLanguage);
   };
 
@@ -97,7 +87,6 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
   useEffect(() => {
     const componentWillMount = async () => {
       let artworkInfo: ArtWorkRecordsResult;
-      let storyResponse: StoryResponse;
       let imageId: string;
 
       // Check if result data is stored in location state from camera component
@@ -110,10 +99,7 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
         imageId = id;
 
         if (path === "artwork") {
-          [artworkInfo, storyResponse] = await Promise.all([
-            sr.getArtworkInformation(imageId),
-            setupStory(imageId),
-          ]);
+          artworkInfo = await sr.getArtworkInformation(imageId)
         } else if (path === "exhibition") {
           artworkInfo = await sr.getSpecialExhibitionObject(imageId);
         }
@@ -126,7 +112,6 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
 
       setResult(artworkInfo);
       setArtwork(artwork);
-      setStories(storyResponse);
       setImageId(imageId);
       setSpecialExhibition(artworkInfo.data.specialExhibition);
 
@@ -145,7 +130,13 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
       {result &&
         artwork &&
         (result.data.showStory ? (
-          <Artwork />
+          <Artwork
+            artwork={artwork}
+            result={result}
+            imageId={imageId}
+            onSelectLanguage={onSelectLanguage}
+            selectedLanguage={selectedLanguage}
+          />
         ) : (
           <ExhibitionObject
             artwork={artwork}

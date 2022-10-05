@@ -54,6 +54,11 @@ const SectionWipesStyled = styled.div`
 type ArtworkComponentProps = {
   match: Match;
   history: History;
+  artwork: ArtworkObject["artwork"];
+  result: ArtWorkRecordsResult;
+  imageId: string;
+  onSelectLanguage: (selectedLanguage: LanguageOptionType) => void;
+  selectedLanguage: LanguageOptionType;
 } & WithTranslationState;
 
 type ArtworkComponentState = {
@@ -72,16 +77,14 @@ type ArtworkComponentState = {
   infoCardDuration: number;
   emailCardClickable: boolean;
   storyTopsClickable: {};
-  result: ArtWorkRecordsResult;
-  selectedLanguage: LanguageOptionType;
   stories: any[];
   storyId: string;
   storyTitle: string;
   showStory: boolean;
-  artwork: ArtworkObject["artwork"];
   roomRecords: ArtworkObject["roomRecords"];
   storyDurationsCurrent: any[];
   storyOffsets: any[];
+  loaded: boolean;
 };
 
 export class Artwork extends Component<
@@ -143,6 +146,7 @@ export class Artwork extends Component<
       infoCardDuration: 700,
       emailCardClickable: true,
       storyTopsClickable: {},
+      loaded: false,
     };
 
     this.artworkTimeoutCallback = null;
@@ -150,10 +154,6 @@ export class Artwork extends Component<
   }
 
   async componentWillMount() {
-    let imageId = this.state.result
-      ? this.state.result.data.records[0].id
-      : this.props.match.params.imageId;
-    const selectedLang = await this.props.getSelectedLanguage();
     const emailCaptured =
       localStorage.getItem(constants.SNAP_USER_EMAIL) !== null;
 
@@ -163,85 +163,41 @@ export class Artwork extends Component<
     const offsetArr = [];
     const durDefault = 300;
 
-    if (!this.state.result) {
-      let artworkInfo, storyResponse;
+    const { stories, storyId, storyTitle } = await this.setupStory(
+      this.props.imageId
+    );
+    const { artwork, roomRecords } = constructResultAndInRoomSlider(
+      this.props.result,
+      isTablet
+    );
 
-      if (this.props.match.url.includes("artwork")) {
-        [artworkInfo, storyResponse] = await Promise.all([
-          this.sr.getArtworkInformation(imageId),
-          this.setupStory(imageId),
-        ]);
-      } else if (this.props.match.url.includes("exhibition")) {
-        [artworkInfo, storyResponse] = await Promise.all([
-          this.sr.getSpecialExhibitionObject(imageId),
-          this.setupStory(imageId),
-        ]);
-      }
+    stories.forEach((story) => {
+      durationCurArr.push(durDefault);
+      offsetArr.push(durDefault);
+      storyPositionArr.push(false);
+    });
+    durationNextArr.push(durDefault);
 
-      const { stories, storyId, storyTitle } = storyResponse;
-      const { artwork, roomRecords } = constructResultAndInRoomSlider(
-        artworkInfo,
-        isTablet
-      );
-
-      stories.forEach((story) => {
-        durationCurArr.push(durDefault);
-        offsetArr.push(durDefault);
-        storyPositionArr.push(false);
-      });
-      durationNextArr.push(durDefault);
-
-      this.setState({
-        selectedLanguage: selectedLang[0],
-        stories: stories,
-        storyId: storyId,
-        storyTitle: storyTitle,
-        result: artworkInfo,
-        showStory: artworkInfo.data.showStory,
-        artwork: artwork,
-        roomRecords: roomRecords,
-        emailCaptured: emailCaptured,
-        showEmailForm: !emailCaptured,
-        emailCaptureAck: emailCaptured,
-        storyDurationsCurrent: durationCurArr,
-        storyOffsets: offsetArr,
-      });
-    } else {
-      const { artwork, roomRecords } = constructResultAndInRoomSlider(
-        this.state.result,
-        isTablet
-      );
-      const { stories, storyId, storyTitle } = await this.setupStory(imageId);
-
-      stories.forEach((story) => {
-        durationCurArr.push(durDefault);
-        offsetArr.push(durDefault);
-        storyPositionArr.push(false);
-      });
-      durationNextArr.push(durDefault);
-
-      this.setState({
-        selectedLanguage: selectedLang[0],
-        stories: stories,
-        storyId: storyId,
-        storyTitle: storyTitle,
-        showStory: this.state.result.data.showStory,
-        artwork: artwork,
-        roomRecords: roomRecords,
-        emailCaptured: emailCaptured,
-        showEmailForm: !emailCaptured,
-        emailCaptureAck: emailCaptured,
-        storyDurationsCurrent: durationCurArr,
-        storyOffsets: offsetArr,
-      });
-    }
+    this.setState({
+      stories: stories,
+      storyId: storyId,
+      storyTitle: storyTitle,
+      showStory: this.props.result.data.showStory,
+      roomRecords: roomRecords,
+      emailCaptured: emailCaptured,
+      showEmailForm: !emailCaptured,
+      emailCaptureAck: emailCaptured,
+      storyDurationsCurrent: durationCurArr,
+      storyOffsets: offsetArr,
+      loaded: true,
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (!this.artworkRef) {
       return;
     }
-    if (prevState.selectedLanguage.code !== this.state.selectedLanguage.code) {
+    if (prevProps.selectedLanguage.code !== this.props.selectedLanguage.code) {
       const newOffset = Math.max(
         Math.ceil(
           this.artworkRef.getBoundingClientRect().bottom -
@@ -297,36 +253,20 @@ export class Artwork extends Component<
   };
 
   onSelectLanguage = async (selectedLanguage: LanguageOptionType) => {
-    // Scroll to top when language changes. This should help re-calculate correct offsets on language change
-    window.scroll({ top: 0, behavior: "smooth" });
-
-    // Update local storage with the new set language and then update the server session
-    await this.props.updateSelectedLanguage(selectedLanguage);
-
-    // Get the new language translations
-    const imageId = this.getFocusedArtworkImageId();
-    const artworkInfo = await this.sr.getArtworkInformation(imageId);
-
-    const { stories, storyId, storyTitle } = await this.setupStory(imageId);
-    const { artwork, roomRecords } = artworkInfo
-      ? constructResultAndInRoomSlider(artworkInfo, isTablet)
+    this.props.onSelectLanguage(selectedLanguage);
+    const { stories, storyId, storyTitle } = await this.setupStory(
+      this.props.imageId
+    );
+    const { artwork, roomRecords } = this.props.result
+      ? constructResultAndInRoomSlider(this.props.result, isTablet)
       : undefined;
 
     this.setState({
-      result: artworkInfo,
-      selectedLanguage,
       stories,
       storyId,
       storyTitle,
-      artwork,
       roomRecords,
     });
-  };
-
-  getFocusedArtworkImageId = () => {
-    return this.state.artwork
-      ? this.state.artwork.id
-      : this.props.match.params.imageId;
   };
 
   setupStory = async (imageId) => {
@@ -468,9 +408,8 @@ export class Artwork extends Component<
   };
 
   onStoryReadComplete = () => {
-    const imageId = this.getFocusedArtworkImageId();
     const { storyId } = this.state;
-    this.sr.markStoryAsRead(imageId, storyId);
+    this.sr.markStoryAsRead(this.props.imageId, storyId);
   };
 
   onStoryHeightReady = (height, index) => {
@@ -579,7 +518,7 @@ export class Artwork extends Component<
                   isLastStoryItem={index === stories.length - 1 ? true : false}
                   story={story}
                   storyTitle={storyTitle}
-                  selectedLanguage={this.state.selectedLanguage}
+                  selectedLanguage={this.props.selectedLanguage}
                   onStoryReadComplete={this.onStoryReadComplete}
                   getSize={this.onStoryHeightReady}
                   statusCallback={this.storySceneCallback}
@@ -688,7 +627,7 @@ export class Artwork extends Component<
         {showTitleBar ? (
           <StoryTitle
             langOptions={this.props.langOptions}
-            selectedLanguage={this.state.selectedLanguage}
+            selectedLanguage={this.props.selectedLanguage}
             onSelectLanguage={this.onSelectLanguage}
           />
         ) : (
@@ -711,14 +650,14 @@ export class Artwork extends Component<
       <SectionWipesStyled hasChildCards={hasChildCards}>
         <ResultCard
           // @ts-ignore
-          artwork={this.state.artwork}
+          artwork={this.props.artwork}
           refCallbackInfo={this.refCallbackInfo}
           setArtworkRef={this.setArtworkRef}
           langOptions={this.props.langOptions}
-          selectedLanguage={this.state.selectedLanguage}
+          selectedLanguage={this.props.selectedLanguage}
           onSelectLanguage={this.onSelectLanguage}
           shortDescContainer={this.shortDescContainer}
-          specialExhibition={this.state.result.data.specialExhibition}
+          specialExhibition={this.props.result.data.specialExhibition}
           getTranslation={this.props.getTranslation}
         />
 
@@ -754,8 +693,8 @@ export class Artwork extends Component<
   };
 
   render() {
-    const { artwork, imgLoaded } = this.state;
-    if (!artwork) {
+    const { imgLoaded, loaded } = this.state;
+    if (!loaded) {
       return null;
     }
     return (
@@ -764,7 +703,7 @@ export class Artwork extends Component<
           <div style={{ visibility: `hidden` }}>
             <img
               className="card-img-result"
-              src={this.state.artwork.url}
+              src={this.props.artwork.url}
               alt="match_image"
               onLoad={this.onArtworkImgLoad}
             />
