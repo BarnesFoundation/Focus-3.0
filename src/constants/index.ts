@@ -91,3 +91,7 @@ export const GA_EVENT_LABEL = {
   SCANNER_MOUNT_FAILURE: "scanner load failed",
   PERMISSION_GRANTED: "camera permission granted",
 };
+
+// Scrollmagic animation constants
+export const INFO_CARD_DURATION = 700;
+export const CONTENT_OFFSET = 67;

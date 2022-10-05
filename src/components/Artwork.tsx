@@ -62,23 +62,16 @@ type ArtworkComponentProps = {
 } & WithTranslationState;
 
 type ArtworkComponentState = {
-  showEmailScreen: boolean;
   imgLoaded: boolean;
-  alsoInRoomResults: any[];
-  snapAttempts: number;
-  errors: { email: boolean };
   showTitleBar: boolean;
-  storyDuration: number;
-  infoHeightUpdated: boolean;
-  infoCardDuration: number;
   emailCardClickable: boolean;
   storyTopsClickable: {};
-  stories: any[];
-  storyId: string;
-  storyTitle: string;
-  showStory: boolean;
-  storyDurationsCurrent: any[];
-  storyOffsets: any[];
+  stories?: any[];
+  storyId?: string;
+  storyTitle?: string;
+  showStory?: boolean;
+  storyDurationsCurrent?: any[];
+  storyOffsets?: any[];
   loaded: boolean;
 };
 
@@ -92,16 +85,12 @@ export class Artwork extends Component<
   emailSceneTrigger;
   artworkRef;
   infoCardRef;
-  emailCardRef;
   sceneRefs: {};
-  contentOffset: number;
   artworkScrollOffset: number;
   langOptions: LanguageOptionType[];
   artworkTimeoutCallback;
-  emailSubmitTimeoutCallback;
   controller;
   emailFormHeight: number;
-  shortDescContainer;
 
   constructor(props) {
     super(props);
@@ -117,31 +106,18 @@ export class Artwork extends Component<
     // Refs that end up being assigned to
     this.artworkRef = null;
     this.infoCardRef = null;
-    this.emailCardRef = null;
     this.sceneRefs = {};
 
-    this.contentOffset = 67;
     this.artworkScrollOffset = 0;
+    this.artworkTimeoutCallback = null;
 
     this.state = {
-      ...props.location.state,
-      showEmailScreen: false,
       imgLoaded: false,
-      alsoInRoomResults: [],
-      snapAttempts:
-        parseInt(localStorage.getItem(constants.SNAP_ATTEMPTS)) || 1,
-      errors: { email: false },
       showTitleBar: false,
-      storyDuration: 250,
-      infoHeightUpdated: false,
-      infoCardDuration: 700,
       emailCardClickable: true,
       storyTopsClickable: {},
       loaded: false,
     };
-
-    this.artworkTimeoutCallback = null;
-    this.emailSubmitTimeoutCallback = null;
   }
 
   async componentWillMount() {
@@ -174,7 +150,6 @@ export class Artwork extends Component<
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log(this.artworkRef);
     if (!this.artworkRef) {
       return;
     }
@@ -182,7 +157,7 @@ export class Artwork extends Component<
       const newOffset = Math.max(
         Math.ceil(
           this.artworkRef.getBoundingClientRect().bottom -
-            constants.VIEWPORT_HEIGHT
+          constants.VIEWPORT_HEIGHT
         ),
         0
       );
@@ -202,8 +177,6 @@ export class Artwork extends Component<
 
   componentWillUnmount() {
     if (this.artworkTimeoutCallback) clearTimeout(this.artworkTimeoutCallback);
-    if (this.emailSubmitTimeoutCallback)
-      clearTimeout(this.emailSubmitTimeoutCallback);
     this.artworkScene && this.artworkScene.remove();
     this.emailScene && this.emailScene.remove();
     this.emailSceneTrigger && this.emailSceneTrigger.remove();
@@ -251,21 +224,13 @@ export class Artwork extends Component<
     return constructStory(storyInformation);
   };
 
-  onSelectInRoomArt = (aitrId) => {
-    localStorage.setItem(
-      constants.SNAP_ATTEMPTS,
-      (this.state.snapAttempts + 1).toString()
-    );
-    this.props.history.push({ pathname: `/artwork/${aitrId}` });
-  };
-
   /** Sets up the ScrollMagic scene for the artwork result section */
   setupArtworkScene = () => {
     // Calculate the vertical offset for the artwork result
     const artworkVerticalOffset = Math.max(
       Math.ceil(
         this.artworkRef.getBoundingClientRect().bottom -
-          constants.VIEWPORT_HEIGHT
+        constants.VIEWPORT_HEIGHT
       ),
       0
     );
@@ -415,7 +380,7 @@ export class Artwork extends Component<
       const storySceneOffset =
         index > 0
           ? this.state.storyOffsets[index] - 342
-          : this.state.infoCardDuration + 33;
+          : constants.INFO_CARD_DURATION + 33;
 
       // Amount that the story should peek
       const peekHeight = isAndroid && index === 0 ? 123 : 67;
@@ -514,7 +479,7 @@ export class Artwork extends Component<
       const storyEnterPinDuration =
         index > 0
           ? this.state.storyDurationsCurrent[index - 1] / 4 - 50
-          : this.state.infoCardDuration + this.contentOffset + 33;
+          : constants.INFO_CARD_DURATION + constants.CONTENT_OFFSET + 33;
 
       return (
         <Scene
@@ -618,7 +583,6 @@ export class Artwork extends Component<
           langOptions={this.props.langOptions}
           selectedLanguage={this.props.selectedLanguage}
           onSelectLanguage={this.onSelectLanguage}
-          shortDescContainer={this.shortDescContainer}
           specialExhibition={this.props.result.data.specialExhibition}
           getTranslation={this.props.getTranslation}
         />
