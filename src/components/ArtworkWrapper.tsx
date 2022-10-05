@@ -67,6 +67,20 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
     setSelectedLanguage(selectedLanguage);
   };
 
+  /** Updates state that email was captured and submits it to the server session */
+  const onSubmitEmail = (email: string, callback?: (args?: any) => void) => {
+    setEmailCaptured(true);
+
+    // Store the email
+    sr.submitBookmarksEmail(email);
+
+    // Close the email card after 4 seconds
+    setTimeout(() => {
+      callback();
+      setEmailCaptureAck(true);
+    }, 4000);
+  };
+
   // Set state and get object data on component initialization
   useEffect(() => {
     const componentWillMount = async () => {
@@ -117,6 +131,10 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
             imageId={imageId}
             onSelectLanguage={onSelectLanguage}
             selectedLanguage={selectedLanguage}
+            emailCaptured={emailCaptured}
+            showEmailForm={showEmailForm}
+            emailCaptureAck={emailCaptureAck}
+            onSubmitEmail={onSubmitEmail}
           />
         ) : (
           <ExhibitionObject
@@ -125,6 +143,10 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
             imageId={imageId}
             onSelectLanguage={onSelectLanguage}
             selectedLanguage={selectedLanguage}
+            emailCaptured={emailCaptured}
+            showEmailForm={showEmailForm}
+            emailCaptureAck={emailCaptureAck}
+            onSubmitEmail={onSubmitEmail}
           />
         ))}
     </Fragment>

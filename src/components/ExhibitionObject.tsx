@@ -24,6 +24,10 @@ type ExhibitionObjectProps = {
   imageId: string;
   onSelectLanguage: (selectedLanguage: LanguageOptionType) => void;
   selectedLanguage: LanguageOptionType;
+  emailCaptured: boolean;
+  showEmailForm: boolean;
+  emailCaptureAck: boolean;
+  onSubmitEmail: (email: string, callback?: (args?: any) => void) => void;
 } & WithTranslationState;
 
 export const ExhibitionObjectComponent: React.FC<ExhibitionObjectProps> = ({
@@ -32,6 +36,10 @@ export const ExhibitionObjectComponent: React.FC<ExhibitionObjectProps> = ({
   imageId,
   onSelectLanguage,
   selectedLanguage,
+  emailCaptured,
+  showEmailForm,
+  emailCaptureAck,
+  onSubmitEmail,
   langOptions,
   getSelectedLanguage,
   getTranslation,
@@ -41,28 +49,13 @@ export const ExhibitionObjectComponent: React.FC<ExhibitionObjectProps> = ({
   const sr = new SearchRequestService();
   // Component state
   const [imgLoaded, setImgLoaded] = useState(false);
-  const [emailCaptured, setEmailCaptured] = useState(false);
-  const [showEmailForm, setShowEmailForm] = useState(true);
-  const [emailCaptureAck, setEmailCaptureAck] = useState(false);
-
-  const { getLocalStorage } = useLocalStorage();
-
   const [formOpen, setFormOpen] = useState(false);
   const startYCard2 = useRef<number>();
   const startYTrigger = useRef<number>();
 
   /** Updates state that email was captured and submits it to the server session */
-  const onSubmitEmail = (email) => {
-    setEmailCaptured(true);
-
-    // Store the email
-    sr.submitBookmarksEmail(email);
-
-    // Close the email card after 4 seconds
-    setTimeout(() => {
-      setFormOpen(false);
-      setEmailCaptureAck(true);
-    }, 4000);
+  const handleSubmitEmail = (email) => {
+    onSubmitEmail(email, () => setFormOpen(false));
   };
 
   const handleClick = () => {
@@ -79,19 +72,6 @@ export const ExhibitionObjectComponent: React.FC<ExhibitionObjectProps> = ({
     const endY = touch.pageY;
     if (endY > startYCard2.current) setFormOpen(false);
   };
-
-  // Set state and get object data on component initialization
-  useEffect(() => {
-    const componentWillMount = async () => {
-      const emailRecorded = getLocalStorage(constants.SNAP_USER_EMAIL) !== null;
-      setEmailCaptured(emailRecorded);
-      setShowEmailForm(!emailRecorded);
-      setEmailCaptureAck(emailRecorded);
-      // setSelectedLanguage((await getSelectedLanguage())[0]);
-    };
-
-    componentWillMount();
-  }, []);
 
   useEffect(() => {
     if (!imgLoaded || !showEmailForm) return;
@@ -343,12 +323,12 @@ export const ExhibitionObjectComponent: React.FC<ExhibitionObjectProps> = ({
                 <EmailForm
                   withStory={false}
                   isEmailScreen={false}
-                  onSubmitEmail={onSubmitEmail}
+                  onSubmitEmail={handleSubmitEmail}
                   getTranslation={getTranslation}
                   getSize={(height) => null}
                   pointerEvents="auto"
                   handleClickScroll={(storyIndex, isStoryCard) => null}
-                  alwaysFloatBtn={!emailCaptureAck}
+                  alwaysFloatBtn={true}
                 />
               </div>
             ) : (

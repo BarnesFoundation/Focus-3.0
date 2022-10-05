@@ -18,7 +18,6 @@ import { Controller, Scene } from "react-scrollmagic";
 // @ts-ignore
 import styled, { css } from "styled-components";
 import StoryItem from "./StoryItem";
-import { isTablet } from "react-device-detect";
 // @ts-ignore
 import ScrollMagic from "scrollmagic";
 import { isAndroid, isIOS } from "react-device-detect";
@@ -26,10 +25,7 @@ import { isAndroid, isIOS } from "react-device-detect";
 import { ScanButton } from "./ScanButton";
 import { ResultCard } from "./ResultCard";
 import { StoryTitle } from "./StoryTitle";
-import {
-  constructResultAndInRoomSlider,
-  constructStory,
-} from "../helpers/artWorkHelper";
+import { constructStory } from "../helpers/artWorkHelper";
 import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
 
 /**
@@ -59,16 +55,16 @@ type ArtworkComponentProps = {
   imageId: string;
   onSelectLanguage: (selectedLanguage: LanguageOptionType) => void;
   selectedLanguage: LanguageOptionType;
+  emailCaptured: boolean;
+  showEmailForm: boolean;
+  emailCaptureAck: boolean;
+  onSubmitEmail: (email: string, callback?: (args?: any) => void) => void;
 } & WithTranslationState;
 
 type ArtworkComponentState = {
   showEmailScreen: boolean;
-  emailCaptured: boolean;
-  showEmailForm: boolean;
-  emailCaptureAck: boolean;
   imgLoaded: boolean;
   alsoInRoomResults: any[];
-  email: string;
   snapAttempts: number;
   errors: { email: boolean };
   showTitleBar: boolean;
@@ -130,12 +126,8 @@ export class Artwork extends Component<
     this.state = {
       ...props.location.state,
       showEmailScreen: false,
-      emailCaptured: false,
-      showEmailForm: true,
-      emailCaptureAck: false,
       imgLoaded: false,
       alsoInRoomResults: [],
-      email: localStorage.getItem(constants.SNAP_USER_EMAIL) || "",
       snapAttempts:
         parseInt(localStorage.getItem(constants.SNAP_ATTEMPTS)) || 1,
       errors: { email: false },
@@ -153,9 +145,6 @@ export class Artwork extends Component<
   }
 
   async componentWillMount() {
-    const emailCaptured =
-      localStorage.getItem(constants.SNAP_USER_EMAIL) !== null;
-
     const durationCurArr = [];
     const durationNextArr = [];
     const storyPositionArr = [];
@@ -178,9 +167,6 @@ export class Artwork extends Component<
       storyId: storyId,
       storyTitle: storyTitle,
       showStory: this.props.result.data.showStory,
-      emailCaptured: emailCaptured,
-      showEmailForm: !emailCaptured,
-      emailCaptureAck: emailCaptured,
       storyDurationsCurrent: durationCurArr,
       storyOffsets: offsetArr,
       loaded: true,
@@ -271,23 +257,6 @@ export class Artwork extends Component<
       (this.state.snapAttempts + 1).toString()
     );
     this.props.history.push({ pathname: `/artwork/${aitrId}` });
-  };
-
-  /** Updates state that email was captured and submits it to the server session */
-  onSubmitEmail = (email) => {
-    this.setState({
-      email: email,
-      emailCaptured: true,
-      emailCaptureAck: true,
-    });
-
-    // Store the email
-    this.sr.submitBookmarksEmail(email);
-
-    // Close the email card after 4 secs
-    this.emailSubmitTimeoutCallback = setTimeout(() => {
-      this.setState({ emailCaptureAck: true });
-    }, 4000);
   };
 
   /** Sets up the ScrollMagic scene for the artwork result section */
@@ -388,10 +357,10 @@ export class Artwork extends Component<
       this.controller = new ScrollMagic.Controller(scrollContainer);
       this.artworkTimeoutCallback = setTimeout(() => {
         this.setupArtworkScene();
-        if (!this.state.showStory && !this.state.emailCaptured) {
+        if (!this.state.showStory && !this.props.emailCaptured) {
           this.setupEmailSceneOnEnter();
         }
-        if (!this.state.emailCaptured) {
+        if (!this.props.emailCaptured) {
           this.setupEmailScene();
         }
       }, 0);
@@ -436,7 +405,8 @@ export class Artwork extends Component<
 
   /** Renders each of the story cards */
   renderStory = () => {
-    const { stories, storyTitle, showEmailForm } = this.state;
+    const { stories, storyTitle } = this.state;
+    const { showEmailForm } = this.props;
 
     // Iterate through the available stories
     return stories.map((story, index) => {
@@ -603,7 +573,8 @@ export class Artwork extends Component<
 
   /** For Android, scroll within the fixed container .sm-container because of card peek issue */
   renderStoryContainer = () => {
-    const { showTitleBar, showStory, showEmailForm } = this.state;
+    const { showTitleBar, showStory } = this.state;
+    const { showEmailForm } = this.props;
     const showEmailPin = !showStory && showEmailForm ? true : false;
 
     // Props for the controller, add container prop for Android
@@ -633,8 +604,8 @@ export class Artwork extends Component<
 
   /** Responsible for rendering the entirety of the page */
   renderResult = () => {
-    const { showStory, emailCaptureAck, showEmailForm, emailCardClickable } =
-      this.state;
+    const { showStory, emailCardClickable } = this.state;
+    const { emailCaptureAck, showEmailForm } = this.props;
     const hasChildCards = showStory || !emailCaptureAck;
 
     return (
@@ -667,7 +638,7 @@ export class Artwork extends Component<
           <EmailForm
             withStory={showStory}
             isEmailScreen={false}
-            onSubmitEmail={this.onSubmitEmail}
+            onSubmitEmail={this.props.onSubmitEmail}
             getTranslation={this.props.getTranslation}
             getSize={this.onEmailHeightReady}
             pointerEvents={emailCardClickable ? "auto" : "none"}
