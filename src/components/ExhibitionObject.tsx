@@ -2,14 +2,12 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import classnames from "classnames";
 import { isAndroid } from "react-device-detect";
 
-import { SearchRequestService } from "../services/SearchRequestService";
-import * as constants from "../constants";
+import { LANGUAGE_EN } from "../constants";
 import withTranslation, {
   LanguageOptionType,
   WithTranslationState,
 } from "./withTranslation";
 import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
-import { useLocalStorage } from "../hooks/useLocalStorage";
 import { EmailForm } from "./EmailForm";
 import ProgressiveImage from "react-progressive-image";
 import { LanguageDropdown } from "./LanguageDropdown";
@@ -21,32 +19,24 @@ import { ScanButton } from "./ScanButton";
 type ExhibitionObjectProps = {
   artwork: ArtworkObject;
   result: ArtWorkRecordsResult;
-  imageId: string;
   onSelectLanguage: (selectedLanguage: LanguageOptionType) => void;
   selectedLanguage: LanguageOptionType;
   emailCaptured: boolean;
   showEmailForm: boolean;
-  emailCaptureAck: boolean;
   onSubmitEmail: (email: string, callback?: (args?: any) => void) => void;
 } & WithTranslationState;
 
 export const ExhibitionObjectComponent: React.FC<ExhibitionObjectProps> = ({
   artwork,
   result,
-  imageId,
   onSelectLanguage,
   selectedLanguage,
   emailCaptured,
   showEmailForm,
-  emailCaptureAck,
   onSubmitEmail,
   langOptions,
-  getSelectedLanguage,
   getTranslation,
-  updateSelectedLanguage,
 }) => {
-  // Initialize the search request services
-  const sr = new SearchRequestService();
   // Component state
   const [imgLoaded, setImgLoaded] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
@@ -214,7 +204,7 @@ export const ExhibitionObjectComponent: React.FC<ExhibitionObjectProps> = ({
                       </div>
 
                       {artwork.content &&
-                        selectedLanguage.code !== constants.LANGUAGE_EN && (
+                        selectedLanguage.code !== LANGUAGE_EN && (
                           <div className="google-translate-disclaimer">
                             <span>Translated with </span>
                             <img src={google_logo} alt="google_logo" />

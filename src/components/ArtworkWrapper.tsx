@@ -140,12 +140,10 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
           <ExhibitionObject
             artwork={artwork}
             result={result}
-            imageId={imageId}
             onSelectLanguage={onSelectLanguage}
             selectedLanguage={selectedLanguage}
             emailCaptured={emailCaptured}
             showEmailForm={showEmailForm}
-            emailCaptureAck={emailCaptureAck}
             onSubmitEmail={onSubmitEmail}
           />
         ))}
