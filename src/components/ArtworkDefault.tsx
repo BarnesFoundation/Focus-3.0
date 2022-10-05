@@ -16,7 +16,7 @@ import { ContentBlock } from "./ContentBlock";
 import google_logo from "../images/google_translate.svg";
 import { ScanButton } from "./ScanButton";
 
-type ExhibitionObjectProps = {
+type ArtworkDefaultProps = {
   artwork: ArtworkObject;
   result: ArtWorkRecordsResult;
   onSelectLanguage: (selectedLanguage: LanguageOptionType) => void;
@@ -26,7 +26,7 @@ type ExhibitionObjectProps = {
   onSubmitEmail: (email: string, callback?: (args?: any) => void) => void;
 } & WithTranslationState;
 
-export const ExhibitionObjectComponent: React.FC<ExhibitionObjectProps> = ({
+export const ArtworkDefaultComponent: React.FC<ArtworkDefaultProps> = ({
   artwork,
   result,
   onSelectLanguage,
@@ -331,6 +331,6 @@ export const ExhibitionObjectComponent: React.FC<ExhibitionObjectProps> = ({
   );
 };
 
-export const ExhibitionObject = withTranslation<ExhibitionObjectProps>(
-  ExhibitionObjectComponent
+export const ArtworkDefault = withTranslation<ArtworkDefaultProps>(
+  ArtworkDefaultComponent
 );

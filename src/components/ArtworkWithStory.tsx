@@ -43,7 +43,7 @@ const SectionWipesStyled = styled.div`
   }
 `;
 
-type ArtworkComponentProps = {
+type ArtworkWithStoryProps = {
   artwork: ArtworkObject;
   result: ArtWorkRecordsResult;
   imageId: string;
@@ -55,7 +55,7 @@ type ArtworkComponentProps = {
   onSubmitEmail: (email: string, callback?: (args?: any) => void) => void;
 } & WithTranslationState;
 
-type ArtworkComponentState = {
+type ArtworkWithStoryState = {
   imgLoaded: boolean;
   showTitleBar: boolean;
   emailCardClickable: boolean;
@@ -69,9 +69,9 @@ type ArtworkComponentState = {
   loaded: boolean;
 };
 
-export class Artwork extends Component<
-  ArtworkComponentProps,
-  ArtworkComponentState
+export class ArtworkWithStory extends Component<
+  ArtworkWithStoryProps,
+  ArtworkWithStoryState
 > {
   sr: SearchRequestService;
   artworkScene;
@@ -635,8 +635,8 @@ export class Artwork extends Component<
   }
 }
 
-export default compose<Artwork>(
+export default compose<ArtworkWithStory>(
   withOrientation,
   withTranslation,
   withRouter
-)(Artwork);
+)(ArtworkWithStory);

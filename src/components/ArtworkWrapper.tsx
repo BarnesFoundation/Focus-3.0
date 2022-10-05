@@ -11,8 +11,8 @@ import withTranslation, {
 import { constructResultAndInRoomSlider } from "../helpers/artWorkHelper";
 import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import Artwork from "./Artwork";
-import { ExhibitionObject } from "./ExhibitionObject";
+import ArtworkWithStory from "./ArtworkWithStory";
+import { ArtworkDefault } from "./ArtworkDefault";
 
 export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
   getSelectedLanguage,
@@ -120,7 +120,7 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
       {result &&
         artwork &&
         (result.data.showStory ? (
-          <Artwork
+          <ArtworkWithStory
             artwork={artwork}
             result={result}
             imageId={imageId}
@@ -132,7 +132,7 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
             onSubmitEmail={onSubmitEmail}
           />
         ) : (
-          <ExhibitionObject
+          <ArtworkDefault
             artwork={artwork}
             result={result}
             onSelectLanguage={onSelectLanguage}
