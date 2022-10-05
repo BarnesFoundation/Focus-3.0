@@ -3,6 +3,12 @@ import { withRouter } from "react-router";
 import { History, Match } from "react-router-dom";
 import { compose } from "redux";
 import $ from "jquery";
+import ScrollMagic from "scrollmagic";
+import { Controller, Scene } from "react-scrollmagic";
+// @ts-ignore
+import { isAndroid, isIOS } from "react-device-detect";
+// @ts-ignore
+import styled, { css } from "styled-components";
 
 import * as constants from "../constants";
 import withOrientation from "./withOrientation";
@@ -10,23 +16,14 @@ import withTranslation, {
   LanguageOptionType,
   WithTranslationState,
 } from "./withTranslation";
-
 import { EmailForm } from "./EmailForm";
-
-import { SearchRequestService } from "../services/SearchRequestService";
-import { Controller, Scene } from "react-scrollmagic";
-// @ts-ignore
-import styled, { css } from "styled-components";
 import StoryItem from "./StoryItem";
-// @ts-ignore
-import ScrollMagic from "scrollmagic";
-import { isAndroid, isIOS } from "react-device-detect";
-
 import { ScanButton } from "./ScanButton";
 import { ResultCard } from "./ResultCard";
 import { StoryTitle } from "./StoryTitle";
 import { constructStory } from "../helpers/artWorkHelper";
 import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
+import { SearchRequestService } from "../services/SearchRequestService";
 
 /**
  * withRouter HOC provides props with location, history and match objects
