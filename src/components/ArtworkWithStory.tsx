@@ -1,8 +1,13 @@
 import React, { Component, CSSProperties } from "react";
 import { withRouter } from "react-router";
-import { History, Match } from "react-router-dom";
 import { compose } from "redux";
 import $ from "jquery";
+import ScrollMagic from "scrollmagic";
+import { Controller, Scene } from "react-scrollmagic";
+// @ts-ignore
+import { isAndroid, isIOS } from "react-device-detect";
+// @ts-ignore
+import styled, { css } from "styled-components";
 
 import * as constants from "../constants";
 import withOrientation from "./withOrientation";
@@ -10,27 +15,18 @@ import withTranslation, {
   LanguageOptionType,
   WithTranslationState,
 } from "./withTranslation";
-
 import { EmailForm } from "./EmailForm";
-
-import { SearchRequestService } from "../services/SearchRequestService";
-import { Controller, Scene } from "react-scrollmagic";
-// @ts-ignore
-import styled, { css } from "styled-components";
 import StoryItem from "./StoryItem";
-import { isTablet } from "react-device-detect";
-// @ts-ignore
-import ScrollMagic from "scrollmagic";
-import { isAndroid, isIOS } from "react-device-detect";
-
 import { ScanButton } from "./ScanButton";
 import { ResultCard } from "./ResultCard";
 import { StoryTitle } from "./StoryTitle";
+import { constructStory } from "../helpers/artWorkHelper";
 import {
-  constructResultAndInRoomSlider,
-  constructStory,
-} from "../helpers/artWorkHelper";
-import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
+  ArtworkObject,
+  ArtWorkRecordsResult,
+  StoryItemType,
+} from "../types/payloadTypes";
+import { SearchRequestService } from "../services/SearchRequestService";
 
 /**
  * withRouter HOC provides props with location, history and match objects
@@ -51,59 +47,48 @@ const SectionWipesStyled = styled.div`
   }
 `;
 
-type ArtworkComponentProps = {
-  match: Match;
-  history: History;
-} & WithTranslationState;
-
-type ArtworkComponentState = {
-  showEmailScreen: boolean;
+type ArtworkWithStoryProps = {
+  artwork: ArtworkObject;
+  result: ArtWorkRecordsResult;
+  imageId: string;
+  onSelectLanguage: (selectedLanguage: LanguageOptionType) => void;
+  selectedLanguage: LanguageOptionType;
   emailCaptured: boolean;
   showEmailForm: boolean;
   emailCaptureAck: boolean;
+  onSubmitEmail: (email: string, callback?: (args?: any) => void) => void;
+} & WithTranslationState;
+
+type ArtworkWithStoryState = {
   imgLoaded: boolean;
-  alsoInRoomResults: any[];
-  email: string;
-  snapAttempts: number;
-  errors: { email: boolean };
   showTitleBar: boolean;
-  storyDuration: number;
-  infoHeightUpdated: boolean;
-  infoCardDuration: number;
   emailCardClickable: boolean;
   storyTopsClickable: {};
-  result: ArtWorkRecordsResult;
-  selectedLanguage: LanguageOptionType;
-  stories: any[];
-  storyId: string;
-  storyTitle: string;
-  showStory: boolean;
-  artwork: ArtworkObject["artwork"];
-  roomRecords: ArtworkObject["roomRecords"];
-  storyDurationsCurrent: any[];
-  storyOffsets: any[];
+  stories?: StoryItemType[];
+  storyId?: string;
+  storyTitle?: string;
+  showStory?: boolean;
+  storyDurationsCurrent?: number[];
+  storyOffsets?: number[];
+  loaded: boolean;
 };
 
-export class Artwork extends Component<
-  ArtworkComponentProps,
-  ArtworkComponentState
+export class ArtworkWithStory extends Component<
+  ArtworkWithStoryProps,
+  ArtworkWithStoryState
 > {
   sr: SearchRequestService;
-  artworkScene;
-  emailScene;
-  emailSceneTrigger;
-  artworkRef;
-  infoCardRef;
-  emailCardRef;
-  sceneRefs: {};
-  contentOffset: number;
+  artworkScene: ScrollMagic.Scene;
+  emailScene: ScrollMagic.Scene;
+  emailSceneTrigger: ScrollMagic.Scene;
+  artworkRef: HTMLDivElement;
+  infoCardRef: HTMLDivElement;
+  sceneRefs: Scene[];
   artworkScrollOffset: number;
   langOptions: LanguageOptionType[];
   artworkTimeoutCallback;
-  emailSubmitTimeoutCallback;
-  controller;
+  controller: ScrollMagic.Controller;
   emailFormHeight: number;
-  shortDescContainer;
 
   constructor(props) {
     super(props);
@@ -119,129 +104,57 @@ export class Artwork extends Component<
     // Refs that end up being assigned to
     this.artworkRef = null;
     this.infoCardRef = null;
-    this.emailCardRef = null;
-    this.sceneRefs = {};
+    this.sceneRefs = [];
 
-    this.contentOffset = 67;
     this.artworkScrollOffset = 0;
+    this.artworkTimeoutCallback = null;
 
     this.state = {
-      ...props.location.state,
-      showEmailScreen: false,
-      emailCaptured: false,
-      showEmailForm: true,
-      emailCaptureAck: false,
       imgLoaded: false,
-      alsoInRoomResults: [],
-      email: localStorage.getItem(constants.SNAP_USER_EMAIL) || "",
-      snapAttempts:
-        parseInt(localStorage.getItem(constants.SNAP_ATTEMPTS)) || 1,
-      errors: { email: false },
       showTitleBar: false,
-      storyDuration: 250,
-      infoHeightUpdated: false,
-      infoCardDuration: 700,
       emailCardClickable: true,
       storyTopsClickable: {},
+      loaded: false,
     };
-
-    this.artworkTimeoutCallback = null;
-    this.emailSubmitTimeoutCallback = null;
   }
 
   async componentWillMount() {
-    let imageId = this.state.result
-      ? this.state.result.data.records[0].id
-      : this.props.match.params.imageId;
-    const selectedLang = await this.props.getSelectedLanguage();
-    const emailCaptured =
-      localStorage.getItem(constants.SNAP_USER_EMAIL) !== null;
-
-    const durationCurArr = [];
-    const durationNextArr = [];
-    const storyPositionArr = [];
-    const offsetArr = [];
+    const durationCurArr: number[] = [];
+    const durationNextArr: number[] = [];
+    const storyPositionArr: boolean[] = [];
+    const offsetArr: number[] = [];
     const durDefault = 300;
 
-    if (!this.state.result) {
-      let artworkInfo, storyResponse;
+    const { stories, storyId, storyTitle } = await this.setupStory(
+      this.props.imageId
+    );
 
-      if (this.props.match.url.includes("artwork")) {
-        [artworkInfo, storyResponse] = await Promise.all([
-          this.sr.getArtworkInformation(imageId),
-          this.setupStory(imageId),
-        ]);
-      } else if (this.props.match.url.includes("exhibition")) {
-        [artworkInfo, storyResponse] = await Promise.all([
-          this.sr.getSpecialExhibitionObject(imageId),
-          this.setupStory(imageId),
-        ]);
-      }
+    stories.forEach((story) => {
+      durationCurArr.push(durDefault);
+      offsetArr.push(durDefault);
+      storyPositionArr.push(false);
+    });
+    durationNextArr.push(durDefault);
 
-      const { stories, storyId, storyTitle } = storyResponse;
-      const { artwork, roomRecords } = constructResultAndInRoomSlider(
-        artworkInfo,
-        isTablet
-      );
-
-      stories.forEach((story) => {
-        durationCurArr.push(durDefault);
-        offsetArr.push(durDefault);
-        storyPositionArr.push(false);
-      });
-      durationNextArr.push(durDefault);
-
-      this.setState({
-        selectedLanguage: selectedLang[0],
-        stories: stories,
-        storyId: storyId,
-        storyTitle: storyTitle,
-        result: artworkInfo,
-        showStory: artworkInfo.data.showStory,
-        artwork: artwork,
-        roomRecords: roomRecords,
-        emailCaptured: emailCaptured,
-        showEmailForm: !emailCaptured,
-        emailCaptureAck: emailCaptured,
-        storyDurationsCurrent: durationCurArr,
-        storyOffsets: offsetArr,
-      });
-    } else {
-      const { artwork, roomRecords } = constructResultAndInRoomSlider(
-        this.state.result,
-        isTablet
-      );
-      const { stories, storyId, storyTitle } = await this.setupStory(imageId);
-
-      stories.forEach((story) => {
-        durationCurArr.push(durDefault);
-        offsetArr.push(durDefault);
-        storyPositionArr.push(false);
-      });
-      durationNextArr.push(durDefault);
-
-      this.setState({
-        selectedLanguage: selectedLang[0],
-        stories: stories,
-        storyId: storyId,
-        storyTitle: storyTitle,
-        showStory: this.state.result.data.show_story,
-        artwork: artwork,
-        roomRecords: roomRecords,
-        emailCaptured: emailCaptured,
-        showEmailForm: !emailCaptured,
-        emailCaptureAck: emailCaptured,
-        storyDurationsCurrent: durationCurArr,
-        storyOffsets: offsetArr,
-      });
-    }
+    this.setState({
+      stories: stories,
+      storyId: storyId,
+      storyTitle: storyTitle,
+      showStory: this.props.result.data.showStory,
+      storyDurationsCurrent: durationCurArr,
+      storyOffsets: offsetArr,
+      loaded: true,
+    });
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(
+    prevProps: ArtworkWithStoryProps,
+    _prevState: ArtworkWithStoryState
+  ) {
     if (!this.artworkRef) {
       return;
     }
-    if (prevState.selectedLanguage.code !== this.state.selectedLanguage.code) {
+    if (prevProps.selectedLanguage.code !== this.props.selectedLanguage.code) {
       const newOffset = Math.max(
         Math.ceil(
           this.artworkRef.getBoundingClientRect().bottom -
@@ -265,8 +178,6 @@ export class Artwork extends Component<
 
   componentWillUnmount() {
     if (this.artworkTimeoutCallback) clearTimeout(this.artworkTimeoutCallback);
-    if (this.emailSubmitTimeoutCallback)
-      clearTimeout(this.emailSubmitTimeoutCallback);
     this.artworkScene && this.artworkScene.remove();
     this.emailScene && this.emailScene.remove();
     this.emailSceneTrigger && this.emailSceneTrigger.remove();
@@ -297,66 +208,21 @@ export class Artwork extends Component<
   };
 
   onSelectLanguage = async (selectedLanguage: LanguageOptionType) => {
-    // Scroll to top when language changes. This should help re-calculate correct offsets on language change
-    window.scroll({ top: 0, behavior: "smooth" });
-
-    // Update local storage with the new set language and then update the server session
-    await this.props.updateSelectedLanguage(selectedLanguage);
-
-    // Get the new language translations
-    const imageId = this.getFocusedArtworkImageId();
-    const artworkInfo = await this.sr.getArtworkInformation(imageId);
-
-    const { stories, storyId, storyTitle } = await this.setupStory(imageId);
-    const { artwork, roomRecords } = artworkInfo
-      ? constructResultAndInRoomSlider(artworkInfo, isTablet)
-      : undefined;
+    this.props.onSelectLanguage(selectedLanguage);
+    const { stories, storyId, storyTitle } = await this.setupStory(
+      this.props.imageId
+    );
 
     this.setState({
-      result: artworkInfo,
-      selectedLanguage,
       stories,
       storyId,
       storyTitle,
-      artwork,
-      roomRecords,
     });
   };
 
-  getFocusedArtworkImageId = () => {
-    return this.state.artwork
-      ? this.state.artwork.id
-      : this.props.match.params.imageId;
-  };
-
-  setupStory = async (imageId) => {
+  setupStory = async (imageId: string) => {
     const storyInformation = await this.sr.getStoryItems(imageId);
     return constructStory(storyInformation);
-  };
-
-  onSelectInRoomArt = (aitrId) => {
-    localStorage.setItem(
-      constants.SNAP_ATTEMPTS,
-      (this.state.snapAttempts + 1).toString()
-    );
-    this.props.history.push({ pathname: `/artwork/${aitrId}` });
-  };
-
-  /** Updates state that email was captured and submits it to the server session */
-  onSubmitEmail = (email) => {
-    this.setState({
-      email: email,
-      emailCaptured: true,
-      emailCaptureAck: true,
-    });
-
-    // Store the email
-    this.sr.submitBookmarksEmail(email);
-
-    // Close the email card after 4 secs
-    this.emailSubmitTimeoutCallback = setTimeout(() => {
-      this.setState({ emailCaptureAck: true });
-    }, 4000);
   };
 
   /** Sets up the ScrollMagic scene for the artwork result section */
@@ -382,7 +248,7 @@ export class Artwork extends Component<
   };
 
   /** Handles the tap-to-scroll functionality for cards */
-  handleClickScroll = (storyIndex, isStoryCard) => {
+  handleClickScroll = (storyIndex: number, isStoryCard: boolean) => {
     let landingPoint;
 
     // Determine the offset needed for the height of each story card and the amount it should peek up
@@ -392,7 +258,12 @@ export class Artwork extends Component<
     // If the click originated from a story card
     if (isStoryCard) {
       // Amount needed for getting past the first card
-      let initial = Math.abs(this.sceneRefs[0].props.duration) + peekOffset;
+      const duration: number =
+        typeof this.sceneRefs[0].props.duration === "string"
+          ? parseInt(this.sceneRefs[0].props.duration)
+          : this.sceneRefs[0].props.duration;
+
+      let initial = Math.abs(duration) + peekOffset;
 
       if (storyIndex == 0) {
         landingPoint = initial;
@@ -450,17 +321,17 @@ export class Artwork extends Component<
       .addTo(this.controller);
   };
 
-  setArtworkRef = (elem) => {
+  setArtworkRef = (elem: HTMLDivElement) => {
     if (elem) {
       this.artworkRef = elem;
       const scrollContainer = isAndroid ? { container: ".sm-container" } : {};
       this.controller = new ScrollMagic.Controller(scrollContainer);
       this.artworkTimeoutCallback = setTimeout(() => {
         this.setupArtworkScene();
-        if (!this.state.showStory && !this.state.emailCaptured) {
+        if (!this.state.showStory && !this.props.emailCaptured) {
           this.setupEmailSceneOnEnter();
         }
-        if (!this.state.emailCaptured) {
+        if (!this.props.emailCaptured) {
           this.setupEmailScene();
         }
       }, 0);
@@ -468,12 +339,11 @@ export class Artwork extends Component<
   };
 
   onStoryReadComplete = () => {
-    const imageId = this.getFocusedArtworkImageId();
     const { storyId } = this.state;
-    this.sr.markStoryAsRead(imageId, storyId);
+    this.sr.markStoryAsRead(this.props.imageId, storyId);
   };
 
-  onStoryHeightReady = (height, index) => {
+  onStoryHeightReady = (height: number, index: number) => {
     if (index > -1) {
       //console.log('Story durations based on height :: ', index, height);
       var durationCurArr = this.state.storyDurationsCurrent;
@@ -482,11 +352,11 @@ export class Artwork extends Component<
     }
   };
 
-  onEmailHeightReady = (height) => {
+  onEmailHeightReady = (height: number) => {
     this.emailFormHeight = (height * 2) / 2.2;
   };
 
-  storySceneCallback = (showTitle) => {
+  storySceneCallback = (showTitle: boolean) => {
     if (showTitle) {
       this.setState({ showTitleBar: true });
     } else {
@@ -494,19 +364,20 @@ export class Artwork extends Component<
     }
   };
 
-  refCallbackInfo = (element) => {
+  refCallbackInfo = (element: HTMLDivElement) => {
     if (element) {
       this.infoCardRef = element;
     }
   };
 
-  onArtworkImgLoad = ({ target: img }) => {
+  onArtworkImgLoad = ({ target: _img }) => {
     this.setState({ imgLoaded: true });
   };
 
   /** Renders each of the story cards */
   renderStory = () => {
-    const { stories, storyTitle, showEmailForm } = this.state;
+    const { stories, storyTitle } = this.state;
+    const { showEmailForm } = this.props;
 
     // Iterate through the available stories
     return stories.map((story, index) => {
@@ -515,7 +386,7 @@ export class Artwork extends Component<
       const storySceneOffset =
         index > 0
           ? this.state.storyOffsets[index] - 342
-          : this.state.infoCardDuration + 33;
+          : constants.INFO_CARD_DURATION + 33;
 
       // Amount that the story should peek
       const peekHeight = isAndroid && index === 0 ? 123 : 67;
@@ -579,7 +450,7 @@ export class Artwork extends Component<
                   isLastStoryItem={index === stories.length - 1 ? true : false}
                   story={story}
                   storyTitle={storyTitle}
-                  selectedLanguage={this.state.selectedLanguage}
+                  selectedLanguage={this.props.selectedLanguage}
                   onStoryReadComplete={this.onStoryReadComplete}
                   getSize={this.onStoryHeightReady}
                   statusCallback={this.storySceneCallback}
@@ -594,7 +465,7 @@ export class Artwork extends Component<
   };
 
   /** Changes whether or not the top of a story card is clickable */
-  onVisibilityChange = (isVisible, storyIndex) => {
+  onVisibilityChange = (isVisible: boolean, storyIndex: number) => {
     this.setState((pState) => {
       const storyTopsClickable = { ...pState.storyTopsClickable };
       storyTopsClickable[storyIndex] = isVisible;
@@ -614,7 +485,7 @@ export class Artwork extends Component<
       const storyEnterPinDuration =
         index > 0
           ? this.state.storyDurationsCurrent[index - 1] / 4 - 50
-          : this.state.infoCardDuration + this.contentOffset + 33;
+          : constants.INFO_CARD_DURATION + constants.CONTENT_OFFSET + 33;
 
       return (
         <Scene
@@ -673,7 +544,8 @@ export class Artwork extends Component<
 
   /** For Android, scroll within the fixed container .sm-container because of card peek issue */
   renderStoryContainer = () => {
-    const { showTitleBar, showStory, showEmailForm } = this.state;
+    const { showTitleBar, showStory } = this.state;
+    const { showEmailForm } = this.props;
     const showEmailPin = !showStory && showEmailForm ? true : false;
 
     // Props for the controller, add container prop for Android
@@ -688,7 +560,7 @@ export class Artwork extends Component<
         {showTitleBar ? (
           <StoryTitle
             langOptions={this.props.langOptions}
-            selectedLanguage={this.state.selectedLanguage}
+            selectedLanguage={this.props.selectedLanguage}
             onSelectLanguage={this.onSelectLanguage}
           />
         ) : (
@@ -703,22 +575,21 @@ export class Artwork extends Component<
 
   /** Responsible for rendering the entirety of the page */
   renderResult = () => {
-    const { showStory, emailCaptureAck, showEmailForm, emailCardClickable } =
-      this.state;
+    const { showStory, emailCardClickable } = this.state;
+    const { emailCaptureAck, showEmailForm } = this.props;
     const hasChildCards = showStory || !emailCaptureAck;
 
     return (
       <SectionWipesStyled hasChildCards={hasChildCards}>
         <ResultCard
           // @ts-ignore
-          artwork={this.state.artwork}
+          artwork={this.props.artwork}
           refCallbackInfo={this.refCallbackInfo}
           setArtworkRef={this.setArtworkRef}
           langOptions={this.props.langOptions}
-          selectedLanguage={this.state.selectedLanguage}
+          selectedLanguage={this.props.selectedLanguage}
           onSelectLanguage={this.onSelectLanguage}
-          shortDescContainer={this.shortDescContainer}
-          specialExhibition={this.state.result.data.specialExhibition}
+          specialExhibition={this.props.result.data.specialExhibition}
           getTranslation={this.props.getTranslation}
         />
 
@@ -737,7 +608,7 @@ export class Artwork extends Component<
           <EmailForm
             withStory={showStory}
             isEmailScreen={false}
-            onSubmitEmail={this.onSubmitEmail}
+            onSubmitEmail={this.props.onSubmitEmail}
             getTranslation={this.props.getTranslation}
             getSize={this.onEmailHeightReady}
             pointerEvents={emailCardClickable ? "auto" : "none"}
@@ -754,8 +625,8 @@ export class Artwork extends Component<
   };
 
   render() {
-    const { artwork, imgLoaded } = this.state;
-    if (!artwork) {
+    const { imgLoaded, loaded } = this.state;
+    if (!loaded) {
       return null;
     }
     return (
@@ -764,7 +635,7 @@ export class Artwork extends Component<
           <div style={{ visibility: `hidden` }}>
             <img
               className="card-img-result"
-              src={this.state.artwork.url}
+              src={this.props.artwork.url}
               alt="match_image"
               onLoad={this.onArtworkImgLoad}
             />
@@ -776,8 +647,8 @@ export class Artwork extends Component<
   }
 }
 
-export default compose<Artwork>(
+export default compose<ArtworkWithStory>(
   withOrientation,
   withTranslation,
   withRouter
-)(Artwork);
+)(ArtworkWithStory);

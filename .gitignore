@@ -24,6 +24,7 @@ yarn-error.log*
 
 dist
 .env
+.env.*
 uploads
 __save
 emailPreviews/*

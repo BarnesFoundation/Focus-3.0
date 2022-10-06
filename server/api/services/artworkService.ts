@@ -210,6 +210,101 @@ export default class ArtworkService {
     const object = await GraphCMSService.findObjectById(objectId);
     return object;
   }
+
+  public static async getCmsContentTranslations(
+    content,
+    targetLanguage: string | null
+  ) {
+    // No need to translate content if the language is English
+    // since content defaults to English. We can't translate empty
+    // arrays, so short-circuit out of here if there's no content
+    if (targetLanguage === "en" || !targetLanguage || !content.length) {
+      return content;
+    }
+
+    try {
+      const translatedContent = [];
+
+      for (const cb of content) {
+        const contentBlock = [];
+
+        for (const block of cb["contentBlock"]) {
+          const translatedBlock = { ...block };
+
+          switch (block.type) {
+            case "Image":
+              translatedBlock["caption"]["html"] =
+                await TranslateService.awsTranslate(
+                  block["caption"]["html"],
+                  targetLanguage
+                );
+              translatedBlock["altText"] = await TranslateService.awsTranslate(
+                block["altText"],
+                targetLanguage
+              );
+              break;
+
+            case "ImageComparison":
+              translatedBlock["leftImage"]["caption"]["html"] =
+                await TranslateService.awsTranslate(
+                  block["leftImage"]["caption"]["html"],
+                  targetLanguage
+                );
+              translatedBlock["rightImage"]["altText"] =
+                await TranslateService.awsTranslate(
+                  block["rightImage"]["altText"],
+                  targetLanguage
+                );
+              translatedBlock["rightImage"]["caption"]["html"] =
+                await TranslateService.awsTranslate(
+                  block["rightImage"]["caption"]["html"],
+                  targetLanguage
+                );
+              translatedBlock["rightImage"]["altText"] =
+                await TranslateService.awsTranslate(
+                  block["rightImage"]["altText"],
+                  targetLanguage
+                );
+              break;
+
+            case "TextBlock":
+              translatedBlock["textBlock"]["html"] =
+                await TranslateService.awsTranslate(
+                  block["textBlock"]["html"],
+                  targetLanguage
+                );
+              break;
+
+            case "Title":
+              translatedBlock["title"] = await TranslateService.awsTranslate(
+                block["title"],
+                targetLanguage
+              );
+              translatedBlock["subtitle"] = await TranslateService.awsTranslate(
+                block["subtitle"],
+                targetLanguage
+              );
+              break;
+
+            default:
+              break;
+          }
+
+          contentBlock.push(translatedBlock);
+        }
+
+        translatedContent.push({ contentBlock });
+      }
+
+      return translatedContent;
+    } catch (error) {
+      console.error(
+        `Failed to translate content block to language "${targetLanguage}`,
+        error
+      );
+      return content;
+    }
+  }
 }
 
 export type ParsedRelatedStory =

@@ -77,7 +77,7 @@ export type ArtWorkRecordsResult = {
     records: ArtWorkRecord[];
     roomRecords;
     message: string;
-    show_story: boolean;
+    showStory: boolean;
     specialExhibition: boolean;
   };
   success: boolean;
@@ -85,30 +85,27 @@ export type ArtWorkRecordsResult = {
 };
 
 export type ArtworkObject = {
-  artwork: {
-    id?: number;
-    title?: string;
-    shortDescription?: string;
-    artist?: string;
-    nationality?: string;
-    birthDate?: string;
-    deathDate?: string;
-    culture?: string;
-    classification?: string;
-    locations?: string;
-    medium?: string;
-    invno?: string;
-    displayDate?: string;
-    dimensions?: string;
-    visualDescription?: string;
-    url?: string;
-    url_low_quality?: string;
-    bg_url?: string;
-    curatorialApproval?: boolean;
-    unIdentified?: boolean;
-    content?: Content[];
-  };
-  roomRecords: any[];
+  id?: number;
+  title?: string;
+  shortDescription?: string;
+  artist?: string;
+  nationality?: string;
+  birthDate?: string;
+  deathDate?: string;
+  culture?: string;
+  classification?: string;
+  locations?: string;
+  medium?: string;
+  invno?: string;
+  displayDate?: string;
+  dimensions?: string;
+  visualDescription?: string;
+  url?: string;
+  url_low_quality?: string;
+  bg_url?: string;
+  curatorialApproval?: boolean;
+  unIdentified?: boolean;
+  content?: Content[];
 };
 
 export type StoryItemType = {
@@ -134,4 +131,10 @@ export type StoryItemsResponse = {
     translated_title: string;
     link: string;
   };
+};
+
+export type StoryResponse = {
+  stories: StoryItemType[];
+  storyId: string;
+  storyTitle: string;
 };

@@ -10,13 +10,12 @@ import { Share } from "./Share";
 import { ContentBlock } from "./ContentBlock";
 
 export type ResultCardProps = {
-  artwork: ArtworkObject["artwork"];
-  refCallbackInfo?: (element: any) => void;
-  setArtworkRef?: (element: any) => void;
+  artwork: ArtworkObject;
+  refCallbackInfo: (element: HTMLDivElement) => void;
+  setArtworkRef: (element: HTMLDivElement) => void;
   langOptions: WithTranslationState["langOptions"];
   selectedLanguage: LanguageOptionType;
   onSelectLanguage: (item: LanguageOptionType) => void;
-  shortDescContainer?: any;
   specialExhibition: boolean;
   getTranslation: WithTranslationState["getTranslation"];
 };
@@ -28,7 +27,6 @@ export const ResultCard: React.FC<ResultCardProps> = ({
   langOptions,
   selectedLanguage,
   onSelectLanguage,
-  shortDescContainer,
   specialExhibition,
   getTranslation,
 }) => {
@@ -112,7 +110,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
                 )}
               </div>
 
-              <div className="short-desc-container" ref={shortDescContainer}>
+              <div className="short-desc-container">
                 {artwork.shortDescription && !artwork.content && (
                   <div
                     className="card-text paragraph"

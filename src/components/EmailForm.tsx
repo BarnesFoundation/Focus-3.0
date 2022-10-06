@@ -19,11 +19,11 @@ const withStoryStyles = {
 type EmailFormProps = {
   withStory: any;
   onSubmitEmail: (email: any) => void;
-  getSize: (height: any) => any;
-  getTranslation: any;
-  isEmailScreen: any;
+  getSize: (height: number) => void;
+  getTranslation: (screen: string, textId: string) => string;
+  isEmailScreen: boolean;
   pointerEvents: "auto" | "none";
-  handleClickScroll: (storyIndex: any, isStoryCard: boolean) => void;
+  handleClickScroll: (storyIndex: number, isStoryCard: boolean) => void;
   alwaysFloatBtn?: boolean;
 };
 
