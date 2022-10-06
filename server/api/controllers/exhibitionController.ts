@@ -29,7 +29,7 @@ class ExhibitionController {
       preferredLanguage
     );
 
-    objectData[0]["content"] = await TranslateService.translateContent(
+    objectData[0]["content"] = await ArtworkService.getCmsContentTranslations(
       objectData[0]["content"],
       preferredLanguage
     );

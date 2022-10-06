@@ -31,10 +31,11 @@ class ArtworkController {
       );
 
       if (collectionObjects) {
-        artworkInformation["content"] = await TranslateService.translateContent(
-          collectionObjects["content"],
-          preferredLanguage
-        );
+        artworkInformation["content"] =
+          await ArtworkService.getCmsContentTranslations(
+            collectionObjects["content"],
+            preferredLanguage
+          );
       }
 
       // Add the Imgix URL for the artwork
