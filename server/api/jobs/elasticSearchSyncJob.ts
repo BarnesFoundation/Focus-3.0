@@ -13,7 +13,7 @@ class ElasticSearchSyncJob {
 
     const recordBatchSize = 500;
     const numberOfBatches = Math.ceil(totalRecords / recordBatchSize);
-    console.log(
+    console.debug(
       `Job will process ${recordBatchSize} in ${numberOfBatches} batches `
     );
 
@@ -35,7 +35,7 @@ class ElasticSearchSyncJob {
 
         // If there's no record for this id, we'll cache it
         if (!cachedRecord) {
-          console.info(
+          console.debug(
             `No record found for "image_id": ${record.id}. Creating new record`
           );
           await prisma.es_cached_records.create({
@@ -52,7 +52,7 @@ class ElasticSearchSyncJob {
         // Otherwise, we had a record for it, so let's just update the data
         // TODO - The `updateMany` needs to be changed to `update` when we make `image_id` a unique field
         else {
-          console.info(
+          console.debug(
             `Existing record found for "image_id": ${record.id}. Updating record data`
           );
           await prisma.es_cached_records.updateMany({
