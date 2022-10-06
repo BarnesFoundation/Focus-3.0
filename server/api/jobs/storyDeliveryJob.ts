@@ -63,7 +63,7 @@ class StoryDeliveryJob {
         }, {})
       );
 
-      console.log(
+      console.debug(
         `For session id ${bookmarkSet[0].session_id}, we will deliver the following story id's`,
         bookmarkStoryList.map((item) => item.unique_identifier)
       );
