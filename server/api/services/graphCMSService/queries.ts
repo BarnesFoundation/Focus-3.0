@@ -169,6 +169,7 @@ export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
 				culture
 				deathDate
 				dimensions
+				displayDate
 				medium
 				nationality
 				objectId
