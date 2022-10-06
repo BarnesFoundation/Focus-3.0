@@ -220,8 +220,12 @@ export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
 							}
 							... on Title {
 								type
-								subtitle
-								title
+								subtitleHtml {
+									html
+								}
+								titleHtml {
+									html
+								}
 							}
 							... on Video {
 								type
@@ -288,8 +292,12 @@ export function getCollectionContentByInvno(
 							}
 							... on Title {
 								type
-								title
-								subtitle
+								subtitleHtml {
+									html
+								}
+								titleHtml {
+									html
+								}
 							}
 							... on Video {
 								type
@@ -365,8 +373,12 @@ export const getContentAndStories = (
 							}
 							... on Title {
 								type
-								title
-								subtitle
+								subtitleHtml {
+									html
+								}
+								titleHtml {
+									html
+								}
 							}
 							... on Video {
 								type

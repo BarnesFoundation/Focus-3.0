@@ -5,7 +5,7 @@ import {
   ReactCompareSliderImage,
 } from "react-compare-slider";
 import ReactPlayer from "react-player/lazy";
-import { formatHtml, formatHtmlCaption } from "../helpers/artWorkHelper";
+import { formatHtml, formatHtmlCaption, formatHtmlTitle } from "../helpers/artWorkHelper";
 import {
   ContentBlock as ContentBlockType,
   ContentBlockTypes,
@@ -23,14 +23,15 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
         case ContentBlockTypes.TITLE:
           return (
             <div className="content-block__title-block" key={index}>
-              {block.title && (
+              {console.log(block)}
+              {block.titleHtml && (
                 <div className="content-block__title-block__title">
-                  {block.title}
+                  {formatHtmlTitle(block.titleHtml.html)}
                 </div>
               )}
-              {block.subtitle && (
+              {block.subtitleHtml && (
                 <div className="content-block__title-block__subtitle">
-                  {block.subtitle}
+                  {formatHtmlTitle(block.subtitleHtml.html)}
                 </div>
               )}
             </div>

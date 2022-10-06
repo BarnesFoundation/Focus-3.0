@@ -63,8 +63,12 @@ type TextBlock = {
 
 type Title = {
   type: ContentBlockTypes.TITLE;
-  title?: string;
-  subtitle?: string;
+  titleHtml?: {
+    html: string;
+  };
+  subtitleHtml?: {
+    html: string;
+  };
 };
 
 type Video = {

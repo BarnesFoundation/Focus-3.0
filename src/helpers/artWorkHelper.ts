@@ -148,3 +148,14 @@ export const formatHtmlCaption = (html) => {
     })
   );
 };
+
+export const formatHtmlTitle = (html) => {
+  return parse(
+    sanitizeHtml(html, {
+      allowedTags: ["p", "br", "em", "span", "strong", "u"],
+      allowedAttributes: {
+        a: ["href", "target"],
+      },
+    })
+  );
+};
