@@ -18,7 +18,6 @@ class ArtworkController {
 
     if (artworkInformation) {
       // Fetch the story and content
-      // const storyInformation = await GraphCMSService.hasStory(artworkId);
       const { collectionObjects, storyInformation } =
         await GraphCMSService.findContentAndStories(
           artworkId,
