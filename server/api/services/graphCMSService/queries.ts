@@ -165,10 +165,13 @@ export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
 			specialExhibitionObjects(where: {objectId: $objectId}) {
 				birthDate
 				classification
-				creditLine
+				creditLine {
+					html
+				}
 				culture
 				deathDate
 				dimensions
+				displayDate
 				medium
 				nationality
 				objectId
@@ -220,8 +223,12 @@ export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
 							}
 							... on Title {
 								type
-								subtitle
-								title
+								subtitleHtml {
+									html
+								}
+								titleHtml {
+									html
+								}
 							}
 							... on Video {
 								type
@@ -288,8 +295,12 @@ export function getCollectionContentByInvno(
 							}
 							... on Title {
 								type
-								title
-								subtitle
+								subtitleHtml {
+									html
+								}
+								titleHtml {
+									html
+								}
 							}
 							... on Video {
 								type
@@ -365,8 +376,12 @@ export const getContentAndStories = (
 							}
 							... on Title {
 								type
-								title
-								subtitle
+								subtitleHtml {
+									html
+								}
+								titleHtml {
+									html
+								}
 							}
 							... on Video {
 								type

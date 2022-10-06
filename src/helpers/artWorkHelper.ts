@@ -44,6 +44,7 @@ export const constructResultAndInRoomSlider = (
         dimensions,
         visualDescription,
         content,
+        creditLine,
       } = artObject;
 
       // Determine the flags
@@ -71,6 +72,7 @@ export const constructResultAndInRoomSlider = (
         dimensions,
         visualDescription,
         content,
+        creditLine,
 
         // Set the urls
         url: `${artObject.art_url}${artUrlParams}`,
@@ -142,6 +144,17 @@ export const formatHtmlCaption = (html) => {
   return parse(
     sanitizeHtml(html, {
       allowedTags: ["p", "a", "br", "em", "span", "strong", "u"],
+      allowedAttributes: {
+        a: ["href", "target"],
+      },
+    })
+  );
+};
+
+export const formatHtmlTitle = (html) => {
+  return parse(
+    sanitizeHtml(html, {
+      allowedTags: ["p", "br", "em", "span", "strong", "u"],
       allowedAttributes: {
         a: ["href", "target"],
       },
