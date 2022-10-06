@@ -20,7 +20,7 @@ export default class MailService {
         locals,
       });
 
-      console.log("Successfully sent email ", sendEmailResponse);
+      console.debug("Successfully sent email ", sendEmailResponse.messageId);
     } catch (error) {
       console.error(`An error occurred sending email`, error);
     }
