@@ -165,7 +165,9 @@ export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
 			specialExhibitionObjects(where: {objectId: $objectId}) {
 				birthDate
 				classification
-				creditLine
+				creditLine {
+					html
+				}
 				culture
 				deathDate
 				dimensions

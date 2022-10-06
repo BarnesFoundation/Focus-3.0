@@ -44,6 +44,7 @@ export const constructResultAndInRoomSlider = (
         dimensions,
         visualDescription,
         content,
+        creditLine,
       } = artObject;
 
       // Determine the flags
@@ -71,6 +72,7 @@ export const constructResultAndInRoomSlider = (
         dimensions,
         visualDescription,
         content,
+        creditLine,
 
         // Set the urls
         url: `${artObject.art_url}${artUrlParams}`,

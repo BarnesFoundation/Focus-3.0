@@ -110,6 +110,9 @@ export type ArtworkObject = {
   curatorialApproval?: boolean;
   unIdentified?: boolean;
   content?: Content[];
+  creditLine?: {
+    html: string;
+  };
 };
 
 export type StoryItemType = {

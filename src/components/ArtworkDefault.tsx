@@ -15,6 +15,7 @@ import { Share } from "./Share";
 import { ContentBlock } from "./ContentBlock";
 import google_logo from "../images/google_translate.svg";
 import { ScanButton } from "./ScanButton";
+import { formatHtmlCaption } from "../helpers/artWorkHelper";
 
 type ArtworkDefaultProps = {
   artwork: ArtworkObject;
@@ -278,6 +279,17 @@ export const ArtworkDefaultComponent: React.FC<ArtworkDefaultProps> = ({
                                 )}:`}</td>
                                 <td className="text-left item-info">
                                   {artwork.dimensions}
+                                </td>
+                              </tr>
+                            )}
+                            {artwork.creditLine && (
+                              <tr>
+                                <td className="text-left item-label">
+                                  {/* TODO: Get translations for this label */}
+                                  Credit:
+                                </td>
+                                <td className="text-left item-info">
+                                  {formatHtmlCaption(artwork.creditLine.html)}
                                 </td>
                               </tr>
                             )}
