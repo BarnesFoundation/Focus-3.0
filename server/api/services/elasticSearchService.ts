@@ -38,6 +38,7 @@ const ES_FIELDS = [
   "visualDescription",
 ];
 
+// TODO - add typings here if possible
 type ElasticSearchRecord = {
   id;
   imageSecret;
