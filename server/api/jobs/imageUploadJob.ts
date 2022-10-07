@@ -81,10 +81,10 @@ class ImageUploadJob extends AsyncJob {
           },
         });
       } else {
-        console.debug(`Could not find photo for Photo ID: ${photoId}`);
+        console.warn(`Could not find photo for Photo ID: ${photoId}`);
       }
     } else {
-      console.debug(`Could not find album for Album ID: ${albumId}`);
+      console.warn(`Could not find album for Album ID: ${albumId}`);
     }
   }
 }
