@@ -1,6 +1,4 @@
 import { S3 } from "@aws-sdk/client-s3";
-import fs from "fs";
-import { promisify } from "util";
 
 import { PrismaClient } from "@prisma/client";
 
@@ -65,6 +63,7 @@ class ImageUploadJob extends AsyncJob {
         // Now that the photo is uploaded, let's update the photo in the database to
         // 1. Remove the giant blob string
         // 2. Add the S3 URL generated for the image
+        const now = new Date(Date.now()).toISOString();
         const publicUrl = generatePublicUrl(fileName);
         await prisma.photos.update({
           where: {
@@ -78,6 +77,9 @@ class ImageUploadJob extends AsyncJob {
           data: {
             searched_image_blob: null,
             searched_image_s3_url: publicUrl,
+
+            // Indicate that the record was updated during this job run
+            updated_at: now,
           },
         });
       } else {
