@@ -28,7 +28,6 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
         case ContentBlockTypes.TITLE:
           return (
             <div className="content-block__title-block" key={index}>
-              {console.log(block)}
               {block.titleHtml && (
                 <div className="content-block__title-block__title">
                   {formatHtmlTitle(block.titleHtml.html)}
@@ -67,9 +66,9 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
         // Image Comparison Slider Block
         case ContentBlockTypes.IMAGE_COMPARISON:
           return (
-            <>
+            <div key={index} style={{ position: "relative" }}>
               {block.style === ImageComparisonStyle.SLIDER && (
-                <figure className="content-block__comparison" key={index}>
+                <figure className="content-block__comparison">
                   <ReactCompareSlider
                     itemOne={
                       <ReactCompareSliderImage
@@ -106,7 +105,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
                 </figure>
               )}
               {block.style === ImageComparisonStyle.ANIMATION_FADE && (
-                <figure className="content-block__fader" key={index}>
+                <figure className="content-block__fader">
                   <img
                     id={"fadeImg" + index}
                     className="content-block__fade-image fade-two"
@@ -121,22 +120,23 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
                       block.rightImage.altText ? block.rightImage.altText : ""
                     }
                   />
-                  <div className="content-block__comparison__caption">
+                  <div className="content-block__comparison__caption-fade">
                     {block.leftImage.caption?.html && (
                       <figcaption className="caption-left">
-                        Left: {formatHtmlCaption(block.leftImage.caption.html)}
+                        Image 1:{" "}
+                        {formatHtmlCaption(block.leftImage.caption.html)}
                       </figcaption>
                     )}
                     {block.rightImage.caption?.html && (
-                      <figcaption className="caption-right">
-                        Right:{" "}
+                      <figcaption className="caption-left">
+                        Image 2:{" "}
                         {formatHtmlCaption(block.rightImage.caption.html)}
                       </figcaption>
                     )}
                   </div>
                 </figure>
               )}
-            </>
+            </div>
           );
 
         // Video Block

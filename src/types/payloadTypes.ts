@@ -39,7 +39,7 @@ export enum ContentBlockTypes {
 
 export enum ImageComparisonStyle {
   SLIDER = "Slider",
-  ANIMATION_FADE = "AnimationFade",
+  ANIMATION_FADE = "Animation_Fade",
 }
 
 type Image = {

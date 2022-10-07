@@ -63,7 +63,6 @@
   &__fade-image {
     width: 100%;
     margin: 2rem 0;
-    position: absolute;
     top: 0;
     left: 0;
   }
@@ -87,6 +86,9 @@
         flex-grow: 1;
       }
     }
+    &-fade {
+      flex-direction: column;
+    }
   }
 
   &__video {
@@ -95,6 +97,7 @@
 }
 
 .fade-one {
+  position: absolute;
   opacity: 1;
   animation: fadeAnimation 5s infinite ease-in-out;
 }
