@@ -40,8 +40,6 @@ interface TypedRequest extends express.Request {
   body: FoundImageScan | NoFoundImageScan;
 }
 
-const unlinkAsync = promisify(fs.unlink);
-
 class ScanController {
   public static async saveScan(
     request: TypedRequest,
@@ -51,10 +49,20 @@ class ScanController {
     const sessionId = request.sessionID;
     const queryImage = request.file;
 
-    const referenceImageUrl =
+    let referenceImageUrl =
       request.body.searchSuccess === TRUE
         ? request.body.referenceImageUrl
         : null;
+
+    // We shouldn't be receiving a `referenceImageUrl` that is the string `null`
+    if (referenceImageUrl === "null") {
+      console.warn(`Reference Image URL is "null" string
+	   Session ID: ${sessionId}
+	   Search Success: ${request.body.searchSuccess} 
+	  `);
+
+      referenceImageUrl = null;
+    }
 
     // Look up the album for this session and scan sequence
     let sessionAlbum = await prisma.albums.findFirst({
@@ -95,7 +103,7 @@ class ScanController {
     });
 
     // We'll queue the actual upload for this image to S3
-    await ImageUploadJob.performLater(
+    ImageUploadJob.performLater(
       parseInt(sessionAlbum.id.toString()),
       parseInt(createdAlbumPhoto.id.toString())
     );
