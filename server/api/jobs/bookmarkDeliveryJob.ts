@@ -57,6 +57,11 @@ class BookmarkDeliveryJob {
         }, {})
       );
 
+      // We can use this session id to identify a user because it's listed in their bookmark records
+      console.debug(
+        `For session id ${bookmarkSet[0].session_id}, we will deliver the following artwork id's`,
+        bookmarkArtworkList.map((item) => item.image_id)
+      );
       await MailService.send({
         to: email,
         template: "BookmarkEmail",
