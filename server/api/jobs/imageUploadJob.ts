@@ -17,7 +17,7 @@ const generatePublicUrl = (photoKey: string) => {
 };
 
 class ImageUploadJob extends AsyncJob {
-  public static performLater(albumId: number, photoId: number): Promise<void> {
+  public static performLater(albumId: number, photoId: number): void {
     return super.performLater(albumId, photoId);
   }
 
