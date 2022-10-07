@@ -6,6 +6,7 @@ import {
   environmentConfiguration,
   isProduction,
   isLocal,
+  isDevelopment,
 } from "../../../config";
 
 const { sendGrid } = environmentConfiguration;
@@ -39,8 +40,9 @@ export const Emailer = new Email({
     from: sendGrid.email,
   },
 
-  // We only want to send emails on Production stage
-  send: isProduction,
+  // We only want to send emails on Production or Development stages
+  // We'll still be able to preview emails locally without actually sending them
+  send: isProduction || isDevelopment,
   transport: transporter,
   preview: isLocal
     ? {

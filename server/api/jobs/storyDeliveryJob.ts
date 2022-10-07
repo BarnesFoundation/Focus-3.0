@@ -63,7 +63,8 @@ class StoryDeliveryJob {
         }, {})
       );
 
-      console.log(
+      // We can use this session id to identify a user because it's listed in their bookmark records
+      console.debug(
         `For session id ${bookmarkSet[0].session_id}, we will deliver the following story id's`,
         bookmarkStoryList.map((item) => item.unique_identifier)
       );

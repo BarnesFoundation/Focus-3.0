@@ -1,6 +1,4 @@
 import { S3 } from "@aws-sdk/client-s3";
-import fs from "fs";
-import { promisify } from "util";
 
 import { PrismaClient } from "@prisma/client";
 
@@ -9,10 +7,6 @@ import { AsyncJob } from ".";
 
 const prisma = new PrismaClient();
 const s3Client = new S3({ region: environmentConfiguration.aws.region });
-
-const writeFileAsync = promisify(fs.writeFile);
-const readFileAsync = promisify(fs.readFile);
-const TMP_PATH = "tmp";
 
 const generatePublicUrl = (photoKey: string) => {
   const href = `https://s3.${environmentConfiguration.aws.region}.amazonaws.com`;
@@ -28,6 +22,10 @@ class ImageUploadJob extends AsyncJob {
   }
 
   public static async main(albumId: number, photoId: number) {
+    console.debug(`Performing ImageUploadJob for
+	Album ID: ${albumId}
+	Photo ID: ${photoId}
+	`);
     const foundAlbum = await prisma.albums.findUnique({
       where: {
         id: albumId,
@@ -35,6 +33,7 @@ class ImageUploadJob extends AsyncJob {
     });
 
     if (foundAlbum) {
+      console.debug(`Found album for Album ID: ${albumId}`);
       const photoInAlbum = await prisma.photos.findFirst({
         where: {
           id: photoId,
@@ -45,6 +44,7 @@ class ImageUploadJob extends AsyncJob {
       // If we located the photo for this album, and it has image data
       // we'll perform the upload for the photo to S3
       if (photoInAlbum && photoInAlbum.searched_image_blob) {
+        console.debug(`Found photo for Photo ID: ${photoId}`);
         const fileName = `${photoId}_${Date.now()}.png`;
         const bufferedImage = Buffer.from(
           photoInAlbum.searched_image_blob,
@@ -52,6 +52,7 @@ class ImageUploadJob extends AsyncJob {
         );
 
         // Now we can upload the image to S3
+        console.debug(`Uploading image ${fileName} to S3 bucket`);
         await s3Client.putObject({
           ACL: "public-read",
           Bucket: environmentConfiguration.aws.s3Bucket,
@@ -62,17 +63,30 @@ class ImageUploadJob extends AsyncJob {
         // Now that the photo is uploaded, let's update the photo in the database to
         // 1. Remove the giant blob string
         // 2. Add the S3 URL generated for the image
+        const now = new Date(Date.now()).toISOString();
         const publicUrl = generatePublicUrl(fileName);
         await prisma.photos.update({
           where: {
             id: photoId,
+
+            // TODO - this throws a type error since `album_id` isn't a unique column
+            // Let's fix this by possibly making `album_id` and `photo_id` a composite unique key
+            // we can then uncomment this following line, once the Prisma schema has been updated
+            // album_id: albumId,
           },
           data: {
             searched_image_blob: null,
             searched_image_s3_url: publicUrl,
+
+            // Indicate that the record was updated during this job run
+            updated_at: now,
           },
         });
+      } else {
+        console.warn(`Could not find photo for Photo ID: ${photoId}`);
       }
+    } else {
+      console.warn(`Could not find album for Album ID: ${albumId}`);
     }
   }
 }
