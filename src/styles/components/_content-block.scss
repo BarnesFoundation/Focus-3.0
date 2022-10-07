@@ -96,7 +96,7 @@
 
 .fade-one {
   opacity: 1;
-  animation: flickerAnimation 5s infinite ease-in-out;
+  animation: fadeAnimation 5s infinite ease-in-out;
 }
 
 @keyframes fadeAnimation {
