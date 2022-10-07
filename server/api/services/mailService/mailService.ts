@@ -20,7 +20,10 @@ export default class MailService {
         locals,
       });
 
-      console.debug("Successfully sent email ", sendEmailResponse.messageId);
+      console.debug(
+        `Successfully delivered "${template}" to email "${to}" `,
+        sendEmailResponse.messageId
+      );
     } catch (error) {
       console.error(`An error occurred sending email`, error);
     }
