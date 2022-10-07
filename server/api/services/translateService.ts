@@ -28,6 +28,22 @@ const LANGUAGE_SHORT_CODE_COLUMN_MAP = {
 };
 
 export default class TranslateService {
+  public static async awsTranslate(
+    originalText: string,
+    targetLanguage: string
+  ): Promise<string> {
+    if (!originalText) return originalText;
+
+    const { TranslatedText } = await translateClient.send(
+      new TranslateTextCommand({
+        SourceLanguageCode: "en",
+        Text: originalText,
+        TargetLanguageCode: targetLanguage,
+      })
+    );
+    return TranslatedText;
+  }
+
   public static async translate(
     originalText: string,
     targetLanguage: string | null
@@ -40,14 +56,7 @@ export default class TranslateService {
     }
 
     try {
-      const { TranslatedText } = await translateClient.send(
-        new TranslateTextCommand({
-          SourceLanguageCode: "en",
-          Text: originalText,
-          TargetLanguageCode: targetLanguage,
-        })
-      );
-      return TranslatedText;
+      return await this.awsTranslate(originalText, targetLanguage);
     } catch (error) {
       console.error(
         `Failed to translate content "${originalText}" to language "${targetLanguage}`,

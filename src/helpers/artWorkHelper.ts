@@ -5,6 +5,7 @@ import {
   ArtWorkRecordsResult,
   StoryItemsResponse,
   StoryItemType,
+  StoryResponse,
 } from "../types/payloadTypes";
 
 export const constructResultAndInRoomSlider = (
@@ -14,7 +15,6 @@ export const constructResultAndInRoomSlider = (
   const { success } = artworkResult;
 
   let artwork = {};
-  let roomRecords = [];
 
   if (success) {
     // If the artwork result has records
@@ -44,6 +44,7 @@ export const constructResultAndInRoomSlider = (
         dimensions,
         visualDescription,
         content,
+        creditLine,
       } = artObject;
 
       // Determine the flags
@@ -71,6 +72,7 @@ export const constructResultAndInRoomSlider = (
         dimensions,
         visualDescription,
         content,
+        creditLine,
 
         // Set the urls
         url: `${artObject.art_url}${artUrlParams}`,
@@ -82,17 +84,13 @@ export const constructResultAndInRoomSlider = (
         unIdentified,
       };
     }
-    // Get the room records array
-    const rr = artworkResult["data"]["roomRecords"] || [];
-
-    if (rr?.length > 0) {
-      roomRecords = rr;
-    }
   }
-  return { artwork, roomRecords };
+  return artwork;
 };
 
-export const constructStory = (storyInformation: StoryItemsResponse) => {
+export const constructStory = (
+  storyInformation: StoryItemsResponse
+): StoryResponse => {
   let stories: StoryItemType[] = [],
     storyId: string = undefined,
     storyTitle: string = undefined;
@@ -135,6 +133,28 @@ export const formatHtml = (html) => {
         "thead",
         "tr",
       ],
+      allowedAttributes: {
+        a: ["href", "target"],
+      },
+    })
+  );
+};
+
+export const formatHtmlCaption = (html) => {
+  return parse(
+    sanitizeHtml(html, {
+      allowedTags: ["p", "a", "br", "em", "span", "strong", "u"],
+      allowedAttributes: {
+        a: ["href", "target"],
+      },
+    })
+  );
+};
+
+export const formatHtmlTitle = (html) => {
+  return parse(
+    sanitizeHtml(html, {
+      allowedTags: ["p", "br", "em", "span", "strong", "u"],
       allowedAttributes: {
         a: ["href", "target"],
       },

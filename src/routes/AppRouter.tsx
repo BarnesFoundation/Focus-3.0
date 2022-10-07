@@ -4,8 +4,6 @@ import posed, { PoseGroup } from "react-pose";
 
 import { Home } from "../components/Home";
 import CameraContainer from "../components/CameraContainer";
-import Artwork from "../components/Artwork";
-import { ExhibitionObject } from "../components/ExhibitionObject";
 import StoryPage from "../components/StoryPage";
 import { OrientationContextProvider } from "../contexts/OrientationContext";
 import {
@@ -15,6 +13,7 @@ import {
   SNAP_USER_EMAIL,
 } from "../constants";
 import * as ROUTES from "../constants/routes";
+import { ArtworkWrapper } from "../components/ArtworkWrapper";
 
 const RouteContainer = posed.div({
   enter: { opacity: 1, delay: 0, beforeChildren: true },
@@ -42,12 +41,12 @@ const Routes = () => (
               />
               <Route
                 path={`${ROUTES.ARTWORK}/:imageId?`}
-                component={Artwork}
+                component={ArtworkWrapper}
                 key="artwork"
               />
               <Route
                 path={`${ROUTES.EXHIBITION}/:imageId?`}
-                component={ExhibitionObject}
+                component={ArtworkWrapper}
                 key="artwork"
               />
               <Route

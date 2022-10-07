@@ -165,9 +165,6 @@ class SearchRequestService {
       data = await this.getArtworkInformation(imageId);
     }
 
-    // Retrieve artwork information
-    const esResponse = await this.getArtworkInformation(imageId);
-
     return new IdentifiedImagePayload(data, referenceImageUrl);
   };
 

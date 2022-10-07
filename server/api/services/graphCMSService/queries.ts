@@ -165,10 +165,13 @@ export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
 			specialExhibitionObjects(where: {objectId: $objectId}) {
 				birthDate
 				classification
-				creditLine
+				creditLine {
+					html
+				}
 				culture
 				deathDate
 				dimensions
+				displayDate
 				medium
 				nationality
 				objectId
@@ -220,8 +223,12 @@ export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
 							}
 							... on Title {
 								type
-								subtitle
-								title
+								subtitleHtml {
+									html
+								}
+								titleHtml {
+									html
+								}
 							}
 							... on Video {
 								type
@@ -238,3 +245,158 @@ export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
     },
   };
 }
+
+export function getCollectionContentByInvno(
+  inventoryNumber: string
+): GraphQLQuery {
+  return {
+    query: `
+		query($inventoryNumber: String) {
+			collectionObjects(where: {inventoryNumber: $inventoryNumber}) {
+				content {
+					... on ContentBlock {
+						contentBlock {
+							... on Image {
+								altText
+								caption {
+									html
+								}
+								image {
+									url
+								}
+								type
+							}
+							... on ImageComparison {
+								type
+								rightImage {
+									altText
+									caption {
+										html
+									}
+									image {
+										url
+									}
+								}
+								leftImage {
+									altText
+									caption {
+										html
+									}
+									image {
+										url
+									}
+								}
+							}
+							... on TextBlock {
+								type
+								textBlock {
+									html
+								}
+							}
+							... on Title {
+								type
+								subtitleHtml {
+									html
+								}
+								titleHtml {
+									html
+								}
+							}
+							... on Video {
+								type
+								url
+							}
+						}
+					}
+				}
+				inventoryNumber
+			}
+		}
+		`,
+    variables: {
+      inventoryNumber: inventoryNumber,
+    },
+  };
+}
+
+export const getContentAndStories = (
+  objectId: string,
+  inventoryNumber: string
+): GraphQLQuery => {
+  return {
+    query: `
+		query($objectID: Int, $inventoryNumber: String) {
+			storiesForObjectIds(where: { objectID: $objectID }) {
+			  id
+			  objectID
+			  relatedStories {
+				id
+			  }
+			}
+			collectionObjects(where: {inventoryNumber: $inventoryNumber}) {
+				content {
+					... on ContentBlock {
+						contentBlock {
+							... on Image {
+								altText
+								caption {
+									html
+								}
+								image {
+									url
+								}
+								type
+							}
+							... on ImageComparison {
+								type
+								rightImage {
+									altText
+									caption {
+										html
+									}
+									image {
+										url
+									}
+								}
+								leftImage {
+									altText
+									caption {
+										html
+									}
+									image {
+										url
+									}
+								}
+							}
+							... on TextBlock {
+								type
+								textBlock {
+									html
+								}
+							}
+							... on Title {
+								type
+								subtitleHtml {
+									html
+								}
+								titleHtml {
+									html
+								}
+							}
+							... on Video {
+								type
+								url
+							}
+						}
+					}
+				}
+				inventoryNumber
+			}
+		  }
+		  `,
+    variables: {
+      objectID: parseInt(objectId),
+      inventoryNumber: inventoryNumber,
+    },
+  };
+};
