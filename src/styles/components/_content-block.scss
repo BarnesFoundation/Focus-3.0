@@ -60,6 +60,14 @@
     }
   }
 
+  &__fade-image {
+    width: 100%;
+    margin: 2rem 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
   &__comparison {
     margin: 2rem 0;
 
@@ -83,5 +91,24 @@
 
   &__video {
     margin: 2rem 0;
+  }
+}
+
+.fade-one {
+  opacity: 1;
+  animation: flickerAnimation 5s infinite ease-in-out;
+}
+
+@keyframes fadeAnimation {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
   }
 }
