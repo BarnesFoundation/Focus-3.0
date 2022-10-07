@@ -34,12 +34,23 @@ class AsyncJob {
    * 5. Define a route handler for that job definition and have the handler call the "main" function
    *    of the job, forwarding the arguments from the HTTP request to it
    */
-  public static async performLater(...args) {
+  public static performLater(...args) {
+    const asyncJobEndpoint = `/api/job/${this.name}`;
+
+    // Log these arguments and context for debugging purposes
+    console.debug(`AsyncJob handling "performLater" call for "${
+      this.name
+    }" with below parameters
+	Base URL: ${environmentConfiguration.assetHost}
+	URL: ${asyncJobEndpoint}
+	Arguments: ${JSON.stringify(args)}
+	`);
+
     try {
       axios({
         method: "POST",
         data: [...args],
-        url: `/api/job/${this.name}`,
+        url: asyncJobEndpoint,
 
         // Asset host should be the URL of the server
         // so we're fine to use this as the URL to send this to
