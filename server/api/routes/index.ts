@@ -16,6 +16,6 @@ ApiRouter.use("/job", JobRouter);
 ApiRouter.use("/bookmark", BookmarkRouter);
 ApiRouter.use("/translation", TranslationRouter);
 ApiRouter.use("/stories", StoryRouter);
-ApiRouter.use("/exhibition", ExhibitionRouter)
+ApiRouter.use("/exhibition", ExhibitionRouter);
 
 export default ApiRouter;
