@@ -60,6 +60,13 @@
     }
   }
 
+  &__fade-image {
+    width: 100%;
+    margin: 2rem 0;
+    top: 0;
+    left: 0;
+  }
+
   &__comparison {
     margin: 2rem 0;
 
@@ -79,9 +86,32 @@
         flex-grow: 1;
       }
     }
+    &-fade {
+      flex-direction: column;
+    }
   }
 
   &__video {
     margin: 2rem 0;
+  }
+}
+
+.fade-one {
+  position: absolute;
+  opacity: 1;
+  animation: fadeAnimation 5s infinite ease-in-out;
+}
+
+@keyframes fadeAnimation {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
   }
 }

@@ -37,11 +37,16 @@ export enum ContentBlockTypes {
   VIDEO = "Video",
 }
 
+export enum ImageComparisonStyle {
+  SLIDER = "Slider",
+  ANIMATION_FADE = "Animation_Fade",
+}
+
 type Image = {
   type: ContentBlockTypes.IMAGE;
   caption?: {
     html: string;
-  }
+  };
   altText?: string;
   image: {
     url: string;
@@ -50,6 +55,7 @@ type Image = {
 
 type ImageComparison = {
   type: ContentBlockTypes.IMAGE_COMPARISON;
+  style: ImageComparisonStyle;
   rightImage: Image;
   leftImage: Image;
 };

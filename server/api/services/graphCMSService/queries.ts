@@ -196,6 +196,7 @@ export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
 							}
 							... on ImageComparison {
 								type
+								style
 								leftImage {
 									altText
 									caption {

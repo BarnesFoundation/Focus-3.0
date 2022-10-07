@@ -5,10 +5,15 @@ import {
   ReactCompareSliderImage,
 } from "react-compare-slider";
 import ReactPlayer from "react-player/lazy";
-import { formatHtml, formatHtmlCaption, formatHtmlTitle } from "../helpers/artWorkHelper";
+import {
+  formatHtml,
+  formatHtmlCaption,
+  formatHtmlTitle,
+} from "../helpers/artWorkHelper";
 import {
   ContentBlock as ContentBlockType,
   ContentBlockTypes,
+  ImageComparisonStyle,
 } from "../types/payloadTypes";
 
 type ContentBlockProps = {
@@ -23,7 +28,6 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
         case ContentBlockTypes.TITLE:
           return (
             <div className="content-block__title-block" key={index}>
-              {console.log(block)}
               {block.titleHtml && (
                 <div className="content-block__title-block__title">
                   {formatHtmlTitle(block.titleHtml.html)}
@@ -62,36 +66,77 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
         // Image Comparison Slider Block
         case ContentBlockTypes.IMAGE_COMPARISON:
           return (
-            <figure className="content-block__comparison" key={index}>
-              <ReactCompareSlider
-                itemOne={
-                  <ReactCompareSliderImage
+            <div key={index} style={{ position: "relative" }}>
+              {block.style === ImageComparisonStyle.SLIDER && (
+                <figure className="content-block__comparison">
+                  <ReactCompareSlider
+                    itemOne={
+                      <ReactCompareSliderImage
+                        src={block.leftImage.image.url}
+                        alt={
+                          block.leftImage.altText ? block.leftImage.altText : ""
+                        }
+                      />
+                    }
+                    itemTwo={
+                      <ReactCompareSliderImage
+                        src={block.rightImage.image.url}
+                        alt={
+                          block.rightImage.altText
+                            ? block.rightImage.altText
+                            : ""
+                        }
+                      />
+                    }
+                  />
+                  <div className="content-block__comparison__caption">
+                    {block.leftImage.caption?.html && (
+                      <figcaption className="caption-left">
+                        Left: {formatHtmlCaption(block.leftImage.caption.html)}
+                      </figcaption>
+                    )}
+                    {block.rightImage.caption?.html && (
+                      <figcaption className="caption-right">
+                        Right:{" "}
+                        {formatHtmlCaption(block.rightImage.caption.html)}
+                      </figcaption>
+                    )}
+                  </div>
+                </figure>
+              )}
+              {block.style === ImageComparisonStyle.ANIMATION_FADE && (
+                <figure className="content-block__fader">
+                  <img
+                    id={"fadeImg2" + index}
+                    className="content-block__fade-image fade-two"
                     src={block.leftImage.image.url}
                     alt={block.leftImage.altText ? block.leftImage.altText : ""}
                   />
-                }
-                itemTwo={
-                  <ReactCompareSliderImage
+                  <img
+                    id={"fadeImg1" + index}
+                    className="content-block__fade-image fade-one"
                     src={block.rightImage.image.url}
                     alt={
                       block.rightImage.altText ? block.rightImage.altText : ""
                     }
                   />
-                }
-              />
-              <div className="content-block__comparison__caption">
-                {block.leftImage.caption?.html && (
-                  <figcaption className="caption-left">
-                    Left: {formatHtmlCaption(block.leftImage.caption.html)}
-                  </figcaption>
-                )}
-                {block.rightImage.caption?.html && (
-                  <figcaption className="caption-right">
-                    Right: {formatHtmlCaption(block.rightImage.caption.html)}
-                  </figcaption>
-                )}
-              </div>
-            </figure>
+                  <div className="content-block__comparison__caption-fade">
+                    {block.leftImage.caption?.html && (
+                      <figcaption className="caption-left">
+                        {/* Image 1:{" "} */}
+                        {formatHtmlCaption(block.leftImage.caption.html)}
+                      </figcaption>
+                    )}
+                    {block.rightImage.caption?.html && (
+                      <figcaption className="caption-left">
+                        {/* Image 2:{" "} */}
+                        {formatHtmlCaption(block.rightImage.caption.html)}
+                      </figcaption>
+                    )}
+                  </div>
+                </figure>
+              )}
+            </div>
           );
 
         // Video Block
