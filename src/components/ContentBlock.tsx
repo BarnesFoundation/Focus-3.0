@@ -107,13 +107,13 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
               {block.style === ImageComparisonStyle.ANIMATION_FADE && (
                 <figure className="content-block__fader">
                   <img
-                    id={"fadeImg" + index}
+                    id={"fadeImg2" + index}
                     className="content-block__fade-image fade-two"
                     src={block.leftImage.image.url}
                     alt={block.leftImage.altText ? block.leftImage.altText : ""}
                   />
                   <img
-                    id={"fadeImg" + index}
+                    id={"fadeImg1" + index}
                     className="content-block__fade-image fade-one"
                     src={block.rightImage.image.url}
                     alt={
@@ -123,13 +123,13 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
                   <div className="content-block__comparison__caption-fade">
                     {block.leftImage.caption?.html && (
                       <figcaption className="caption-left">
-                        Image 1:{" "}
+                        {/* Image 1:{" "} */}
                         {formatHtmlCaption(block.leftImage.caption.html)}
                       </figcaption>
                     )}
                     {block.rightImage.caption?.html && (
                       <figcaption className="caption-left">
-                        Image 2:{" "}
+                        {/* Image 2:{" "} */}
                         {formatHtmlCaption(block.rightImage.caption.html)}
                       </figcaption>
                     )}
