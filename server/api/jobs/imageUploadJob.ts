@@ -21,7 +21,11 @@ class ImageUploadJob extends AsyncJob {
     return super.performLater(albumId, photoId);
   }
 
-  public static async main(albumId: number, photoId: number) {
+  public static async main(
+    albumId: number,
+    photoId: number,
+    image: Express.Multer.File
+  ) {
     console.debug(`Performing ImageUploadJob for
 	Album ID: ${albumId}
 	Photo ID: ${photoId}
@@ -41,15 +45,12 @@ class ImageUploadJob extends AsyncJob {
         },
       });
 
-      // If we located the photo for this album, and it has image data
+      // If we located the photo for this album
       // we'll perform the upload for the photo to S3
       if (photoInAlbum && photoInAlbum.searched_image_blob) {
-        console.debug(`Found photo for Photo ID: ${photoId}`);
+        console.debug(`Found photo record for Photo ID: ${photoId}`);
         const fileName = `${photoId}_${Date.now()}.png`;
-        const bufferedImage = Buffer.from(
-          photoInAlbum.searched_image_blob,
-          "base64"
-        );
+        const imageBuffer = image.buffer.toString("base64");
 
         // Now we can upload the image to S3
         console.debug(`Uploading image ${fileName} to S3 bucket`);
@@ -57,7 +58,7 @@ class ImageUploadJob extends AsyncJob {
           ACL: "public-read",
           Bucket: environmentConfiguration.aws.s3Bucket,
           Key: fileName,
-          Body: bufferedImage,
+          Body: imageBuffer,
         });
 
         // Now that the photo is uploaded, let's update the photo in the database to
@@ -83,10 +84,10 @@ class ImageUploadJob extends AsyncJob {
           },
         });
       } else {
-        console.warn(`Could not find photo for Photo ID: ${photoId}`);
+        console.warn(`Could not find photo record for Photo ID: ${photoId}`);
       }
     } else {
-      console.warn(`Could not find album for Album ID: ${albumId}`);
+      console.warn(`Could not find album record for Album ID: ${albumId}`);
     }
   }
 }
