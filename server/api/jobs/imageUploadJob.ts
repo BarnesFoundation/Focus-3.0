@@ -3,7 +3,6 @@ import { S3 } from "@aws-sdk/client-s3";
 import { PrismaClient } from "@prisma/client";
 
 import { environmentConfiguration } from "../../config";
-import { AsyncJob } from ".";
 
 const prisma = new PrismaClient();
 const s3Client = new S3({ region: environmentConfiguration.aws.region });
@@ -16,11 +15,7 @@ const generatePublicUrl = (photoKey: string) => {
   return publicUrl;
 };
 
-class ImageUploadJob extends AsyncJob {
-  public static performLater(albumId: number, photoId: number): void {
-    return super.performLater(albumId, photoId);
-  }
-
+class ImageUploadJob {
   public static async main(
     albumId: number,
     photoId: number,
