@@ -3,7 +3,6 @@ import express from "express";
 import {
   ElasticSearchSyncJob,
   StorySyncJob,
-  ImageUploadJob,
   SessionClearJob,
   BookmarkDeliveryJob,
   StoryDeliveryJob,
@@ -26,15 +25,6 @@ class JobController {
   ) {
     await StorySyncJob.main();
     return response.status(200).json("StorySyncJob completed successfully");
-  }
-
-  public static async performImageUploadJob(
-    request: express.Request,
-    response: express.Response
-  ) {
-    const [albumId, photoId] = request.body;
-    await ImageUploadJob.main(albumId, photoId);
-    return response.status(200).json("ImageUploadJob completed successfully");
   }
 
   public static async performSessionClearJob(
