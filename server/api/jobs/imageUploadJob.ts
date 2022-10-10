@@ -42,7 +42,7 @@ class ImageUploadJob {
 
       // If we located the photo for this album
       // we'll perform the upload for the photo to S3
-      if (photoInAlbum && photoInAlbum.searched_image_blob) {
+      if (photoInAlbum) {
         console.debug(`Found photo record for Photo ID: ${photoId}`);
         const fileName = `${photoId}_${Date.now()}.png`;
         const imageBuffer = image.buffer.toString("base64");
