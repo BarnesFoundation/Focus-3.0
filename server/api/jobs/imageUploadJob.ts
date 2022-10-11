@@ -3,7 +3,6 @@ import { S3 } from "@aws-sdk/client-s3";
 import { PrismaClient } from "@prisma/client";
 
 import { environmentConfiguration } from "../../config";
-import { AsyncJob } from ".";
 
 const prisma = new PrismaClient();
 const s3Client = new S3({ region: environmentConfiguration.aws.region });
@@ -16,12 +15,12 @@ const generatePublicUrl = (photoKey: string) => {
   return publicUrl;
 };
 
-class ImageUploadJob extends AsyncJob {
-  public static performLater(albumId: number, photoId: number): void {
-    return super.performLater(albumId, photoId);
-  }
-
-  public static async main(albumId: number, photoId: number) {
+class ImageUploadJob {
+  public static async main(
+    albumId: number,
+    photoId: number,
+    image: Express.Multer.File
+  ) {
     console.debug(`Performing ImageUploadJob for
 	Album ID: ${albumId}
 	Photo ID: ${photoId}
@@ -41,15 +40,12 @@ class ImageUploadJob extends AsyncJob {
         },
       });
 
-      // If we located the photo for this album, and it has image data
+      // If we located the photo for this album
       // we'll perform the upload for the photo to S3
-      if (photoInAlbum && photoInAlbum.searched_image_blob) {
-        console.debug(`Found photo for Photo ID: ${photoId}`);
+      if (photoInAlbum) {
+        console.debug(`Found photo record for Photo ID: ${photoId}`);
         const fileName = `${photoId}_${Date.now()}.png`;
-        const bufferedImage = Buffer.from(
-          photoInAlbum.searched_image_blob,
-          "base64"
-        );
+        const imageBuffer = image.buffer.toString("base64");
 
         // Now we can upload the image to S3
         console.debug(`Uploading image ${fileName} to S3 bucket`);
@@ -57,7 +53,7 @@ class ImageUploadJob extends AsyncJob {
           ACL: "public-read",
           Bucket: environmentConfiguration.aws.s3Bucket,
           Key: fileName,
-          Body: bufferedImage,
+          Body: imageBuffer,
         });
 
         // Now that the photo is uploaded, let's update the photo in the database to
@@ -83,10 +79,10 @@ class ImageUploadJob extends AsyncJob {
           },
         });
       } else {
-        console.warn(`Could not find photo for Photo ID: ${photoId}`);
+        console.warn(`Could not find photo record for Photo ID: ${photoId}`);
       }
     } else {
-      console.warn(`Could not find album for Album ID: ${albumId}`);
+      console.warn(`Could not find album record for Album ID: ${albumId}`);
     }
   }
 }
