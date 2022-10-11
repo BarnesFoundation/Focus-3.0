@@ -233,11 +233,14 @@ export default class ArtworkService {
 
           switch (block.type) {
             case "Image":
-              translatedBlock["caption"]["html"] =
-                await TranslateService.awsTranslate(
-                  block["caption"]["html"],
-                  targetLanguage
-                );
+              if (translatedBlock["caption"]) {
+                translatedBlock["caption"]["html"] =
+                  await TranslateService.awsTranslate(
+                    block["caption"]["html"],
+                    targetLanguage
+                  );
+              }
+
               translatedBlock["altText"] = await TranslateService.awsTranslate(
                 block["altText"],
                 targetLanguage
@@ -245,21 +248,28 @@ export default class ArtworkService {
               break;
 
             case "ImageComparison":
-              translatedBlock["leftImage"]["caption"]["html"] =
-                await TranslateService.awsTranslate(
-                  block["leftImage"]["caption"]["html"],
-                  targetLanguage
-                );
+              if (translatedBlock["leftImage"]["caption"]) {
+                translatedBlock["leftImage"]["caption"]["html"] =
+                  await TranslateService.awsTranslate(
+                    block["leftImage"]["caption"]["html"],
+                    targetLanguage
+                  );
+              }
+
               translatedBlock["rightImage"]["altText"] =
                 await TranslateService.awsTranslate(
                   block["rightImage"]["altText"],
                   targetLanguage
                 );
-              translatedBlock["rightImage"]["caption"]["html"] =
-                await TranslateService.awsTranslate(
-                  block["rightImage"]["caption"]["html"],
-                  targetLanguage
-                );
+
+              if (translatedBlock["rightImage"]["caption"]) {
+                translatedBlock["rightImage"]["caption"]["html"] =
+                  await TranslateService.awsTranslate(
+                    block["rightImage"]["caption"]["html"],
+                    targetLanguage
+                  );
+              }
+
               translatedBlock["rightImage"]["altText"] =
                 await TranslateService.awsTranslate(
                   block["rightImage"]["altText"],
@@ -268,22 +278,31 @@ export default class ArtworkService {
               break;
 
             case "TextBlock":
-              translatedBlock["textBlock"]["html"] =
-                await TranslateService.awsTranslate(
-                  block["textBlock"]["html"],
-                  targetLanguage
-                );
+              if (translatedBlock["textBlock"]["html"]) {
+                translatedBlock["textBlock"]["html"] =
+                  await TranslateService.awsTranslate(
+                    block["textBlock"]["html"],
+                    targetLanguage
+                  );
+              }
               break;
 
             case "Title":
-              translatedBlock["title"] = await TranslateService.awsTranslate(
-                block["title"],
-                targetLanguage
-              );
-              translatedBlock["subtitle"] = await TranslateService.awsTranslate(
-                block["subtitle"],
-                targetLanguage
-              );
+              if (translatedBlock["title"]) {
+                translatedBlock["title"]["html"] =
+                  await TranslateService.awsTranslate(
+                    block["title"]["html"],
+                    targetLanguage
+                  );
+              }
+
+              if (translatedBlock["subtitle"]) {
+                translatedBlock["subtitle"]["html"] =
+                  await TranslateService.awsTranslate(
+                    block["subtitle"]["html"],
+                    targetLanguage
+                  );
+              }
               break;
 
             default:
