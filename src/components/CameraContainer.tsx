@@ -110,7 +110,15 @@ export class CameraContainerComponent extends Component<
         );
         elasticSearchResponse = esResponse;
 
-        this.completeImageSearchRequest(elasticSearchResponse);
+        if (elasticSearchResponse) {
+          this.completeImageSearchRequest(elasticSearchResponse);
+        } else {
+           // The ES response for special exhibition objects can be undefined if no content has bee added to Hygraph for the object,
+          //  In that case we will want to end scanning by updating the state to show that the search did not yield a match
+          this.setState({
+            sessionYieldedMatch: false,
+          });
+        }
       }
 
       // Otherwise, when it's not successful
