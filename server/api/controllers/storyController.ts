@@ -11,7 +11,7 @@ class StoryController {
   ) {
     const storyTitleSlug = request.params.storyTitleSlug;
     const languagePreference =
-      request.query.lang.toString() || request.session.lang_pref || "en";
+      request.query.lang?.toString() || request.session.lang_pref || "en";
 
     const foundStory = await prisma.stories.findFirst({
       where: {
