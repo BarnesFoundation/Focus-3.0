@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { ArtworkService, GraphCMSService } from "../services";
+import { GraphCMSService } from "../services";
 import express from "express";
 
 const prisma = new PrismaClient();
