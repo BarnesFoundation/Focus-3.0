@@ -89,7 +89,6 @@ class ScanController {
     // we can create photos related to this album
     const createdAlbumPhoto = await prisma.photos.create({
       data: {
-        searched_image_blob: queryImage.buffer.toString("base64"),
         es_response: request.body.esResponse,
         response_time: request.body.searchTime,
         result_image_url: referenceImageUrl,
@@ -102,13 +101,17 @@ class ScanController {
       },
     });
 
-    // We'll queue the actual upload for this image to S3
-    ImageUploadJob.performLater(
-      parseInt(sessionAlbum.id.toString()),
-      parseInt(createdAlbumPhoto.id.toString())
-    );
+    // We'll respond to the client that we've received their request
+    // to store the image and close the connection
+    response.status(200).json("Request to store image received");
 
-    response.status(200).json("Image was stored");
+    // We'll proceed with the image upload, no longer impacting the
+    // client's connection as it should be ended by now
+    await ImageUploadJob.main(
+      parseInt(sessionAlbum.id.toString()),
+      parseInt(createdAlbumPhoto.id.toString()),
+      queryImage
+    );
   }
 }
 
