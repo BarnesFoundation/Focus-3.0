@@ -3,10 +3,7 @@ import classnames from "classnames";
 import { isAndroid } from "react-device-detect";
 
 import { LANGUAGE_EN } from "../constants";
-import withTranslation, {
-  LanguageOptionType,
-  WithTranslationState,
-} from "./withTranslation";
+import { LanguageOptionType, WithTranslationState } from "./withTranslation";
 import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
 import { EmailForm } from "./EmailForm";
 import ProgressiveImage from "react-progressive-image";
@@ -25,9 +22,11 @@ type ArtworkDefaultProps = {
   emailCaptured: boolean;
   showEmailForm: boolean;
   onSubmitEmail: (email: string, callback?: (args?: any) => void) => void;
-} & WithTranslationState;
+  langOptions: WithTranslationState["langOptions"];
+  getTranslation: WithTranslationState["getTranslation"]
+};
 
-export const ArtworkDefaultComponent: React.FC<ArtworkDefaultProps> = ({
+export const ArtworkDefault: React.FC<ArtworkDefaultProps> = ({
   artwork,
   result,
   onSelectLanguage,
@@ -348,7 +347,3 @@ export const ArtworkDefaultComponent: React.FC<ArtworkDefaultProps> = ({
     </div>
   );
 };
-
-export const ArtworkDefault = withTranslation<ArtworkDefaultProps>(
-  ArtworkDefaultComponent
-);
