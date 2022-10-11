@@ -23,7 +23,7 @@ type ArtworkDefaultProps = {
   showEmailForm: boolean;
   onSubmitEmail: (email: string, callback?: (args?: any) => void) => void;
   langOptions: WithTranslationState["langOptions"];
-  getTranslation: WithTranslationState["getTranslation"]
+  getTranslation: WithTranslationState["getTranslation"];
 };
 
 export const ArtworkDefault: React.FC<ArtworkDefaultProps> = ({
@@ -40,6 +40,7 @@ export const ArtworkDefault: React.FC<ArtworkDefaultProps> = ({
   // Component state
   const [imgLoaded, setImgLoaded] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
+  const [shortDescFontStyle, setShortDescStyle] = useState({});
   const startYCard2 = useRef<number>();
   const startYTrigger = useRef<number>();
 
@@ -62,6 +63,12 @@ export const ArtworkDefault: React.FC<ArtworkDefaultProps> = ({
     const endY = touch.pageY;
     if (endY > startYCard2.current) setFormOpen(false);
   };
+
+  useEffect(() => {
+    selectedLanguage.code === "Ru"
+      ? setShortDescStyle({ fontSize: "14px" })
+      : setShortDescStyle({});
+  }, [selectedLanguage]);
 
   useEffect(() => {
     if (!imgLoaded || !showEmailForm) return;
@@ -191,7 +198,7 @@ export const ArtworkDefault: React.FC<ArtworkDefaultProps> = ({
 
                       <div className="short-desc-container">
                         {/* Content blocks from Hygraph CMS */}
-                        {artwork.content && (
+                        {artwork.content ? (
                           <div className="card-content">
                             {artwork.content.map((c, index) => (
                               <ContentBlock
@@ -200,10 +207,20 @@ export const ArtworkDefault: React.FC<ArtworkDefaultProps> = ({
                               />
                             ))}
                           </div>
+                        ) : artwork.shortDescription ? (
+                          <div
+                            className="card-text paragraph"
+                            style={shortDescFontStyle}
+                            dangerouslySetInnerHTML={{
+                              __html: artwork.shortDescription,
+                            }}
+                          ></div>
+                        ) : (
+                          <></>
                         )}
                       </div>
 
-                      {artwork.content &&
+                      {(artwork.content || artwork.shortDescription) &&
                         selectedLanguage.code !== LANGUAGE_EN && (
                           <div className="google-translate-disclaimer">
                             <span>Translated with </span>
