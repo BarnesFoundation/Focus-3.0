@@ -288,18 +288,18 @@ export default class ArtworkService {
               break;
 
             case "Title":
-              if (translatedBlock["title"]) {
-                translatedBlock["title"]["html"] =
+              if (translatedBlock["titleHtml"]) {
+                translatedBlock["titleHtml"]["html"] =
                   await TranslateService.awsTranslate(
-                    block["title"]["html"],
+                    block["titleHtml"]["html"],
                     targetLanguage
                   );
               }
 
-              if (translatedBlock["subtitle"]) {
-                translatedBlock["subtitle"]["html"] =
+              if (translatedBlock["subtitleHtml"]) {
+                translatedBlock["subtitleHtml"]["html"] =
                   await TranslateService.awsTranslate(
-                    block["subtitle"]["html"],
+                    block["subtitleHtml"]["html"],
                     targetLanguage
                   );
               }
