@@ -2,7 +2,6 @@ import React from "react";
 import ProgressiveImage from "react-progressive-image";
 import { LANGUAGE_EN, SNAP_LANGUAGE_PREFERENCE } from "../constants";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import google_logo from "../images/google_translate.svg";
 import { LanguageOptionType, WithTranslationState } from "./withTranslation";
 import { ArtworkObject } from "../types/payloadTypes";
 import { LanguageDropdown } from "./LanguageDropdown";
@@ -32,6 +31,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
 }) => {
   const { getLocalStorage } = useLocalStorage();
 
+  // Russian language renders differently, so we need to override the default font size
   const shortDescFontStyle =
     getLocalStorage(SNAP_LANGUAGE_PREFERENCE) === "Ru"
       ? { fontSize: `14px` }
@@ -134,8 +134,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
               {artwork.shortDescription &&
                 selectedLanguage.code !== LANGUAGE_EN && (
                   <div className="google-translate-disclaimer">
-                    <span>Translated with </span>
-                    <img src={google_logo} alt="google_logo" />
+                    Translated with AWS
                   </div>
                 )}
               <div className="card-info">

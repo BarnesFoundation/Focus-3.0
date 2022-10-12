@@ -2,7 +2,6 @@ import React from "react";
 import { Timeline, Tween } from "react-gsap";
 import { Linear, TimelineLite } from "gsap/all";
 import barnes_logo from "../images/barnes_email_logo_1x.png";
-import google_logo from "../images/google_translate.svg";
 import scroll_up from "../images/up_wht_1x.png";
 import {
   LANGUAGE_EN,
@@ -451,8 +450,7 @@ class StoryItem extends React.Component<StoryItemProps, StoryItemState> {
                       className="google-translate-disclaimer"
                       style={{ paddingBottom: `200px` }}
                     >
-                      <span>Translated with </span>
-                      <img src={google_logo} alt="google_logo" />
+                      Translated with AWS
                     </div>
                   )}
                 </div>

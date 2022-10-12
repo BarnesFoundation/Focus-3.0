@@ -22,6 +22,7 @@ class BookmarkController {
 
     // Update the language for the user
     request.session.lang_pref = languageToSet.toLowerCase();
+    await request.session.save();
 
     // We need to update all bookmark entries for the user to use the new language
     await prisma.bookmarks.updateMany({
