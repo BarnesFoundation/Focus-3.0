@@ -269,6 +269,7 @@ export function getCollectionContentByInvno(
 							}
 							... on ImageComparison {
 								type
+								style
 								rightImage {
 									altText
 									caption {
@@ -350,6 +351,7 @@ export const getContentAndStories = (
 							}
 							... on ImageComparison {
 								type
+								style
 								rightImage {
 									altText
 									caption {

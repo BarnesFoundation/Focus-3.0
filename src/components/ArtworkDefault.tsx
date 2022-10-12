@@ -3,17 +3,13 @@ import classnames from "classnames";
 import { isAndroid } from "react-device-detect";
 
 import { LANGUAGE_EN } from "../constants";
-import withTranslation, {
-  LanguageOptionType,
-  WithTranslationState,
-} from "./withTranslation";
+import { LanguageOptionType, WithTranslationState } from "./withTranslation";
 import { ArtworkObject, ArtWorkRecordsResult } from "../types/payloadTypes";
 import { EmailForm } from "./EmailForm";
 import ProgressiveImage from "react-progressive-image";
 import { LanguageDropdown } from "./LanguageDropdown";
 import { Share } from "./Share";
 import { ContentBlock } from "./ContentBlock";
-import google_logo from "../images/google_translate.svg";
 import { ScanButton } from "./ScanButton";
 import { formatHtmlCaption } from "../helpers/artWorkHelper";
 
@@ -25,9 +21,11 @@ type ArtworkDefaultProps = {
   emailCaptured: boolean;
   showEmailForm: boolean;
   onSubmitEmail: (email: string, callback?: (args?: any) => void) => void;
-} & WithTranslationState;
+  langOptions: WithTranslationState["langOptions"];
+  getTranslation: WithTranslationState["getTranslation"];
+};
 
-export const ArtworkDefaultComponent: React.FC<ArtworkDefaultProps> = ({
+export const ArtworkDefault: React.FC<ArtworkDefaultProps> = ({
   artwork,
   result,
   onSelectLanguage,
@@ -41,6 +39,7 @@ export const ArtworkDefaultComponent: React.FC<ArtworkDefaultProps> = ({
   // Component state
   const [imgLoaded, setImgLoaded] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
+  const [shortDescFontStyle, setShortDescStyle] = useState({});
   const startYCard2 = useRef<number>();
   const startYTrigger = useRef<number>();
 
@@ -63,6 +62,13 @@ export const ArtworkDefaultComponent: React.FC<ArtworkDefaultProps> = ({
     const endY = touch.pageY;
     if (endY > startYCard2.current) setFormOpen(false);
   };
+
+  useEffect(() => {
+    // Russian language renders differently, so we need to override the default font size
+    selectedLanguage.code === "Ru"
+      ? setShortDescStyle({ fontSize: "14px" })
+      : setShortDescStyle({});
+  }, [selectedLanguage]);
 
   useEffect(() => {
     if (!imgLoaded || !showEmailForm) return;
@@ -192,7 +198,7 @@ export const ArtworkDefaultComponent: React.FC<ArtworkDefaultProps> = ({
 
                       <div className="short-desc-container">
                         {/* Content blocks from Hygraph CMS */}
-                        {artwork.content && (
+                        {artwork.content ? (
                           <div className="card-content">
                             {artwork.content.map((c, index) => (
                               <ContentBlock
@@ -201,14 +207,23 @@ export const ArtworkDefaultComponent: React.FC<ArtworkDefaultProps> = ({
                               />
                             ))}
                           </div>
+                        ) : artwork.shortDescription ? (
+                          <div
+                            className="card-text paragraph"
+                            style={shortDescFontStyle}
+                            dangerouslySetInnerHTML={{
+                              __html: artwork.shortDescription,
+                            }}
+                          ></div>
+                        ) : (
+                          <></>
                         )}
                       </div>
 
-                      {artwork.content &&
+                      {(artwork.content || artwork.shortDescription) &&
                         selectedLanguage.code !== LANGUAGE_EN && (
                           <div className="google-translate-disclaimer">
-                            <span>Translated with </span>
-                            <img src={google_logo} alt="google_logo" />
+                            Translated with AWS
                           </div>
                         )}
 
@@ -348,7 +363,3 @@ export const ArtworkDefaultComponent: React.FC<ArtworkDefaultProps> = ({
     </div>
   );
 };
-
-export const ArtworkDefault = withTranslation<ArtworkDefaultProps>(
-  ArtworkDefaultComponent
-);
