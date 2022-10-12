@@ -132,6 +132,8 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
             showEmailForm={showEmailForm}
             emailCaptureAck={emailCaptureAck}
             onSubmitEmail={onSubmitEmail}
+            langOptions={langOptions}
+            getTranslation={getTranslation}
           />
         ) : (
           <ArtworkDefault
