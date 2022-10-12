@@ -1,8 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-
 import { Store } from "../../utils";
+import { DatabaseService } from "../services";
 
-const prisma = new PrismaClient();
+const prisma = DatabaseService.instance;
 
 const prune = () =>
   new Promise((resolve, reject) => {

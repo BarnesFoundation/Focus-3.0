@@ -1,9 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import express from "express";
 
 import { TranslateService } from "../services";
-
-const prisma = new PrismaClient();
 
 class TranslationController {
   public static async getCannedTranslations(

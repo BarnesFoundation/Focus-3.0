@@ -1,10 +1,9 @@
-import { PrismaClient } from "@prisma/client";
 import express from "express";
 import * as EmailValidator from "email-validator";
 
-import { BookmarkService } from "../services";
+import { BookmarkService, DatabaseService } from "../services";
 
-const prisma = new PrismaClient();
+const prisma = DatabaseService.instance;
 
 class BookmarkController {
   public static async setLanguagePreference(

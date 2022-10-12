@@ -1,12 +1,10 @@
 import express from "express";
 import multer from "multer";
-import { PrismaClient } from "@prisma/client";
-import fs from "fs";
-import { promisify } from "util";
 
 import { ImageUploadJob } from "../jobs";
+import { DatabaseService } from "../services";
 
-const prisma = new PrismaClient();
+const prisma = DatabaseService.instance;
 
 export const uploadMiddleware = multer({ storage: multer.memoryStorage() });
 export const fieldName = "image";

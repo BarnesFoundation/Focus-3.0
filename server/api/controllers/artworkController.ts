@@ -1,11 +1,15 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
 
-import { ArtworkService, GraphCMSService, TranslateService } from "../services";
+import {
+  ArtworkService,
+  GraphCMSService,
+  TranslateService,
+  DatabaseService,
+} from "../services";
 import { generateImgixUrl } from "../utils/generateImgixUrl";
 
 export const fieldName = "storablePhoto";
-const prisma = new PrismaClient();
+const prisma = DatabaseService.instance;
 
 class ArtworkController {
   public static async getInformation(
