@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import DatabaseService from "./databaseService";
 
-const prisma = new PrismaClient();
+const prisma = DatabaseService.instance;
 
 export default class BookmarkService {
   public static async subscribeUserNewsletter(emailToSubscribe: string) {

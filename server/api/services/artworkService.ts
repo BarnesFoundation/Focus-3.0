@@ -1,5 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
+import DatabaseService from "./databaseService";
 import ElasticSearchService from "./elasticSearchService";
 import GraphCMSService, { RelatedStory, ObjectID } from "./graphCMSService";
 import Config from "../../config";
@@ -8,7 +7,7 @@ import { slugify } from "../utils";
 import { generateImgixUrl } from "../utils/generateImgixUrl";
 import TranslateService from "./translateService";
 
-const prisma = new PrismaClient();
+const prisma = DatabaseService.instance;
 
 // Unique separator to separate strings of content to be translated
 const UNIQUE_SEPARATOR = "***";
