@@ -1,7 +1,8 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+import { DatabaseService } from "../services";
+
+const prisma = DatabaseService.instance;
 
 export const captureScannedHistoryMiddleware = async (
   request: express.Request,

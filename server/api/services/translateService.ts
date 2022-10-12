@@ -2,11 +2,11 @@ import {
   TranslateClient,
   TranslateTextCommand,
 } from "@aws-sdk/client-translate";
-import { PrismaClient } from "@prisma/client";
 
+import DatabaseService from "./databaseService";
 import { environmentConfiguration } from "../../config";
 
-const prisma = new PrismaClient();
+const prisma = DatabaseService.instance;
 
 const translateClient = new TranslateClient({
   region: environmentConfiguration.aws.region,

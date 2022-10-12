@@ -1,8 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { ElasticSearchService, DatabaseService } from "../services";
 
-import { ElasticSearchService } from "../services";
-
-const prisma = new PrismaClient();
+const prisma = DatabaseService.instance;
 
 class ElasticSearchSyncJob {
   public static async main() {

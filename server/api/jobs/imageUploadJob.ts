@@ -1,10 +1,9 @@
 import { S3 } from "@aws-sdk/client-s3";
 
-import { PrismaClient } from "@prisma/client";
-
+import { DatabaseService } from "../services";
 import { environmentConfiguration } from "../../config";
 
-const prisma = new PrismaClient();
+const prisma = DatabaseService.instance;
 const s3Client = new S3({ region: environmentConfiguration.aws.region });
 
 const generatePublicUrl = (photoKey: string) => {

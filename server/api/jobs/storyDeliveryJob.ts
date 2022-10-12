@@ -1,4 +1,4 @@
-import { PrismaClient, bookmarks } from "@prisma/client";
+import { bookmarks } from "@prisma/client";
 
 import { groupBy, generateTimeAgo } from "../utils";
 import {
@@ -6,10 +6,11 @@ import {
   TranslateService,
   MailService,
   ParsedRelatedStory,
+  DatabaseService,
 } from "../services";
 import { isLocal } from "../../config";
 
-const prisma = new PrismaClient();
+const prisma = DatabaseService.instance;
 
 // When this story delivery job runs, we will collect stories for each
 // set of bookmarks that occurred more than 22 hours ago

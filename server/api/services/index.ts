@@ -4,6 +4,7 @@ import GraphCMSService, { RelatedStory, ObjectID } from "./graphCMSService";
 import TranslateService from "./translateService";
 import BookmarkService from "./bookmarkService";
 import MailService, { Templates as MailTemplates } from "./mailService";
+import DatabaseService from "./databaseService";
 
 export {
   ElasticSearchService,
@@ -12,6 +13,7 @@ export {
   TranslateService,
   BookmarkService,
   MailService,
+  DatabaseService,
 
   // Types related to services
   MailTemplates,

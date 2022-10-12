@@ -1,8 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-import { GraphCMSService } from "../services";
+import { GraphCMSService, DatabaseService } from "../services";
 import express from "express";
 
-const prisma = new PrismaClient();
+const prisma = DatabaseService.instance;
 
 class StoryController {
   public static async getStoryContent(
