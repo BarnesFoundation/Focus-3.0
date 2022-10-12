@@ -1,10 +1,10 @@
-import { PrismaClient, bookmarks, es_cached_records } from "@prisma/client";
+import { bookmarks, es_cached_records } from "@prisma/client";
 
 import { groupBy, generateTimeAgo } from "../utils";
-import { MailService, TranslateService } from "../services";
+import { MailService, TranslateService, DatabaseService } from "../services";
 import { isLocal } from "../../config";
 
-const prisma = new PrismaClient();
+const prisma = DatabaseService.instance;
 
 // When this bookmark delivery job runs, we will collect bookmarks for each
 // email that occurred more than 3 hours ago

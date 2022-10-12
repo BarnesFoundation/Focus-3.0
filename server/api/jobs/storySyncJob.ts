@@ -1,9 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-
-import { GraphCMSService } from "../services";
+import { GraphCMSService, DatabaseService } from "../services";
 import { slugify } from "../utils";
 
-const prisma = new PrismaClient();
+const prisma = DatabaseService.instance;
 
 class StorySyncJob {
   public static async main() {
