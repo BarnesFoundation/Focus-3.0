@@ -10,7 +10,6 @@ import ProgressiveImage from "react-progressive-image";
 import { LanguageDropdown } from "./LanguageDropdown";
 import { Share } from "./Share";
 import { ContentBlock } from "./ContentBlock";
-import google_logo from "../images/google_translate.svg";
 import { ScanButton } from "./ScanButton";
 import { formatHtmlCaption } from "../helpers/artWorkHelper";
 
@@ -223,8 +222,7 @@ export const ArtworkDefault: React.FC<ArtworkDefaultProps> = ({
                       {(artwork.content || artwork.shortDescription) &&
                         selectedLanguage.code !== LANGUAGE_EN && (
                           <div className="google-translate-disclaimer">
-                            <span>Translated with </span>
-                            <img src={google_logo} alt="google_logo" />
+                            Translated with AWS
                           </div>
                         )}
 
