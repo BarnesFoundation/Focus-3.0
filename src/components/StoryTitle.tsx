@@ -16,12 +16,13 @@ export const StoryTitle: React.FC<StoryTitleProps> = ({
   return (
     <div id="story-title-bar" className="story-title-bar">
       <div className="language-dropdown">
-        <LanguageDropdown
+        {/* Temporarily commenting this out until we can fix the language dropdown in the stories */}
+        {/* <LanguageDropdown
           isStoryItemDropDown={true}
           langOptions={langOptions}
           selected={selectedLanguage}
           onSelectLanguage={onSelectLanguage}
-        />
+        /> */}
       </div>
     </div>
   );

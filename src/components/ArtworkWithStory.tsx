@@ -11,10 +11,7 @@ import styled, { css } from "styled-components";
 
 import * as constants from "../constants";
 import withOrientation from "./withOrientation";
-import withTranslation, {
-  LanguageOptionType,
-  WithTranslationState,
-} from "./withTranslation";
+import { LanguageOptionType, WithTranslationState } from "./withTranslation";
 import { EmailForm } from "./EmailForm";
 import StoryItem from "./StoryItem";
 import { ScanButton } from "./ScanButton";
@@ -57,7 +54,9 @@ type ArtworkWithStoryProps = {
   showEmailForm: boolean;
   emailCaptureAck: boolean;
   onSubmitEmail: (email: string, callback?: (args?: any) => void) => void;
-} & WithTranslationState;
+  langOptions: WithTranslationState["langOptions"];
+  getTranslation: WithTranslationState["getTranslation"];
+};
 
 type ArtworkWithStoryState = {
   imgLoaded: boolean;
@@ -649,6 +648,5 @@ export class ArtworkWithStory extends Component<
 
 export default compose<ArtworkWithStory>(
   withOrientation,
-  withTranslation,
   withRouter
 )(ArtworkWithStory);

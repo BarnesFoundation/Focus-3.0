@@ -17,6 +17,8 @@ import { ArtworkDefault } from "./ArtworkDefault";
 export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
   getSelectedLanguage,
   updateSelectedLanguage,
+  langOptions,
+  getTranslation,
 }) => {
   // Initialize the search request services
   const sr = new SearchRequestService();
@@ -119,6 +121,7 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
     <Fragment>
       {result &&
         artwork &&
+        imageId &&
         (result.data.showStory ? (
           <ArtworkWithStory
             artwork={artwork}
@@ -130,6 +133,8 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
             showEmailForm={showEmailForm}
             emailCaptureAck={emailCaptureAck}
             onSubmitEmail={onSubmitEmail}
+            langOptions={langOptions}
+            getTranslation={getTranslation}
           />
         ) : (
           <ArtworkDefault
@@ -140,6 +145,8 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
             emailCaptured={emailCaptured}
             showEmailForm={showEmailForm}
             onSubmitEmail={onSubmitEmail}
+            langOptions={langOptions}
+            getTranslation={getTranslation}
           />
         ))}
     </Fragment>
