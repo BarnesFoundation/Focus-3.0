@@ -121,6 +121,7 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
     <Fragment>
       {result &&
         artwork &&
+        imageId &&
         (result.data.showStory ? (
           <ArtworkWithStory
             artwork={artwork}
