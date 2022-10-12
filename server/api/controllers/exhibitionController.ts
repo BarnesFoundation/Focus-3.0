@@ -1,10 +1,8 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
 
 import { ArtworkService, TranslateService } from "../services";
 
 export const fieldName = "storablePhoto";
-const prisma = new PrismaClient();
 
 class ExhibitionController {
   public static async getObjectInfo(
