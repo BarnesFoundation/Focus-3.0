@@ -64,6 +64,7 @@ export const ArtworkDefault: React.FC<ArtworkDefaultProps> = ({
   };
 
   useEffect(() => {
+    // Russian language renders differently, so we need to override the default font size
     selectedLanguage.code === "Ru"
       ? setShortDescStyle({ fontSize: "14px" })
       : setShortDescStyle({});

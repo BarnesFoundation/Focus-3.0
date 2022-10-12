@@ -31,6 +31,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({
 }) => {
   const { getLocalStorage } = useLocalStorage();
 
+  // Russian language renders differently, so we need to override the default font size
   const shortDescFontStyle =
     getLocalStorage(SNAP_LANGUAGE_PREFERENCE) === "Ru"
       ? { fontSize: `14px` }
