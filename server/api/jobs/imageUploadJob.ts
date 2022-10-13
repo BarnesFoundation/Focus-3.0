@@ -1,4 +1,5 @@
 import { S3 } from "@aws-sdk/client-s3";
+import crypto from "crypto";
 
 import { DatabaseService } from "../services";
 import { environmentConfiguration } from "../../config";
@@ -17,77 +18,58 @@ const generatePublicUrl = (photoKey: string) => {
 class ImageUploadJob {
   public static async main(
     albumId: number,
-    photoId: number,
-    imageBuffer: string
+    data: { imageBuffer: string; referenceImageUrl: string; searchTime: string }
   ) {
     console.debug(`Performing ImageUploadJob for
 	Album ID: ${albumId}
-	Photo ID: ${photoId}
 	`);
-    const foundAlbum = await prisma.albums.findUnique({
-      where: {
-        id: albumId,
+    const { imageBuffer, referenceImageUrl, searchTime } = data;
+    const now = new Date(Date.now()).toISOString();
+
+    // Let's upload the image to S3 and get the public URL for it
+    const filePublicUrl = await ImageUploadJob.performUpload(imageBuffer);
+    const createdAlbumPhoto = await prisma.photos.create({
+      data: {
+        response_time: searchTime,
+        result_image_url: referenceImageUrl,
+        search_engine: "Catchoom API",
+
+        updated_at: now,
+        created_at: now,
+
+        album_id: albumId,
+
+        searched_image_blob: null,
+        searched_image_s3_url: filePublicUrl,
       },
     });
 
-    if (foundAlbum) {
-      console.debug(`Found album for Album ID: ${albumId}`);
-      const photoInAlbum = await prisma.photos.findFirst({
-        where: {
-          id: photoId,
-          album_id: albumId,
-        },
+    console.debug(`Successfully created photo record`, createdAlbumPhoto.id);
+  }
+
+  private static async performUpload(imageBuffer: string) {
+    const fileName = `${crypto.randomUUID()}.png`;
+    console.debug(`Uploading image ${fileName} to S3 bucket`);
+
+    try {
+      await s3Client.putObject({
+        ACL: "public-read",
+        Bucket: environmentConfiguration.aws.s3Bucket,
+        Key: fileName,
+        Body: imageBuffer,
       });
 
-      // If we located the photo for this album
-      // we'll perform the upload for the photo to S3
-      if (photoInAlbum) {
-        console.debug(`Found photo record for Photo ID: ${photoId}`);
-        const fileName = `${photoId}_${Date.now()}.png`;
+      // Now that the photo upload has been successful
+      // let's generate the S3 URL for it
+      const publicUrl = generatePublicUrl(fileName);
+      console.debug(`Uploaded image to URL ${publicUrl}`);
 
-        // Now we can upload the image to S3
-        console.debug(`Uploading image ${fileName} to S3 bucket`);
-        try {
-          await s3Client.putObject({
-            ACL: "public-read",
-            Bucket: environmentConfiguration.aws.s3Bucket,
-            Key: fileName,
-            Body: imageBuffer,
-          });
-
-          // Now that the photo is uploaded, let's update the photo in the database to
-          // 1. Remove the giant blob string
-          // 2. Add the S3 URL generated for the image
-          const now = new Date(Date.now()).toISOString();
-          const publicUrl = generatePublicUrl(fileName);
-          await prisma.photos.update({
-            where: {
-              id: photoId,
-
-              // TODO - this throws a type error since `album_id` isn't a unique column
-              // Let's fix this by possibly making `album_id` and `photo_id` a composite unique key
-              // we can then uncomment this following line, once the Prisma schema has been updated
-              // album_id: albumId,
-            },
-            data: {
-              searched_image_blob: null,
-              searched_image_s3_url: publicUrl,
-
-              // Indicate that the record was updated during this job run
-              updated_at: now,
-            },
-          });
-        } catch (error) {
-          console.error(
-            `Encountered an error uploading image ${fileName} to the S3 bucket`,
-            error
-          );
-        }
-      } else {
-        console.warn(`Could not find photo record for Photo ID: ${photoId}`);
-      }
-    } else {
-      console.warn(`Could not find album record for Album ID: ${albumId}`);
+      return publicUrl;
+    } catch (error) {
+      console.error(
+        `Encountered an error uploading image ${fileName} to the S3 bucket`,
+        error
+      );
     }
   }
 }

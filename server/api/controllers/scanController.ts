@@ -83,22 +83,6 @@ class ScanController {
       });
     }
 
-    // Once we've created the album for the session
-    // we can create photos related to this album
-    const createdAlbumPhoto = await prisma.photos.create({
-      data: {
-        es_response: request.body.esResponse,
-        response_time: request.body.searchTime,
-        result_image_url: referenceImageUrl,
-        search_engine: "Catchoom API",
-
-        updated_at: now,
-        created_at: now,
-
-        album_id: sessionAlbum.id,
-      },
-    });
-
     // We'll respond to the client that we've received their request
     // to store the image and close the connection with them
     // We'll store the image buffer so we can pass it later
@@ -107,11 +91,11 @@ class ScanController {
 
     // We'll proceed with the image upload, no longer impacting the
     // client's connection as it should be ended by now
-    await ImageUploadJob.main(
-      parseInt(sessionAlbum.id.toString()),
-      parseInt(createdAlbumPhoto.id.toString()),
-      queryImageBuffer
-    );
+    await ImageUploadJob.main(parseInt(sessionAlbum.id.toString()), {
+      imageBuffer: queryImageBuffer,
+      searchTime: request.body.searchTime,
+      referenceImageUrl,
+    });
   }
 }
 
