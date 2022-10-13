@@ -18,7 +18,11 @@ const generatePublicUrl = (photoKey: string) => {
 class ImageUploadJob {
   public static async main(
     albumId: number,
-    data: { imageBuffer: string; referenceImageUrl: string; searchTime: string }
+    data: {
+      imageBuffer: string;
+      referenceImageUrl: string;
+      searchTime: string;
+    }
   ) {
     console.debug(`Performing ImageUploadJob for
 	Album ID: ${albumId}
@@ -48,7 +52,8 @@ class ImageUploadJob {
   }
 
   private static async performUpload(imageBuffer: string) {
-    const fileName = `${crypto.randomUUID()}.png`;
+    const randomUUID = crypto.randomBytes(16).toString("hex");
+    const fileName = `${randomUUID}.png`;
     console.debug(`Uploading image ${fileName} to S3 bucket`);
 
     try {

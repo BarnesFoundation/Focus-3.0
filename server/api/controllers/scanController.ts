@@ -45,7 +45,7 @@ class ScanController {
   ) {
     const now = new Date(Date.now()).toISOString();
     const sessionId = request.sessionID;
-    const queryImage = request.file;
+    const queryImage = request.file.buffer.toString("base64");
 
     let referenceImageUrl =
       request.body.searchSuccess === TRUE
@@ -85,14 +85,12 @@ class ScanController {
 
     // We'll respond to the client that we've received their request
     // to store the image and close the connection with them
-    // We'll store the image buffer so we can pass it later
-    const queryImageBuffer = queryImage.buffer.toString("base64");
     response.status(200).json("Request to store image received");
 
     // We'll proceed with the image upload, no longer impacting the
     // client's connection as it should be ended by now
     await ImageUploadJob.main(parseInt(sessionAlbum.id.toString()), {
-      imageBuffer: queryImageBuffer,
+      imageBuffer: queryImage,
       searchTime: request.body.searchTime,
       referenceImageUrl,
     });
