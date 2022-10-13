@@ -18,7 +18,7 @@ class ImageUploadJob {
   public static async main(
     albumId: number,
     photoId: number,
-    image: Express.Multer.File
+    imageBuffer: string
   ) {
     console.debug(`Performing ImageUploadJob for
 	Album ID: ${albumId}
@@ -44,39 +44,45 @@ class ImageUploadJob {
       if (photoInAlbum) {
         console.debug(`Found photo record for Photo ID: ${photoId}`);
         const fileName = `${photoId}_${Date.now()}.png`;
-        const imageBuffer = image.buffer.toString("base64");
 
         // Now we can upload the image to S3
         console.debug(`Uploading image ${fileName} to S3 bucket`);
-        await s3Client.putObject({
-          ACL: "public-read",
-          Bucket: environmentConfiguration.aws.s3Bucket,
-          Key: fileName,
-          Body: imageBuffer,
-        });
+        try {
+          await s3Client.putObject({
+            ACL: "public-read",
+            Bucket: environmentConfiguration.aws.s3Bucket,
+            Key: fileName,
+            Body: imageBuffer,
+          });
 
-        // Now that the photo is uploaded, let's update the photo in the database to
-        // 1. Remove the giant blob string
-        // 2. Add the S3 URL generated for the image
-        const now = new Date(Date.now()).toISOString();
-        const publicUrl = generatePublicUrl(fileName);
-        await prisma.photos.update({
-          where: {
-            id: photoId,
+          // Now that the photo is uploaded, let's update the photo in the database to
+          // 1. Remove the giant blob string
+          // 2. Add the S3 URL generated for the image
+          const now = new Date(Date.now()).toISOString();
+          const publicUrl = generatePublicUrl(fileName);
+          await prisma.photos.update({
+            where: {
+              id: photoId,
 
-            // TODO - this throws a type error since `album_id` isn't a unique column
-            // Let's fix this by possibly making `album_id` and `photo_id` a composite unique key
-            // we can then uncomment this following line, once the Prisma schema has been updated
-            // album_id: albumId,
-          },
-          data: {
-            searched_image_blob: null,
-            searched_image_s3_url: publicUrl,
+              // TODO - this throws a type error since `album_id` isn't a unique column
+              // Let's fix this by possibly making `album_id` and `photo_id` a composite unique key
+              // we can then uncomment this following line, once the Prisma schema has been updated
+              // album_id: albumId,
+            },
+            data: {
+              searched_image_blob: null,
+              searched_image_s3_url: publicUrl,
 
-            // Indicate that the record was updated during this job run
-            updated_at: now,
-          },
-        });
+              // Indicate that the record was updated during this job run
+              updated_at: now,
+            },
+          });
+        } catch (error) {
+          console.error(
+            `Encountered an error uploading image ${fileName} to the S3 bucket`,
+            error
+          );
+        }
       } else {
         console.warn(`Could not find photo record for Photo ID: ${photoId}`);
       }

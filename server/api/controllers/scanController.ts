@@ -100,7 +100,9 @@ class ScanController {
     });
 
     // We'll respond to the client that we've received their request
-    // to store the image and close the connection
+    // to store the image and close the connection with them
+    // We'll store the image buffer so we can pass it later
+    const queryImageBuffer = queryImage.buffer.toString("base64");
     response.status(200).json("Request to store image received");
 
     // We'll proceed with the image upload, no longer impacting the
@@ -108,7 +110,7 @@ class ScanController {
     await ImageUploadJob.main(
       parseInt(sessionAlbum.id.toString()),
       parseInt(createdAlbumPhoto.id.toString()),
-      queryImage
+      queryImageBuffer
     );
   }
 }
