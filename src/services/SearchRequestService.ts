@@ -73,9 +73,11 @@ class SearchRequestService {
     await axios.post(constants.SAVE_LANGUAGE_PREFERENCE_URL, payload);
   };
 
-  getAppTranslations = async () => {
+  getAppTranslations = async (lang) => {
     try {
-      let response = await axios.get(constants.APP_TRANSLATIONS_URL);
+      let response = await axios.get(constants.APP_TRANSLATIONS_URL, {
+        params: { lang },
+      });
       return response.data.data.translations;
     } catch (error) {
       console.log(

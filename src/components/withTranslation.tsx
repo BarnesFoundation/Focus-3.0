@@ -76,7 +76,7 @@ function withTranslation<WrappedComponentProps>(WrappedComponent) {
       const langPref = localStorage.getItem(SNAP_LANGUAGE_PREFERENCE);
       if (langPref) await this.sr.saveLanguagePreference(langPref);
       // Set translations in state
-      const translations = await this.sr.getAppTranslations();
+      const translations = await this.sr.getAppTranslations(langPref);
       this.setState({ translations: translations, loaded: true });
       localStorage.setItem(
         SNAP_LANGUAGE_TRANSLATION,
@@ -88,7 +88,10 @@ function withTranslation<WrappedComponentProps>(WrappedComponent) {
       console.log(
         "WithTranslation >> updateTranslations. Update translations."
       );
-      const translations = await this.sr.getAppTranslations();
+      const selectedLang = await this.getSelectedLanguage();
+      const translations = await this.sr.getAppTranslations(
+        selectedLang[0].code
+      );
       this.setState({ translations: translations, loaded: true });
       localStorage.setItem(
         SNAP_LANGUAGE_TRANSLATION,

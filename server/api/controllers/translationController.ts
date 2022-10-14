@@ -7,9 +7,17 @@ class TranslationController {
     request: express.Request,
     response: express.Response
   ) {
-    const languagePreference = request.session.lang_pref
+    const languagePreference = request.query.lang
+      ? request.query.lang.toString()
+      : request.session.lang_pref
       ? request.session.lang_pref
       : "en";
+
+    // If lang preference has changed, update session
+    if (request.session.lang_pref !== languagePreference) {
+      request.session.lang_pref = languagePreference.toLowerCase();
+    }
+
     const storedTranslations =
       await TranslateService.retrieveStoredTranslations(languagePreference);
 
