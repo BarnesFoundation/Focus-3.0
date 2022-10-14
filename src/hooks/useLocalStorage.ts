@@ -62,6 +62,7 @@ const getTranslations = () => {
  * @returns {string} Translation of requested content
  */
 const getTranslation = (screen: string, textId: string): string => {
+  // TODO: use this fn inside FC components instead of passing the withTranslation version down through the parent/child props
   const translations = getTranslations();
   return (
     translations[screen][textId].translated_content ||
