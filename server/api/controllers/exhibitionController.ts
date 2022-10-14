@@ -10,6 +10,13 @@ class ExhibitionController {
     response: express.Response
   ) {
     const objectId = request.params.objectId;
+    const preferredLanguage = request.query.lang.toString();
+
+    // If lang preference has changed, update session
+    if (request.session.lang_pref !== preferredLanguage) {
+      request.session.lang_pref = preferredLanguage.toLowerCase();
+    }
+
     const objectData = await ArtworkService.findSpecialExhibitionObject(
       objectId
     );
@@ -20,7 +27,6 @@ class ExhibitionController {
       objectData[0]["id"] = objectData[0].objectId;
 
       const session = request.session;
-      const preferredLanguage = session.lang_pref;
 
       // Translate the content
       objectData[0]["shortDescription"] = await TranslateService.translate(
