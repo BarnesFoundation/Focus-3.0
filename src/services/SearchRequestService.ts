@@ -30,9 +30,12 @@ class SearchRequestService {
   }
 
   /** Retrieves the art information for the provided image id */
-  getArtworkInformation = async (imageId) => {
+  getArtworkInformation = async (imageId, lang) => {
+    // get lang from local storage
     try {
-      let response = await axios.get(constants.ART_WORK_INFO_URL + imageId);
+      let response = await axios.get(constants.ART_WORK_INFO_URL + imageId, {
+        params: { lang },
+      });
       return response.data;
     } catch (error) {
       console.log(
@@ -138,10 +141,11 @@ class SearchRequestService {
   };
 
   /** Retrieves special exhibition object details from Hygraph/GraphCMS */
-  getSpecialExhibitionObject = async (objectId) => {
+  getSpecialExhibitionObject = async (objectId, lang) => {
     try {
       const response = await axios.get(
-        constants.EXHIBITION_OBJECT_URL(objectId)
+        constants.EXHIBITION_OBJECT_URL(objectId),
+        { params: { lang } }
       );
       return response.data;
     } catch (error) {
@@ -150,7 +154,7 @@ class SearchRequestService {
   };
 
   /** Closure function so that an identified item is processed only once. Returns an IdentifiedImagePayload object */
-  processIdentifiedItem = async (identifiedItem) => {
+  processIdentifiedItem = async (identifiedItem, lang) => {
     // Get the image id and reference image url
     const imageId = identifiedItem.item.name;
     const referenceImageUrl = identifiedItem.image.thumb_120;
@@ -158,11 +162,11 @@ class SearchRequestService {
 
     // If it is a special exhibition object, get info from CMS
     if (imageId.split("/")[0] === "SPEX") {
-      data = await this.getSpecialExhibitionObject(imageId.split("/")[1]);
+      data = await this.getSpecialExhibitionObject(imageId.split("/")[1], lang);
       // Otherwise search for item in ElasticSearch
     } else {
       // Retrieve artwork information
-      data = await this.getArtworkInformation(imageId);
+      data = await this.getArtworkInformation(imageId, lang);
     }
 
     return new IdentifiedImagePayload(data, referenceImageUrl);

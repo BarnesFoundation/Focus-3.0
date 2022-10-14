@@ -96,8 +96,11 @@ export class CameraContainerComponent extends Component<
         // Get the identified image information
         const identifiedItem = imageSearchResponse.responsePayload.results[0];
 
+        // Get language code
+        const langPref = (await this.props.getSelectedLanguage())[0].code;
         const identifiedImageInformation = await this.sr.processIdentifiedItem(
-          identifiedItem
+          identifiedItem,
+          langPref
         );
 
         const { esResponse, referenceImageUrl } = identifiedImageInformation;
