@@ -10,6 +10,7 @@ import { SearchRequestService } from "../services/SearchRequestService";
 import { loadImage } from "./CameraHelper";
 import * as constants from "../constants";
 import { ARTWORK, EXHIBITION } from "../constants/routes";
+import withTranslation, { WithTranslationState } from "./withTranslation";
 
 const Container = posed.div({
   enter: { opacity: 1 },
@@ -18,7 +19,7 @@ const Container = posed.div({
 
 type CameraContainerProps = {
   history: History;
-};
+} & WithTranslationState;
 
 type CameraContainerState = {
   scanSeqId: any;
@@ -194,4 +195,4 @@ export class CameraContainerComponent extends Component<
   }
 }
 
-export default compose(withRouter)(CameraContainerComponent);
+export default compose(withRouter, withTranslation)(CameraContainerComponent);
