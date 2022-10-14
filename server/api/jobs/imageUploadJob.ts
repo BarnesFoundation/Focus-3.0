@@ -51,9 +51,12 @@ class ImageUploadJob {
     console.debug(`Successfully created photo record`, createdAlbumPhoto.id);
   }
 
-  private static async performUpload(imageBuffer: string) {
+  private static async performUpload(imageBufferString: string) {
     const randomUUID = crypto.randomBytes(16).toString("hex");
     const fileName = `${randomUUID}.png`;
+
+    // We need to create the buffer from the base64 image string
+    const imageBuffer = Buffer.from(imageBufferString, "base64");
     console.debug(`Uploading image ${fileName} to S3 bucket`);
 
     try {
