@@ -127,7 +127,6 @@ function withTranslation<WrappedComponentProps>(WrappedComponent) {
         if (option.code === lang.code) {
           option.selected = true;
           localStorage.setItem(SNAP_LANGUAGE_PREFERENCE, lang.code);
-          await this.sr.saveLanguagePreference(lang.code);
           await this.updateTranslations();
         } else {
           option.selected = false;
