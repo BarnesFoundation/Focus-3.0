@@ -5,7 +5,10 @@ import { DatabaseService } from "../services";
 import { environmentConfiguration } from "../../config";
 
 const prisma = DatabaseService.instance;
-const s3Client = new S3({ region: environmentConfiguration.aws.region });
+const s3Client = new S3({
+  region: environmentConfiguration.aws.region,
+  maxAttempts: 3,
+});
 
 const generatePublicUrl = (photoKey: string) => {
   const href = `https://s3.${environmentConfiguration.aws.region}.amazonaws.com`;
@@ -31,29 +34,43 @@ class ImageUploadJob {
     const now = new Date(Date.now()).toISOString();
 
     // Let's upload the image to S3 and get the public URL for it
-    const filePublicUrl = await ImageUploadJob.performUpload(imageBuffer);
-    const createdAlbumPhoto = await prisma.photos.create({
-      data: {
-        response_time: searchTime,
-        result_image_url: referenceImageUrl,
-        search_engine: "Catchoom API",
+    const photoIdentifier = crypto.randomBytes(16).toString("hex");
+    const filePublicUrl = await ImageUploadJob.performUpload(
+      imageBuffer,
+      photoIdentifier
+    );
 
-        updated_at: now,
-        created_at: now,
+    try {
+      await prisma.photos.create({
+        data: {
+          response_time: searchTime,
+          result_image_url: referenceImageUrl,
+          search_engine: "Catchoom API",
 
-        album_id: albumId,
+          updated_at: now,
+          created_at: now,
 
-        searched_image_blob: null,
-        searched_image_s3_url: filePublicUrl,
-      },
-    });
+          album_id: albumId,
 
-    console.debug(`Successfully created photo record`, createdAlbumPhoto.id);
+          searched_image_blob: null,
+          searched_image_s3_url: filePublicUrl,
+        },
+      });
+
+      console.debug(`Successfully created photo record for ${photoIdentifier}`);
+    } catch (error) {
+      console.error(
+        `Encountered an error creating photo record ${photoIdentifier}`,
+        error
+      );
+    }
   }
 
-  private static async performUpload(imageBufferString: string) {
-    const randomUUID = crypto.randomBytes(16).toString("hex");
-    const fileName = `${randomUUID}.png`;
+  private static async performUpload(
+    imageBufferString: string,
+    photoIdentifier: string
+  ) {
+    const fileName = `${photoIdentifier}.png`;
 
     // We need to create the buffer from the base64 image string
     const imageBuffer = Buffer.from(imageBufferString, "base64");
