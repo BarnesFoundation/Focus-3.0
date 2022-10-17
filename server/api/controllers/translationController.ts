@@ -8,7 +8,7 @@ class TranslationController {
     response: express.Response
   ) {
     const languagePreference = request.query.lang
-      ? request.query.lang.toString()
+      ? request.query.lang.toString().toLowerCase()
       : request.session.lang_pref
       ? request.session.lang_pref
       : "en";

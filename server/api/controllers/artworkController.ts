@@ -17,12 +17,16 @@ class ArtworkController {
     response: express.Response
   ) {
     const artworkId = request.params.artworkId;
-    const preferredLanguage = request.query.lang.toString();
+    const preferredLanguage = request.query.lang
+      ? request.query.lang.toString().toLowerCase()
+      : request.session.lang_pref
+      ? request.session.lang_pref
+      : "en";
     const artworkInformation = await ArtworkService.getInformation(artworkId);
 
     // If lang preference has changed, update session
     if (request.session.lang_pref !== preferredLanguage) {
-      request.session.lang_pref = preferredLanguage.toLowerCase();
+      request.session.lang_pref = preferredLanguage;
     }
 
     if (artworkInformation) {

@@ -10,11 +10,15 @@ class ExhibitionController {
     response: express.Response
   ) {
     const objectId = request.params.objectId;
-    const preferredLanguage = request.query.lang.toString();
+    const preferredLanguage = request.query.lang
+      ? request.query.lang.toString().toLowerCase()
+      : request.session.lang_pref
+      ? request.session.lang_pref
+      : "en";
 
     // If lang preference has changed, update session
     if (request.session.lang_pref !== preferredLanguage) {
-      request.session.lang_pref = preferredLanguage.toLowerCase();
+      request.session.lang_pref = preferredLanguage;
     }
 
     const objectData = await ArtworkService.findSpecialExhibitionObject(
