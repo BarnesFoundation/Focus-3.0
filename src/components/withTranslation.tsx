@@ -30,7 +30,7 @@ export type WithTranslationState = {
   translations?;
   loaded?: boolean;
   getTranslation?: (screen: string, textId: string) => string;
-  updateTranslations?: () => Promise<void>;
+  updateTranslations?: (langCode: LanguageOptionType["code"]) => Promise<void>;
   langOptions?: LanguageOptionType[];
   getSelectedLanguage?: () => Promise<LanguageOptionType[]>;
   updateSelectedLanguage?: (language: LanguageOptionType) => Promise<void>;
@@ -98,13 +98,15 @@ function withTranslation<WrappedComponentProps>(WrappedComponent) {
       );
     }
 
-    updateTranslations = async (): Promise<void> => {
+    updateTranslations = async (
+      langCode: LanguageOptionType["code"]
+    ): Promise<void> => {
       console.log(
-        "WithTranslation >> updateTranslations. Update translations."
+        "WithTranslation >> updateTranslations. Update translations to",
+        langCode
       );
-      const translations = await this.sr.getAppTranslations(
-        this.state.selectedLanguage.code
-      );
+
+      const translations = await this.sr.getAppTranslations(langCode);
       this.setState({ translations: translations, loaded: true });
       localStorage.setItem(
         SNAP_LANGUAGE_TRANSLATION,
@@ -144,7 +146,7 @@ function withTranslation<WrappedComponentProps>(WrappedComponent) {
           localStorage.setItem(SNAP_LANGUAGE_PREFERENCE, lang.code);
           this.setState({ selectedLanguage: option });
           // Get app translations
-          await this.updateTranslations();
+          await this.updateTranslations(option.code);
         } else {
           // Set all other options selected value to false
           option.selected = false;
