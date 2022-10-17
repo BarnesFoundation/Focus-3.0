@@ -101,8 +101,17 @@ class ArtworkController {
   ) {
     const session = request.session;
     const artworkId = request.params.artworkId;
+    const languagePreference = request.query.lang
+      ? request.query.lang.toString().toLowerCase()
+      : session.lang_pref
+      ? session.lang_pref
+      : "en";
 
-    const languagePreference = session.lang_pref || "en";
+    // If lang preference has changed, update session
+    if (session.lang_pref !== languagePreference) {
+      session.lang_pref = languagePreference;
+    }
+
     const relatedStories = await GraphCMSService.findByObjectId(
       artworkId,
       languagePreference

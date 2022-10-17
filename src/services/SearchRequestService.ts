@@ -86,9 +86,11 @@ class SearchRequestService {
     }
   };
 
-  getStoryItems = async (imageId) => {
+  getStoryItems = async (imageId, lang) => {
     try {
-      let response = await axios.get(constants.STORIES_URL(imageId));
+      let response = await axios.get(constants.STORIES_URL(imageId), {
+        params: { lang },
+      });
       return response.data;
     } catch (error) {
       console.log("An error occurred while retrieving story from the server");
