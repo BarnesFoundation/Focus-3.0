@@ -136,15 +136,20 @@ function withTranslation<WrappedComponentProps>(WrappedComponent) {
     updateSelectedLanguage = async (
       lang: LanguageOptionType
     ): Promise<void> => {
-      await this.state.langOptions.map(async (option) => {
+      for (const option of this.state.langOptions) {
         if (option.code === lang.code) {
+          // Set selected to true, which makes the check occur next to this language in the dropdown
           option.selected = true;
+          // Set local storage and state with new language
           localStorage.setItem(SNAP_LANGUAGE_PREFERENCE, lang.code);
+          this.setState({ selectedLanguage: option });
+          // Get app translations
           await this.updateTranslations();
         } else {
+          // Set all other options selected value to false
           option.selected = false;
         }
-      });
+      }
     };
 
     render() {
