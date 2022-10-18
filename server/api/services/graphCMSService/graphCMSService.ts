@@ -181,11 +181,11 @@ export default class GraphCMSService {
     } = await GraphCMSService.makeGraphQLRequest(query);
 
     // Check these two parts of the response for the story
-    const retrievedStory = storiesForObjectIds[0]?.relatedStories;
     const storyInformation = { storyId: null, hasStory: false };
+    const retrievedStory = storiesForObjectIds[0]?.relatedStories;
 
-    if (retrievedStory) {
-      storyInformation.storyId = retrievedStory[0].id;
+    if (retrievedStory && retrievedStory.length) {
+      storyInformation.storyId = retrievedStory[0]?.id;
       storyInformation.hasStory = true;
     }
 

@@ -7,7 +7,7 @@ import { environmentConfiguration } from "../../config";
 const prisma = DatabaseService.instance;
 const s3Client = new S3({
   region: environmentConfiguration.aws.region,
-  maxAttempts: 3,
+  maxAttempts: 5,
 });
 
 const generatePublicUrl = (photoKey: string) => {
@@ -40,6 +40,7 @@ class ImageUploadJob {
       photoIdentifier
     );
 
+    const queryStartTime = Date.now();
     try {
       await prisma.photos.create({
         data: {
@@ -57,10 +58,18 @@ class ImageUploadJob {
         },
       });
 
-      console.debug(`Successfully created photo record for ${photoIdentifier}`);
+      const queryEndTime = Date.now();
+      const elapsedSeconds = (queryEndTime - queryStartTime) / 1000;
+
+      console.debug(
+        `Successfully created photo record for ${photoIdentifier} after ${elapsedSeconds} seconds from query start`
+      );
     } catch (error) {
+      const queryEndTime = Date.now();
+      const elapsedSeconds = (queryEndTime - queryStartTime) / 1000;
+
       console.error(
-        `Encountered an error creating photo record ${photoIdentifier}`,
+        `Encountered an error creating photo record ${photoIdentifier} after ${elapsedSeconds} seconds from query start`,
         error
       );
     }
@@ -82,6 +91,7 @@ class ImageUploadJob {
         Bucket: environmentConfiguration.aws.s3Bucket,
         Key: fileName,
         Body: imageBuffer,
+        ContentLength: imageBuffer.length,
       });
 
       // Now that the photo upload has been successful
