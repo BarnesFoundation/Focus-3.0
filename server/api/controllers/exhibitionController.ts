@@ -1,3 +1,4 @@
+import { getPreferredLanguage } from "api/utils";
 import express from "express";
 
 import { ArtworkService, TranslateService } from "../services";
@@ -10,16 +11,7 @@ class ExhibitionController {
     response: express.Response
   ) {
     const objectId = request.params.objectId;
-    const preferredLanguage = request.query.lang
-      ? request.query.lang.toString().toLowerCase()
-      : request.session.lang_pref
-      ? request.session.lang_pref
-      : "en";
-
-    // If lang preference has changed, update session
-    if (request.session.lang_pref !== preferredLanguage) {
-      request.session.lang_pref = preferredLanguage;
-    }
+    const preferredLanguage = getPreferredLanguage(request);
 
     const objectData = await ArtworkService.findSpecialExhibitionObject(
       objectId
@@ -29,8 +21,6 @@ class ExhibitionController {
       // Manipulate the data to have save key/pairs as the ES results
       objectData[0]["art_url"] = objectData[0].image.url;
       objectData[0]["id"] = objectData[0].objectId;
-
-      const session = request.session;
 
       // Translate the content
       objectData[0]["shortDescription"] = await TranslateService.translate(

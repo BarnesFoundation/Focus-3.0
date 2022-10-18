@@ -1,3 +1,4 @@
+import { getPreferredLanguage } from "api/utils";
 import express from "express";
 
 import {
@@ -17,17 +18,8 @@ class ArtworkController {
     response: express.Response
   ) {
     const artworkId = request.params.artworkId;
-    const preferredLanguage = request.query.lang
-      ? request.query.lang.toString().toLowerCase()
-      : request.session.lang_pref
-      ? request.session.lang_pref
-      : "en";
+    const preferredLanguage = getPreferredLanguage(request);
     const artworkInformation = await ArtworkService.getInformation(artworkId);
-
-    // If lang preference has changed, update session
-    if (request.session.lang_pref !== preferredLanguage) {
-      request.session.lang_pref = preferredLanguage;
-    }
 
     if (artworkInformation) {
       // Fetch the story and content
@@ -99,18 +91,8 @@ class ArtworkController {
     request: express.Request,
     response: express.Response
   ) {
-    const session = request.session;
     const artworkId = request.params.artworkId;
-    const languagePreference = request.query.lang
-      ? request.query.lang.toString().toLowerCase()
-      : session.lang_pref
-      ? session.lang_pref
-      : "en";
-
-    // If lang preference has changed, update session
-    if (session.lang_pref !== languagePreference) {
-      session.lang_pref = languagePreference;
-    }
+    const languagePreference = getPreferredLanguage(request);
 
     const relatedStories = await GraphCMSService.findByObjectId(
       artworkId,
