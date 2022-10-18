@@ -79,7 +79,7 @@ function withTranslation<WrappedComponentProps>(WrappedComponent) {
 
       if (langPref) {
         // Set language as selected in langOptions
-        await this.state.langOptions.map(async (option) => {
+        this.state.langOptions.map((option) => {
           if (option.code === langPref) {
             option.selected = true;
             this.setState({ selectedLanguage: option });
