@@ -58,7 +58,12 @@ class ImageUploadJob {
         },
       });
 
-      console.debug(`Successfully created photo record for ${photoIdentifier}`);
+      const queryEndTime = Date.now();
+      const elapsedSeconds = (queryEndTime - queryStartTime) / 1000;
+
+      console.debug(
+        `Successfully created photo record for ${photoIdentifier} after ${elapsedSeconds} seconds from query start`
+      );
     } catch (error) {
       const queryEndTime = Date.now();
       const elapsedSeconds = (queryEndTime - queryStartTime) / 1000;
