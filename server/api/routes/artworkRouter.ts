@@ -15,9 +15,5 @@ ArtworkRouter.post(
   "/:artworkId/stories/:storyId/read",
   ArtworkController.markStoryAsRead
 );
-ArtworkRouter.get(
-  "/special-exhibition/:objectId",
-  ArtworkController.getSpecialExhibitionObject
-);
 
 export default ArtworkRouter;
