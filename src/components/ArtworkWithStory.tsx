@@ -125,7 +125,8 @@ export class ArtworkWithStory extends Component<
     const durDefault = 300;
 
     const { stories, storyId, storyTitle } = await this.setupStory(
-      this.props.imageId
+      this.props.imageId,
+      this.props.selectedLanguage.code
     );
 
     stories.forEach((story) => {
@@ -209,7 +210,8 @@ export class ArtworkWithStory extends Component<
   onSelectLanguage = async (selectedLanguage: LanguageOptionType) => {
     this.props.onSelectLanguage(selectedLanguage);
     const { stories, storyId, storyTitle } = await this.setupStory(
-      this.props.imageId
+      this.props.imageId,
+      selectedLanguage.code
     );
 
     this.setState({
@@ -219,8 +221,8 @@ export class ArtworkWithStory extends Component<
     });
   };
 
-  setupStory = async (imageId: string) => {
-    const storyInformation = await this.sr.getStoryItems(imageId);
+  setupStory = async (imageId: string, lang: string) => {
+    const storyInformation = await this.sr.getStoryItems(imageId, lang);
     return constructStory(storyInformation);
   };
 
