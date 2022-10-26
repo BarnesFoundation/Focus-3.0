@@ -50,6 +50,64 @@ const storiesFragment = `on Stories {
 }
 `;
 
+// Fragment definition for a ContentBlock
+const contentBlockFragment = `on ContentBlock {
+	contentBlock {
+		... on Image {
+			type
+			caption {
+				html
+			}
+			altText
+			image {
+				url
+			}
+		}
+		... on ImageComparison {
+			type
+			style
+			leftImage {
+				altText
+				caption {
+					html
+				}
+				image {
+					url
+				}
+			}
+			rightImage {
+				altText
+				caption {
+					html
+				}
+				image {
+					url
+				}
+			}
+		}
+		... on TextBlock {
+			type
+			textBlock {
+				html
+			}
+		}
+		... on Title {
+			type
+			subtitleHtml {
+				html
+			}
+			titleHtml {
+				html
+			}
+		}
+		... on Video {
+			type
+			url
+		}
+	}
+}
+`;
+
 export function storiesForObjectIdQuery(objectId: string): GraphQLQuery {
   return {
     query: `
@@ -182,61 +240,7 @@ export function getObjectByObjectIdQuery(objectId: string): GraphQLQuery {
 					url
 				}
 				content {
-					... on ContentBlock {
-						contentBlock {
-							... on Image {
-								type
-								caption {
-									html
-								}
-								altText
-								image {
-									url
-								}
-							}
-							... on ImageComparison {
-								type
-								style
-								leftImage {
-									altText
-									caption {
-										html
-									}
-									image {
-										url
-									}
-								}
-								rightImage {
-									altText
-									caption {
-										html
-									}
-									image {
-										url
-									}
-								}
-							}
-							... on TextBlock {
-								type
-								textBlock {
-									html
-								}
-							}
-							... on Title {
-								type
-								subtitleHtml {
-									html
-								}
-								titleHtml {
-									html
-								}
-							}
-							... on Video {
-								type
-								url
-							}
-						}
-					}
+					...${contentBlockFragment}
 				}
 			}
 		}
@@ -255,61 +259,7 @@ export function getCollectionContentByInvno(
 		query($inventoryNumber: String) {
 			collectionObjects(where: {inventoryNumber: $inventoryNumber}) {
 				content {
-					... on ContentBlock {
-						contentBlock {
-							... on Image {
-								altText
-								caption {
-									html
-								}
-								image {
-									url
-								}
-								type
-							}
-							... on ImageComparison {
-								type
-								style
-								rightImage {
-									altText
-									caption {
-										html
-									}
-									image {
-										url
-									}
-								}
-								leftImage {
-									altText
-									caption {
-										html
-									}
-									image {
-										url
-									}
-								}
-							}
-							... on TextBlock {
-								type
-								textBlock {
-									html
-								}
-							}
-							... on Title {
-								type
-								subtitleHtml {
-									html
-								}
-								titleHtml {
-									html
-								}
-							}
-							... on Video {
-								type
-								url
-							}
-						}
-					}
+					...${contentBlockFragment}
 				}
 				inventoryNumber
 			}
@@ -337,61 +287,7 @@ export const getContentAndStories = (
 			}
 			collectionObjects(where: {inventoryNumber: $inventoryNumber}) {
 				content {
-					... on ContentBlock {
-						contentBlock {
-							... on Image {
-								altText
-								caption {
-									html
-								}
-								image {
-									url
-								}
-								type
-							}
-							... on ImageComparison {
-								type
-								style
-								rightImage {
-									altText
-									caption {
-										html
-									}
-									image {
-										url
-									}
-								}
-								leftImage {
-									altText
-									caption {
-										html
-									}
-									image {
-										url
-									}
-								}
-							}
-							... on TextBlock {
-								type
-								textBlock {
-									html
-								}
-							}
-							... on Title {
-								type
-								subtitleHtml {
-									html
-								}
-								titleHtml {
-									html
-								}
-							}
-							... on Video {
-								type
-								url
-							}
-						}
-					}
+					...${contentBlockFragment}
 				}
 				inventoryNumber
 			}
