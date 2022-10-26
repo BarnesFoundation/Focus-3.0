@@ -50,9 +50,15 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
 
     // Get the new language translations
     if (specialExhibition) {
-      artworkInfo = await sr.getSpecialExhibitionObject(imageId);
+      artworkInfo = await sr.getSpecialExhibitionObject(
+        imageId,
+        selectedLanguage.code
+      );
     } else {
-      artworkInfo = await sr.getArtworkInformation(imageId);
+      artworkInfo = await sr.getArtworkInformation(
+        imageId,
+        selectedLanguage.code
+      );
     }
 
     const artwork = artworkInfo
@@ -83,6 +89,7 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
     const componentWillMount = async () => {
       let artworkInfo: ArtWorkRecordsResult;
       let imageId: string;
+      const langPref = (await getSelectedLanguage())[0];
 
       // Check if result data is stored in location state from camera component
       if (location.state?.result) {
@@ -94,9 +101,12 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
         imageId = id;
 
         if (path === "artwork") {
-          artworkInfo = await sr.getArtworkInformation(imageId);
+          artworkInfo = await sr.getArtworkInformation(imageId, langPref.code);
         } else if (path === "exhibition") {
-          artworkInfo = await sr.getSpecialExhibitionObject(imageId);
+          artworkInfo = await sr.getSpecialExhibitionObject(
+            imageId,
+            langPref.code
+          );
         }
       }
 
@@ -111,7 +121,7 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
       setEmailCaptured(emailRecorded);
       setShowEmailForm(!emailRecorded);
       setEmailCaptureAck(emailRecorded);
-      setSelectedLanguage((await getSelectedLanguage())[0]);
+      setSelectedLanguage(langPref);
     };
 
     componentWillMount();
