@@ -1,3 +1,4 @@
+import { getPreferredLanguage } from "api/utils";
 import express from "express";
 
 import { TranslateService } from "../services";
@@ -7,9 +8,8 @@ class TranslationController {
     request: express.Request,
     response: express.Response
   ) {
-    const languagePreference = request.session.lang_pref
-      ? request.session.lang_pref
-      : "en";
+    const languagePreference = getPreferredLanguage(request);
+
     const storedTranslations =
       await TranslateService.retrieveStoredTranslations(languagePreference);
 

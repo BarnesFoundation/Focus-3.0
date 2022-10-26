@@ -1,19 +1,18 @@
 import React from "react";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 import scan_button from "../images/scan-button.svg";
-import { WithTranslationState } from "./withTranslation";
-import withTranslation from "./withTranslation";
 
 export type NoMatchOverlayProps = {
   displayOverlay: boolean;
   handleScan: () => void;
-} & WithTranslationState;
+};
 
-export const NoMatchOverlayComponent: React.FC<NoMatchOverlayProps> = ({
+export const NoMatchOverlay: React.FC<NoMatchOverlayProps> = ({
   displayOverlay,
   handleScan,
-  getTranslation,
 }) => {
+  const { getTranslation } = useLocalStorage();
   return (
     <ReactCSSTransitionGroup
       transitionName="fade"
@@ -44,7 +43,3 @@ export const NoMatchOverlayComponent: React.FC<NoMatchOverlayProps> = ({
     </ReactCSSTransitionGroup>
   );
 };
-
-export const NoMatchOverlay = withTranslation<NoMatchOverlayProps>(
-  NoMatchOverlayComponent
-);

@@ -15,6 +15,7 @@ type UseLocalStorage = {
   getLocalStorage: GetLocalStorage;
   getLanguagePreference: () => any;
   getTranslations: () => object;
+  getTranslation: (screen: string, textId: string) => string;
   resetLocalStorage: () => void;
 };
 
@@ -55,6 +56,20 @@ const getTranslations = () => {
   return getLocalStorage(SNAP_LANGUAGE_TRANSLATION);
 };
 
+/** Returns translated content for UI content on pages
+ * @param {string} screen
+ * @param {string} textId
+ * @returns {string} Translation of requested content
+ */
+const getTranslation = (screen: string, textId: string): string => {
+  // TODO: use this fn inside FC components instead of passing the withTranslation version down through the parent/child props
+  const translations = getTranslations();
+  return (
+    translations[screen][textId].translated_content ||
+    translations[screen][textId].screen_text
+  );
+};
+
 /**
  * @returns {void} Resets local storage to initial values
  */
@@ -84,6 +99,7 @@ export const useLocalStorage = (): UseLocalStorage => {
     getLocalStorage,
     getLanguagePreference,
     getTranslations,
+    getTranslation,
     resetLocalStorage,
   };
 };
