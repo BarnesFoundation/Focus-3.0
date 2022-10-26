@@ -51,7 +51,7 @@ set_env_dev:
 
 # Set PUBLIC_URL for production
 set_env_prod: 
-	export PUBLIC_URL="https://focus-application-dev-serverlessdeploymentbucket-wyfkuk6n7ves.s3.amazonaws.com/build"
+	export PUBLIC_URL="https://focus-application-prod-serverlessdeploymentbucket-1b3ojh7lpevit.s3.amazonaws.com/build"
 
 ######################################
 #

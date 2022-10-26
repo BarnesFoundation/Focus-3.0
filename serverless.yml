@@ -11,14 +11,6 @@ provider:
     # - Should be EITHER prod or dev
     stage: ${opt:stage, 'dev'}
 
-resources:
-    Conditions:
-        # Determine if deployment is for Production
-        IsProduction:
-            Fn::Equals:
-                - ${opt:stage}
-                - prod
-
 functions:
     server:
         url:
@@ -29,8 +21,7 @@ functions:
             # in our Production deployment stage
 
             - schedule:
-                  Condition: IsProduction
-                  name: Schedule_ElasticSearchSyncJob
+                  name: Schedule_ElasticSearchSyncJob-${opt:stage, 'dev'}
                   description: "An event scheduled to run the ElasticSearchSyncJob once each day at 1 AM EST/5 AM UTC"
                   rate: cron(0 5 * * ? *)
                   enabled: true
@@ -39,8 +30,7 @@ functions:
                       httpMethod: "POST"
 
             - schedule:
-                  Condition: IsProduction
-                  name: Schedule_BookmarkDeliveryJob
+                  name: Schedule_BookmarkDeliveryJob-${opt:stage, 'dev'}
                   description: "An event scheduled to run the BookmarkDeliveryJob once every 3 hours"
                   rate: cron(0 */3 * * ? *)
                   enabled: true
@@ -49,8 +39,7 @@ functions:
                       httpMethod: "POST"
 
             - schedule:
-                  Condition: IsProduction
-                  name: Schedule_StoryDeliveryJob
+                  name: Schedule_StoryDeliveryJob-${opt:stage, 'dev'}
                   description: "An event scheduled to run the StoryDeliveryJob once every 4 hours"
                   rate: cron(0 */4 * * ? *)
                   enabled: true
@@ -59,8 +48,7 @@ functions:
                       httpMethod: "POST"
 
             - schedule:
-                  Condition: IsProduction
-                  name: Schedule_StorySyncJob
+                  name: Schedule_StorySyncJob-${opt:stage, 'dev'}
                   description: "An event scheduled to run the StorySyncJob once each day at 2 AM EST/6 AM UTC"
                   rate: cron(0 6 * * ? *)
                   enabled: true
@@ -69,8 +57,7 @@ functions:
                       httpMethod: "POST"
 
             - schedule:
-                  Condition: IsProduction
-                  name: Schedule_SessionClearJob
+                  name: Schedule_SessionClearJob-${opt:stage, 'dev'}
                   description: "An event scheduled to run the SessionClearJob once every 3 days at 12 AM EST/4 AM UTC"
                   rate: cron(0 4 */3 * ? *)
                   enabled: false
