@@ -60,7 +60,7 @@ const contentBlockFragment = `on ContentBlock {
 			}
 			altText
 			image {
-				url
+				url(transformation: {image: {resize: {width: 600}}})
 			}
 		}
 		... on ImageComparison {
@@ -72,7 +72,7 @@ const contentBlockFragment = `on ContentBlock {
 					html
 				}
 				image {
-					url
+					url(transformation: {image: {resize: {width: 600}}})
 				}
 			}
 			rightImage {
@@ -81,7 +81,7 @@ const contentBlockFragment = `on ContentBlock {
 					html
 				}
 				image {
-					url
+					url(transformation: {image: {resize: {width: 600}}})
 				}
 			}
 		}
