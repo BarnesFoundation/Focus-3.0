@@ -1,4 +1,4 @@
-import { getPreferredLanguage } from "api/utils";
+import { getPreferredLanguage } from "../utils";
 import express from "express";
 
 import {
