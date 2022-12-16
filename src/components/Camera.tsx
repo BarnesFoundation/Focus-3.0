@@ -120,7 +120,7 @@ export class CameraComponent extends Component<CameraProps, CameraState> {
       const videoStream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: this.state.frontCamera ? "user" : "environment",
-          width: 1920,
+          width: 1080,
           height: 1080,
         },
       });
