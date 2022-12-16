@@ -4,6 +4,7 @@
   &__content {
     overflow: scroll;
     height: 100vh;
+    height: var(--doc-height);
 
     &__result {
       margin-bottom: 30vh;
@@ -189,7 +190,9 @@
 
     &__email {
       position: fixed;
-      bottom: calc(0vh - calc(390px + env(safe-area-inset-bottom)));
+      // bottom: calc(0vh - calc(390px + env(safe-area-inset-bottom)));
+      // this bit works on my phone in each browser but who knows if it will elsewhere...
+      bottom: calc( (var(--doc-height) / -2 ) - var(--email-height) - env(safe-area-inset-bottom));
       width: 100vw;
       transition: all .25s ease .1s;
       z-index: 10;

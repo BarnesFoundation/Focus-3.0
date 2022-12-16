@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import classnames from "classnames";
-import { isAndroid } from "react-device-detect";
+import { isAndroid, isFirefox } from "react-device-detect";
 
 import { LANGUAGE_EN } from "../constants";
 import { LanguageOptionType, WithTranslationState } from "./withTranslation";
@@ -72,11 +72,19 @@ export const ArtworkDefault: React.FC<ArtworkDefaultProps> = ({
 
   useEffect(() => {
     if (!imgLoaded || !showEmailForm) return;
+    const doc = document.documentElement;
+    doc.style.setProperty("--doc-height", `${window.innerHeight}px`);
+    doc.style.setProperty("--email-height", isFirefox ? "0px" : "40px");
+    const documentHeight = () => {
+      const doc = document.documentElement;
+      doc.style.setProperty("--doc-height", `${window.innerHeight}px`);
+    };
 
     // Add handlers for card-2 swipe down interaction
     const content = document.getElementById("card-content");
     content.addEventListener("touchstart", handleStartSwipe);
     content.addEventListener("touchend", handleSwipeDismiss);
+    window.addEventListener("resize", documentHeight);
     content.addEventListener("wheel", (e) => {
       if (e.deltaY < 0) {
         setFormOpen(false);
@@ -100,6 +108,9 @@ export const ArtworkDefault: React.FC<ArtworkDefaultProps> = ({
     trigger.addEventListener("touchend", (e: TouchEvent) => {
       if (e.changedTouches[0].pageY < startYTrigger.current) setFormOpen(true);
     });
+    return () => {
+      window.removeEventListener("resize", documentHeight);
+    };
   }, [artwork, imgLoaded, showEmailForm]);
 
   return (
