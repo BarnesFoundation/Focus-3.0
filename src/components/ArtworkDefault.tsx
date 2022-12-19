@@ -78,6 +78,7 @@ export const ArtworkDefault: React.FC<ArtworkDefaultProps> = ({
     const documentHeight = () => {
       const doc = document.documentElement;
       doc.style.setProperty("--doc-height", `${window.innerHeight}px`);
+      doc.style.setProperty("--email-height", isFirefox ? "0px" : "40px");
     };
 
     // Add handlers for card-2 swipe down interaction
