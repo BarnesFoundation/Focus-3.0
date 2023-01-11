@@ -2,6 +2,8 @@
  * snap v2 constants
  * ===== START =====
  */
+import { browserName } from "react-device-detect";
+
 export const CATCHOOM_ACCESS_TOKEN =
   process.env.REACT_APP_CATCHOOM_ACCESS_TOKEN;
 export const CATCHOOM_REQUEST_URL = process.env.REACT_APP_CATCHOOM_REQUEST_URL;
@@ -24,7 +26,9 @@ export const VALIDATE_EMAIL_URL = "/api/bookmark/validate-email";
 export const KNIGHT_FOUNDATION_CREDIT_TEXT =
   "Barnes Focus was created by the Knight Center for Digital Innovation in Audience Engagement at the Barnes.";
 export const GET_USER_MEDIA_ERROR_IOS =
-  "This app requires camera access. Go to Settings > Safari > Camera & Microphone Access to allow, then refresh and try again.";
+  "This app requires camera access. Go to Settings > " +
+  browserName +
+  " > and allow camera access, then refresh and try again.";
 export const GET_USER_MEDIA_ERROR_ANDROID = `This app requires camera access. Go to \u22ee > Settings > Site Settings > Camera. Tap on "barnesfoc.us", then hit Reset and try again.`;
 /**
  * snap v2 constants

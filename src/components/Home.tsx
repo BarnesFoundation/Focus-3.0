@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { isAndroid, isIOS, isSafari, osVersion } from "react-device-detect";
+import {
+  isAndroid,
+  isChrome,
+  isFirefox,
+  isIOS,
+  isSafari,
+  osVersion,
+} from "react-device-detect";
 import { useHistory } from "react-router-dom";
 import { Textfit } from "react-textfit";
 
@@ -55,7 +62,7 @@ export const HomeComponent: React.FC<WithTranslationState> = ({
 
     // navigator.mediaDevices.getUserMedia() is only supported on iOS > 11.0 and only on Safari (not Chrome, Firefox, etc.)
     if (iOSVersion >= parseFloat("11.0")) {
-      if (!isSafari) {
+      if (!isSafari && !isChrome && !isFirefox) {
         setUnsupportedIOSBrowser(true);
         setShowError(true);
       }
@@ -77,7 +84,7 @@ export const HomeComponent: React.FC<WithTranslationState> = ({
     try {
       // Attempt to access device camera
       await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment", width: 1920, height: 1080 },
+        video: { facingMode: "environment", width: 1080, height: 1080 },
       });
 
       // TODO - Log the permission grant time if it took more than 900 ms
