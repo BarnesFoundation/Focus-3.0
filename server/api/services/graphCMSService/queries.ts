@@ -63,6 +63,17 @@ const contentBlockFragment = `on ContentBlock {
 				url(transformation: {image: {resize: {width: 600}}})
 			}
 		}
+		... on ImageCarousel {
+			type
+			imageCarousel {
+				image {
+					url(transformation: {image: {resize: {width: 600}}})
+				}
+				caption {
+					html
+				}
+			}	
+		}
 		... on ImageComparison {
 			type
 			style
