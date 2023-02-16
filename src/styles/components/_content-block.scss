@@ -99,6 +99,18 @@
     &__item {
       width: fit-content;
       margin: auto;
+
+      figcaption {
+        margin-top: 0.5rem;
+      }
+    }
+
+    li.alice-carousel__dots-item {
+      background-color: rgba(0, 0, 0, 0.2);
+
+      &.__active {
+        background-color: #f75033;
+      }
     }
 
     .alice-carousel {
@@ -107,17 +119,23 @@
         max-width: calc(100% - 50px);
       }
 
-      &__prev-btn, &__next-btn {
+      &__prev-btn,
+      &__next-btn {
         display: inline-block;
-        width: 20px;
+        width: 25px;
         position: absolute;
-        bottom: 0;
+        bottom: -6px;
         padding-top: 0;
         padding-bottom: 0;
 
         &-item {
           padding-top: 0;
           padding-bottom: 0;
+        }
+
+        p {
+          color: rgba(0, 0, 0, 0.5);
+          font-size: 24px;
         }
       }
 

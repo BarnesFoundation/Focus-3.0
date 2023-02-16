@@ -73,13 +73,18 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
                 responsive={{ 0: { items: 1 } }}
               >
                 {block.imageCarousel.map((img, i) => (
-                  <div key={i} className="content-block__image-carousel__item">
+                  <figure key={i} className="content-block__image-carousel__item">
                     <img
                       src={img.image.url}
                       onDragStart={(e) => e.preventDefault()}
                       style={{ height: "65vh" }}
                     />
-                  </div>
+                    {img.caption?.html && (
+                      <figcaption>
+                        {formatHtmlCaption(img.caption.html)}
+                      </figcaption>
+                    )}
+                  </figure>
                 ))}
               </AliceCarousel>
             </div>
