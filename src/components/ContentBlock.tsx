@@ -1,10 +1,10 @@
-import React, { Fragment } from "react";
-
+import React from "react";
 import {
   ReactCompareSlider,
   ReactCompareSliderImage,
 } from "react-compare-slider";
 import ReactPlayer from "react-player/lazy";
+import AliceCarousel from "react-alice-carousel";
 import {
   formatHtml,
   formatHtmlCaption,
@@ -61,6 +61,28 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
                 <figcaption>{formatHtmlCaption(block.caption.html)}</figcaption>
               )}
             </figure>
+          );
+
+        // Image Carousel Block
+        case ContentBlockTypes.IMAGE_CAROUSEL:
+          return (
+            <div className="content-block__image-carousel">
+              <AliceCarousel
+                controlsStrategy="alternate"
+                infinite={true}
+                responsive={{ 0: { items: 1 } }}
+              >
+                {block.imageCarousel.map((img, i) => (
+                  <div key={i} className="content-block__image-carousel__item">
+                    <img
+                      src={img.image.url}
+                      onDragStart={(e) => e.preventDefault()}
+                      style={{ height: "65vh" }}
+                    />
+                  </div>
+                ))}
+              </AliceCarousel>
+            </div>
           );
 
         // Image Comparison Slider Block

@@ -94,6 +94,42 @@
   &__video {
     margin: 2rem 0;
   }
+
+  &__image-carousel {
+    &__item {
+      width: fit-content;
+      margin: auto;
+    }
+
+    .alice-carousel {
+      &__dots {
+        margin: 0.5rem auto;
+        max-width: calc(100% - 50px);
+      }
+
+      &__prev-btn, &__next-btn {
+        display: inline-block;
+        width: 20px;
+        position: absolute;
+        bottom: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+
+        &-item {
+          padding-top: 0;
+          padding-bottom: 0;
+        }
+      }
+
+      &__prev-btn {
+        left: 0;
+      }
+
+      &__next-btn {
+        right: 0;
+      }
+    }
+  }
 }
 
 .fade-one {
