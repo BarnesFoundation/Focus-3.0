@@ -27,10 +27,17 @@ type Content = {
   contentBlock: ContentBlock[];
 };
 
-export type ContentBlock = Image | ImageComparison | TextBlock | Title | Video;
+export type ContentBlock =
+  | Image
+  | ImageCarousel
+  | ImageComparison
+  | TextBlock
+  | Title
+  | Video;
 
 export enum ContentBlockTypes {
   IMAGE = "Image",
+  IMAGE_CAROUSEL = "ImageCarousel",
   IMAGE_COMPARISON = "ImageComparison",
   TEXT_BLOCK = "TextBlock",
   TITLE = "Title",
@@ -51,6 +58,18 @@ type Image = {
   image: {
     url: string;
   };
+};
+
+type ImageCarousel = {
+  type: ContentBlockTypes.IMAGE_CAROUSEL;
+  imageCarousel: {
+    image: {
+      url: string;
+    };
+    caption?: {
+      html: string;
+    };
+  }[];
 };
 
 type ImageComparison = {
