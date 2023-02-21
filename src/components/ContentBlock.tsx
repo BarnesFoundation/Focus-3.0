@@ -1,10 +1,10 @@
-import React, { Fragment } from "react";
-
+import React from "react";
 import {
   ReactCompareSlider,
   ReactCompareSliderImage,
 } from "react-compare-slider";
 import ReactPlayer from "react-player/lazy";
+import AliceCarousel from "react-alice-carousel";
 import {
   formatHtml,
   formatHtmlCaption,
@@ -15,6 +15,9 @@ import {
   ContentBlockTypes,
   ImageComparisonStyle,
 } from "../types/payloadTypes";
+
+import arrowLeft from "../images/arrow-left.svg";
+import arrowRight from "../images/arrow-right.svg";
 
 type ContentBlockProps = {
   contentBlock: ContentBlockType[];
@@ -61,6 +64,55 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
                 <figcaption>{formatHtmlCaption(block.caption.html)}</figcaption>
               )}
             </figure>
+          );
+
+        // Image Carousel Block
+        case ContentBlockTypes.IMAGE_CAROUSEL:
+          return (
+            <div className="content-block__image-carousel">
+              <AliceCarousel
+                controlsStrategy="alternate"
+                infinite={true}
+                renderPrevButton={() => {
+                  return (
+                    <img
+                      src={arrowLeft}
+                      alt="<"
+                      style={{ position: "absolute", left: "0", top: "-30px" }}
+                    />
+                  );
+                }}
+                renderNextButton={() => {
+                  return (
+                    <img
+                      src={arrowRight}
+                      alt=">"
+                      style={{ position: "absolute", right: "0", top: "-30px" }}
+                    />
+                  );
+                }}
+                responsive={{ 0: { items: 1 } }}
+              >
+                {block.imageCarousel.map((img, i) => (
+                  <figure
+                    key={i}
+                    className="content-block__image-carousel__item"
+                  >
+                    <img
+                      src={img.image.url}
+                      alt={img?.caption?.html}
+                      onDragStart={(e) => e.preventDefault()}
+                      style={{ height: "65vh" }}
+                    />
+                    {img.caption?.html && (
+                      <figcaption>
+                        {formatHtmlCaption(img.caption.html)}
+                      </figcaption>
+                    )}
+                  </figure>
+                ))}
+              </AliceCarousel>
+            </div>
           );
 
         // Image Comparison Slider Block
