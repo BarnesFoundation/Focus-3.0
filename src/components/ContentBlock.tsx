@@ -26,7 +26,7 @@ type ContentBlockProps = {
 export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
   <div className="content-block">
     {contentBlock.map((block, index) => {
-      switch (block.type) {
+      switch (block.__typename) {
         // Title Block
         case ContentBlockTypes.TITLE:
           return (
@@ -69,7 +69,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
         // Image Carousel Block
         case ContentBlockTypes.IMAGE_CAROUSEL:
           return (
-            <div className="content-block__image-carousel">
+            <div className="content-block__image-carousel" key={index}>
               <AliceCarousel
                 controlsStrategy="alternate"
                 infinite={true}
