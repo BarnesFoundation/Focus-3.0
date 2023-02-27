@@ -53,8 +53,8 @@ const storiesFragment = `on Stories {
 // Fragment definition for a ContentBlock
 const contentBlockFragment = `on ContentBlock {
 	contentBlock {
+		__typename
 		... on Image {
-			type
 			caption {
 				html
 			}
@@ -64,7 +64,6 @@ const contentBlockFragment = `on ContentBlock {
 			}
 		}
 		... on ImageCarousel {
-			type
 			imageCarousel {
 				image {
 					url(transformation: {image: {resize: {width: 600}}})
@@ -75,7 +74,6 @@ const contentBlockFragment = `on ContentBlock {
 			}	
 		}
 		... on ImageComparison {
-			type
 			style
 			leftImage {
 				altText
@@ -97,13 +95,11 @@ const contentBlockFragment = `on ContentBlock {
 			}
 		}
 		... on TextBlock {
-			type
 			textBlock {
 				html
 			}
 		}
 		... on Title {
-			type
 			subtitleHtml {
 				html
 			}
@@ -112,7 +108,6 @@ const contentBlockFragment = `on ContentBlock {
 			}
 		}
 		... on Video {
-			type
 			url
 		}
 	}

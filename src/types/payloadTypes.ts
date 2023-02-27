@@ -50,7 +50,7 @@ export enum ImageComparisonStyle {
 }
 
 type Image = {
-  type: ContentBlockTypes.IMAGE;
+  __typename: ContentBlockTypes.IMAGE;
   caption?: {
     html: string;
   };
@@ -61,7 +61,7 @@ type Image = {
 };
 
 type ImageCarousel = {
-  type: ContentBlockTypes.IMAGE_CAROUSEL;
+  __typename: ContentBlockTypes.IMAGE_CAROUSEL;
   imageCarousel: {
     image: {
       url: string;
@@ -73,21 +73,21 @@ type ImageCarousel = {
 };
 
 type ImageComparison = {
-  type: ContentBlockTypes.IMAGE_COMPARISON;
+  __typename: ContentBlockTypes.IMAGE_COMPARISON;
   style: ImageComparisonStyle;
   rightImage: Image;
   leftImage: Image;
 };
 
 type TextBlock = {
-  type: ContentBlockTypes.TEXT_BLOCK;
+  __typename: ContentBlockTypes.TEXT_BLOCK;
   textBlock: {
     html: string;
   };
 };
 
 type Title = {
-  type: ContentBlockTypes.TITLE;
+  __typename: ContentBlockTypes.TITLE;
   titleHtml?: {
     html: string;
   };
@@ -97,7 +97,7 @@ type Title = {
 };
 
 type Video = {
-  type: ContentBlockTypes.VIDEO;
+  __typename: ContentBlockTypes.VIDEO;
   url: string;
 };
 

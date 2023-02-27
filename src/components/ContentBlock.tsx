@@ -26,7 +26,7 @@ type ContentBlockProps = {
 export const ContentBlock: React.FC<ContentBlockProps> = ({ contentBlock }) => (
   <div className="content-block">
     {contentBlock.map((block, index) => {
-      switch (block.type) {
+      switch (block.__typename) {
         // Title Block
         case ContentBlockTypes.TITLE:
           return (
