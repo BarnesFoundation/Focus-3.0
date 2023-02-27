@@ -6,7 +6,7 @@ import * as constants from "../constants";
 import { ArtworkObject } from "../types/payloadTypes";
 
 export type ShareProps = {
-  artwork: ArtworkObject["artwork"];
+  artwork: ArtworkObject;
   shareText: string;
 };
 
