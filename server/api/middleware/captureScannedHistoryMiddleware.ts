@@ -10,7 +10,10 @@ export const captureScannedHistoryMiddleware = async (
   next: express.NextFunction
 ) => {
   if (request.session.initialized) {
+    // Artwork id is passed for Barnes collection objects
     const artworkId = request.params.artworkId;
+    // Object id is passed for special exhibition objects
+    const objectId = request.params.objectId;
     const sessionId = request.sessionID;
 
     // Add the artwork id to the existing scanned history
@@ -27,14 +30,16 @@ export const captureScannedHistoryMiddleware = async (
 
     // Generate a new bookmark record for this artwork
     const now = new Date(Date.now()).toISOString();
+    // Set email_sent as true for special exhibition objects because we do not want to include them in the bookmark email
     await prisma.bookmarks.create({
       data: {
         session_id: sessionId,
-        image_id: artworkId,
+        image_id: objectId ? objectId : artworkId,
         created_at: now,
         updated_at: now,
         email: bookmarkThatHasEmail ? bookmarkThatHasEmail.email : undefined,
         language: request.session.lang_pref,
+        mail_sent: objectId ? true : false,
       },
     });
   }

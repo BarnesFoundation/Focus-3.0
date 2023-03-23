@@ -1,9 +1,14 @@
 import { Router } from "express";
 
 import { ExhibitionController } from "../controllers";
+import { captureScannedHistoryMiddleware } from "../middleware";
 
 const ExhibitionRouter = Router();
 
-ExhibitionRouter.get("/:objectId", ExhibitionController.getObjectInfo);
+ExhibitionRouter.get(
+  "/:objectId",
+  captureScannedHistoryMiddleware,
+  ExhibitionController.getObjectInfo
+);
 
 export default ExhibitionRouter;
