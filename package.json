@@ -36,9 +36,9 @@
         "local-server": "NODE_DEBUG=email-templates nodemon dist/server/app.js",
         "watch-server": "tsc -w -p server",
         "dev": " concurrently \"npm run watch-server\" \"npm run local-server\"",
-		"deploy:dev": "npx serverless deploy --verbose --stage dev",
-		"deploy:prod": "npx serverless deploy --verbose --stage prod",
-		"prisma:generate": "prisma generate"
+        "deploy:dev": "npx serverless deploy --verbose --stage dev",
+        "deploy:prod": "npx serverless deploy --verbose --stage prod",
+        "prisma:generate": "prisma generate"
     },
     "eslintConfig": {
         "extends": [
@@ -80,6 +80,7 @@
         "bootstrap": "^4.0.0",
         "classnames": "^2.3.1",
         "concurrently": "^7.1.0",
+        "crypto-js": "^4.1.1",
         "enzyme": "^3.11.0",
         "enzyme-adapter-react-16": "^1.15.6",
         "eslint": "^8.14.0",

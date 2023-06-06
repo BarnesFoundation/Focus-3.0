@@ -1,4 +1,7 @@
-import crypto from "crypto";
+import createHash from "crypto-js/md5";
+import hexEncode from "crypto-js/enc-hex";
+import base64Encode from "crypto-js/enc-base64";
+import createHmac from "crypto-js/hmac-sha1";
 
 /**
  * @param {string} method - HTTP method used for the request
@@ -16,17 +19,17 @@ export const generateAuthHeader = (
   type: string
 ): string => {
   // 1. Create hexadecimal MD5 hash of request body
-  const contentMD5 = crypto.createHash("md5").update(body).digest("hex");
+  const contentMD5 = hexEncode.stringify(createHash(body));
+  console.log(contentMD5)
 
   // 2. Create string for the signature data
   const unsignedData =
     method + "\n" + contentMD5 + "\n" + type + "\n" + date + "\n" + path;
 
   // 3. Create SHA1 hmac of signature data
-  const signature = crypto
-    .createHmac("sha1", process.env.REACT_APP_VUFORIA_CLIENT_SECRET_KEY)
-    .update(unsignedData)
-    .digest("base64");
+  const signature = base64Encode.stringify(
+    createHmac(unsignedData, process.env.REACT_APP_VUFORIA_CLIENT_SECRET_KEY)
+  );
 
   return signature;
 };
