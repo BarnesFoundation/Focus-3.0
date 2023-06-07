@@ -158,13 +158,18 @@ class SearchRequestService {
   };
 
   /** Submits the image search request to Catchoom and returns and ImageSearchResponse object */
-  submitImageSearchRequest = async (requestConfig) => {
+  submitImageSearchRequest = async (imageData: Blob) => {
     try {
-      const response = (await axios(requestConfig)).data;
+      const formData = new FormData();
+      formData.set("image", imageData, "temp_image.jpg");
+      console.log(formData)
+
+      const response = await axios.post(constants.SCAN_SEARCH_URL, formData);
+      console.log(response);
 
       // Get the search time and number of results
-      const searchTime = response.search_time;
-      const resultsCount = response.results.length;
+      const searchTime = response.data.search_time;
+      const resultsCount = response.data.results.length;
 
       // If a matching result was found, this image search was successful
       if (resultsCount > 0) {

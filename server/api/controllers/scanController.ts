@@ -181,13 +181,21 @@ class ScanController {
         url: vuforiaURL,
         data: requestBody,
       });
+      console.log(
+        "RESP ****************************************\n",
+        imageSearchResponse
+      );
+      response.status(200).json(imageSearchResponse);
     } catch (error) {
       console.log(`An error occurred sending request to Vueforia`, error);
+      response.status(500).json({
+        message: "And error occurrend sending request to Vueforia",
+        error,
+      });
     }
 
     // We'll respond to the client that we've received their request
     // to store the image and close the connection with them
-    response.status(200).json("Request to store image received");
   }
 }
 

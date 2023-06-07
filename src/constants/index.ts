@@ -19,6 +19,7 @@ export const STORIES_EMAIL_PAGE_URL = "/api/stories/";
 export const STORIES_READ_URL = (artworkId: string, storyId: string) =>
   `/api/artwork/${artworkId}/stories/${storyId}/read`;
 export const STORE_SEARCHED_RESULT_URL = "/api/scan/save";
+export const SCAN_SEARCH_URL = "/api/scan/search";
 export const SUBMIT_BOOKMARKS_EMAIL_URL = "/api/bookmark/submit";
 export const SAVE_LANGUAGE_PREFERENCE_URL = "/api/bookmark/set-language";
 export const APP_TRANSLATIONS_URL = "/api/translation";
