@@ -12,6 +12,7 @@ import createHash from "crypto-js/md5";
 import hexEncode from "crypto-js/enc-hex";
 import base64Encode from "crypto-js/enc-base64";
 import createHmac from "crypto-js/hmac-sha1";
+import crypto from "crypto";
 
 import { ImageUploadJob } from "../jobs";
 import { DatabaseService } from "../services";
@@ -181,15 +182,24 @@ export const generateSignature = (
   requestPath: string
 ): string => {
   // 1. Create hexadecimal MD5 hash of request body
-  const requestBodyMD5 = hexEncode.stringify(createHash(requestBody));
+  // const requestBodyMD5 = hexEncode.stringify(createHash(requestBody));
+  console.log(requestBody);
+  const requestBodyMD5 = crypto
+    .createHash("md5")
+    .update(requestBody)
+    .digest("hex");
 
   // 2. Create string for the signature data
   const unsignedContent = `${requestMethod}\n ${requestBodyMD5}\n ${contentType}\n ${date}\n ${requestPath}\n`;
 
   // 3. Create SHA1 hmac of signature data
-  const signature = base64Encode.stringify(
-    createHmac(unsignedContent, process.env.REACT_APP_VUFORIA_CLIENT_SECRET_KEY)
-  );
+  // const signature = base64Encode.stringify(
+  //   createHmac(unsignedContent, process.env.REACT_APP_VUFORIA_CLIENT_SECRET_KEY)
+  // );
+  const signature = crypto
+    .createHmac("sha1", process.env.REACT_APP_VUFORIA_CLIENT_SECRET_KEY)
+    .update(unsignedContent)
+    .digest("base64");
 
   return signature;
 };
