@@ -114,26 +114,51 @@ class ScanController {
     response: express.Response
   ) {
     const queryImage = request.file;
+    // @ts-ignore
     const imageBase64 = queryImage.buffer.toString("base64");
+    const utf8Image = queryImage.buffer.toString("utf-8");
 
     const vuforiaURL = process.env.REACT_APP_VUFORIA_REQUEST_URL;
     const contentTypeBare = "multipart/form-data";
 
     const date = new Date().toUTCString();
 
-    // Set up the form data
-    const form = new FormData();
-    form.set("image", imageBase64);
-    form.set("include_target_data", "top");
+    // // Set up the form data
+    // const form = new FormData();
+    // form.set("image", imageBase64);
+    // form.set("include_target_data", "top");
 
-    // Encode the content and get the body
-    const encoder = new FormDataEncoder(form);
-    const readableStream = Readable.from(encoder.encode());
-    const chunks = [];
-    for await (const chunk of readableStream) {
-      chunks.push(Buffer.from(chunk));
-    }
-    const requestBody = Buffer.concat(chunks).toString("utf-8");
+    // // Encode the content and get the body
+    // const encoder = new FormDataEncoder(form);
+    // const readableStream = Readable.from(encoder.encode());
+    // const chunks = [];
+    // for await (const chunk of readableStream) {
+    //   chunks.push(Buffer.from(chunk));
+    // }
+    // // const requestBody = Buffer.concat(chunks).toString("utf-8");
+    // console.log("BODY ****************************************\n", requestBody);
+
+    // Set the form data
+    // const boundary = encoder.boundary;
+    const boundary = Buffer.from(Math.random().toString(), "utf8")
+      .toString("base64")
+      .substring(0, 12);
+
+    const formData = [
+      {
+        name: "image",
+        value: utf8Image,
+        type: "image/jpeg",
+        filename: "temp_image.jpg",
+      },
+      {
+        name: "include_target_data",
+        value: "top",
+      },
+    ];
+
+    const requestBody = generateWholeRequest(formData, boundary);
+
     const signature = generateSignature(
       "post",
       requestBody,
@@ -143,7 +168,7 @@ class ScanController {
     );
 
     const requestHeaders = {
-      "Content-Type": `multipart/form-data; boundary=${encoder.boundary}`,
+      "Content-Type": `multipart/form-data; boundary=${boundary}`,
       Accept: "application/json",
       Authorization: `VWS ${process.env.REACT_APP_VUFORIA_CLIENT_ACCESS_KEY}:${signature}`,
       Date: date,
@@ -202,6 +227,38 @@ export const generateSignature = (
     .digest("base64");
 
   return signature;
+};
+
+/**
+ * @param {any} form - Object containing the form data
+ * @param {string} boundary - Request body boundary
+ * @returns {string} - Formatted whole request body string
+ */
+export const generateWholeRequest = (form: any, boundary: string): string => {
+  var body = "";
+  for (var key in form) {
+    const filename = form[key].filename
+      ? '; filename="' + form[key].filename + '"'
+      : "";
+    const contentType = form[key].type
+      ? "\r\nContent-type: " + form[key].type
+      : "";
+
+    body +=
+      "--" +
+      boundary +
+      '\r\nContent-Disposition: form-data; name="' +
+      form[key].name +
+      '"' +
+      filename +
+      contentType +
+      "\r\n\r\n" +
+      form[key].value +
+      "\r\n";
+  }
+  body += "--" + boundary + "--\r\n";
+
+  return body;
 };
 
 export default ScanController;
