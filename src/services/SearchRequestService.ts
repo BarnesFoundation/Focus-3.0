@@ -6,24 +6,21 @@ import {
 } from "../classes/searchResponse";
 
 class SearchRequestService {
-  /** Prepares scan data for a request and returns a requetsConfig object with { url, data, config } */
-  prepareRequest(imageData, scanSeqId) {
+  /** Prepares scan data for a request and returns a requestConfig object with { url, data, config } */
+  async prepareRequest(imageData: Blob, scanSeqId) {
     // Configure the request
-    let token = constants.CATCHOOM_ACCESS_TOKEN;
-    let url = constants.CATCHOOM_REQUEST_URL;
-    let headers = { "Content-Type": "multipart/form-data" };
+    let url = process.env.REACT_APP_VUFORIA_REQUEST_URL;
+    const utf8Image = await imageData.text();
 
-    // Set the form data
-    let data = new FormData();
-    data.set("token", token);
-    data.set("image", imageData, "temp_image.jpg");
-    data.set("scanSeqId", scanSeqId);
+    let headers = {
+      "Content-Type": "image/jpeg",
+    };
 
     const axiosConfig = {
       method: "post",
       headers: headers,
       url: url,
-      data: data,
+      data: utf8Image,
     };
 
     return axiosConfig;
