@@ -1,18 +1,8 @@
 import express from "express";
 import multer from "multer";
-import axios from "axios";
-import { FormDataEncoder } from "form-data-encoder";
 
-//const { FormDataEncoder } = await import("form-data-encoder");
-
-import { FormData } from "formdata-node";
-import { Readable } from "stream";
-
-import createHash from "crypto-js/md5";
-import hexEncode from "crypto-js/enc-hex";
-import base64Encode from "crypto-js/enc-base64";
-import createHmac from "crypto-js/hmac-sha1";
 import crypto from "crypto";
+import vuforia from "vuforia-api";
 
 import { ImageUploadJob } from "../jobs";
 import { DatabaseService } from "../services";
@@ -50,6 +40,20 @@ interface FoundImageScan {
 interface TypedRequest extends express.Request {
   body: FoundImageScan | NoFoundImageScan;
 }
+
+interface VuforiaResponse {
+  query_id: string;
+  results: Array<any>;
+  result_code: string;
+}
+
+const vuforiaClient = vuforia.client({
+  serverAccessKey: "",
+  serverSecretKey: "your server secret key",
+
+  clientAccessKey: "f652ecc89752f6a7971bb6e739835266b36715ef",
+  clientSecretKey: "76f8402f08750f7ad0388030cbada12cd11c8783",
+});
 
 class ScanController {
   public static async saveScan(
@@ -114,88 +118,37 @@ class ScanController {
     response: express.Response
   ) {
     const queryImage = request.file;
-    // @ts-ignore
-    const imageBase64 = queryImage.buffer.toString("base64");
-    const utf8Image = queryImage.buffer.toString("utf-8");
-
-    const vuforiaURL = process.env.REACT_APP_VUFORIA_REQUEST_URL;
-    const contentTypeBare = "multipart/form-data";
-
-    const date = new Date().toUTCString();
-
-    // // Set up the form data
-    // const form = new FormData();
-    // form.set("image", imageBase64);
-    // form.set("include_target_data", "top");
-
-    // // Encode the content and get the body
-    // const encoder = new FormDataEncoder(form);
-    // const readableStream = Readable.from(encoder.encode());
-    // const chunks = [];
-    // for await (const chunk of readableStream) {
-    //   chunks.push(Buffer.from(chunk));
-    // }
-    // // const requestBody = Buffer.concat(chunks).toString("utf-8");
-    // console.log("BODY ****************************************\n", requestBody);
-
-    // Set the form data
-    // const boundary = encoder.boundary;
-    const boundary = Buffer.from(Math.random().toString(), "utf8")
-      .toString("base64")
-      .substring(0, 12);
-
-    const formData = [
-      {
-        name: "image",
-        value: utf8Image,
-        type: "image/jpeg",
-        filename: "temp_image.jpg",
-      },
-      {
-        name: "include_target_data",
-        value: "top",
-      },
-    ];
-
-    const requestBody = generateWholeRequest(formData, boundary);
-
-    const signature = generateSignature(
-      "post",
-      requestBody,
-      contentTypeBare,
-      date,
-      "/v1/query"
-    );
-
-    const requestHeaders = {
-      "Content-Type": `multipart/form-data; boundary=${boundary}`,
-      Accept: "application/json",
-      Authorization: `VWS ${process.env.REACT_APP_VUFORIA_CLIENT_ACCESS_KEY}:${signature}`,
-      Date: date,
-    };
+    const imageBinary = queryImage.buffer.toString("binary");
 
     try {
-      const imageSearchResponse = await axios({
-        method: "post",
-        headers: requestHeaders,
-        url: vuforiaURL,
-        data: requestBody,
-      });
-      console.log(
-        "RESP ****************************************\n",
-        imageSearchResponse
+      const imageSearchResult = await new Promise<VuforiaResponse>(
+        (resolve, reject) => {
+          vuforiaClient.cloudRecoQuery(
+            imageBinary,
+            5,
+            function (error, result) {
+              if (error) {
+                return reject(error);
+              } else {
+                return resolve(result);
+              }
+            }
+          );
+        }
       );
-      response.status(200).json(imageSearchResponse);
+
+      console.log(
+        "Successful Vuforia API image search result",
+        imageSearchResult
+      );
+
+      return response.status(200).json(imageSearchResult);
     } catch (error) {
       console.log(`An error occurred sending request to Vueforia`, error);
-      response.status(500).json({
-        message: "And error occurrend sending request to Vueforia",
-        error,
+      return response.status(500).json({
+        message: "An error occurrend sending performing image search request",
       });
     }
-
-    // We'll respond to the client that we've received their request
-    // to store the image and close the connection with them
   }
 }
 
@@ -215,24 +168,26 @@ export const generateSignature = (
   requestPath: string
 ): string => {
   // 1. Create hexadecimal MD5 hash of request body
+  const requestBodyMD5 = "d41d8cd98f00b204e9800998ecf8427e";
   // const requestBodyMD5 = hexEncode.stringify(createHash(requestBody));
-  console.log(requestBody);
-  const requestBodyMD5 = crypto
+  /* const requestBodyMD5 = crypto
     .createHash("md5")
     .update(requestBody)
-    .digest("hex");
+    .digest("hex"); */
 
   // 2. Create string for the signature data
-  const unsignedContent = `${requestMethod}\n ${requestBodyMD5}\n ${contentType}\n ${date}\n ${requestPath}\n`;
+  const unsignedContent = `${requestMethod}\n ${requestBodyMD5}\n ${""}\n ${date}\n ${requestPath}\n`;
 
   // 3. Create SHA1 hmac of signature data
   // const signature = base64Encode.stringify(
   //   createHmac(unsignedContent, process.env.REACT_APP_VUFORIA_CLIENT_SECRET_KEY)
   // );
-  const signature = crypto
-    .createHmac("sha1", process.env.REACT_APP_VUFORIA_CLIENT_SECRET_KEY)
-    .update(unsignedContent)
-    .digest("base64");
+  const hmac = crypto.createHmac(
+    "sha1",
+    process.env.REACT_APP_VUFORIA_CLIENT_SECRET_KEY
+  );
+  hmac.update(unsignedContent);
+  const signature = hmac.digest("base64");
 
   return signature;
 };
