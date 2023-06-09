@@ -62,12 +62,12 @@ set_env_prod:
 # Starts a local ngrok tunnel
 # connected to the React FE on localhost:3006
 ngrok-client:
-	npx ngrok http 3006 --host-header=localhost:3006
+	npx ngrok@4.3.0 http 3006 --host-header=localhost:3006
 
 # Starts a local ngrok tunnel
 # connected to the Node BE on localhost:4006
 ngrok-server:
-	npx ngrok http 4006 --host-header=localhost:4006
+	npx ngrok@4.3.0 http 4006 --host-header=localhost:4006
 
 # Manually copy email views to the dist folder
 # TODO - this should be more automated if possible
