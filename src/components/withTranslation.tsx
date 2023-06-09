@@ -66,7 +66,7 @@ function withTranslation<WrappedComponentProps>(WrappedComponent) {
         ],
         getSelectedLanguage: this.getSelectedLanguage,
         updateSelectedLanguage: this.updateSelectedLanguage,
-        selectedLanguage: { name: "English", code: "En", selected: true },
+        selectedLanguage: { name: "English", code: "En", selected: true }
       };
     }
 
