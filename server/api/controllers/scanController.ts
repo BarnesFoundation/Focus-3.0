@@ -149,7 +149,21 @@ class ScanController {
         imageSearchResult
       );
 
-      return response.status(200).json(imageSearchResult);
+      // Transform the result into a format similar to how CraftAR was providing us
+      // so that we can continue to utilize the FE as-is without any changes for now
+      const transformedResult = {
+        search_time: Date.now(),
+        results: imageSearchResult.results.map((result) => ({
+          item: {
+            name: result.target_data.name,
+          },
+          image: {
+            thumb_120: "null",
+          },
+        })),
+      };
+
+      return response.status(200).json(transformedResult);
     } catch (error) {
       console.log(`An error occurred sending request to Vueforia`, error);
       return response.status(500).json({
