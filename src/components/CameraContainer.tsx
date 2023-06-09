@@ -96,27 +96,25 @@ export class CameraContainerComponent extends Component<
       if (searchWasSuccessful && this.state.shouldBeScanning) {
         this.setState({ shouldBeScanning: false, sessionYieldedMatch: true });
 
-        // Get the identified image information
-        const identifiedItem = imageSearchResponse.responsePayload.results[0];
+        // Get the identified image
+        const identifiedItem =
+          imageSearchResponse.responsePayload.data.results[0];
 
         // Get language code
         const langPref = (await this.props.getSelectedLanguage())[0].code;
-        // const identifiedImageInformation = await this.sr.processIdentifiedItem(
-        //   identifiedItem,
-        //   langPref
-        // );
-
-        // const { esResponse, referenceImageUrl } = identifiedImageInformation;
-
+        const identifiedImageInformation = await this.sr.processIdentifiedItem(
+          identifiedItem,
+          langPref
+        );
+        const { esResponse, referenceImageUrl } = identifiedImageInformation;
         searchResultToStore = new StorableSearch(
-          // data,
           {},
           searchWasSuccessful,
-          "",
-          "",
+          referenceImageUrl,
+          esResponse,
           searchTime
         );
-        elasticSearchResponse = "";
+        elasticSearchResponse = esResponse;
 
         if (elasticSearchResponse) {
           this.completeImageSearchRequest(elasticSearchResponse);

@@ -162,10 +162,8 @@ class SearchRequestService {
     try {
       const formData = new FormData();
       formData.set("image", imageData, "temp_image.jpg");
-      console.log(formData)
 
       const response = await axios.post(constants.SCAN_SEARCH_URL, formData);
-      console.log(response);
 
       // Get the search time and number of results
       const searchTime = response.data.search_time;
