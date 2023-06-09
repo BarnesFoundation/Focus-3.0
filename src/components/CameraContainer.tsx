@@ -73,7 +73,7 @@ export class CameraContainerComponent extends Component<
     // Only process image capture when we haven't determined if session yielded a match
     if (this.state.sessionYieldedMatch === null && this.responseCounter <= 9) {
       // Prepare and send the request to Catchoom for a response
-      const imageSearchRequestConfig = await this.sr.prepareRequest(
+      const imageSearchRequestConfig = this.sr.prepareRequest(
         imageBlob,
         this.state.scanSeqId
       );
@@ -117,7 +117,7 @@ export class CameraContainerComponent extends Component<
         if (elasticSearchResponse) {
           this.completeImageSearchRequest(elasticSearchResponse);
         } else {
-          // The ES response for special exhibition objects can be undefined if no content has bee added to Hygraph for the object,
+           // The ES response for special exhibition objects can be undefined if no content has bee added to Hygraph for the object,
           //  In that case we will want to end scanning by updating the state to show that the search did not yield a match
           this.setState({
             sessionYieldedMatch: false,
