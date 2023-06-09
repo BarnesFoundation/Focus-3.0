@@ -146,21 +146,25 @@ class ScanController {
 
       console.log(
         "Successful Vuforia API image search result",
-        imageSearchResult
+        JSON.stringify(imageSearchResult)
       );
 
       // Transform the result into a format similar to how CraftAR was providing us
       // so that we can continue to utilize the FE as-is without any changes for now
       const transformedResult = {
         search_time: Date.now(),
-        results: imageSearchResult.results.map((result) => ({
-          item: {
-            name: result.target_data.name,
-          },
-          image: {
-            thumb_120: "null",
-          },
-        })),
+        results: imageSearchResult.results
+          // Not sure why some items in this list come back with no `target_data` key
+          // If there is no `target_data` key then we don't get a `name` value
+          .filter((result) => result.target_id && result.target_data)
+          .map((result) => ({
+            item: {
+              name: result.target_data?.name,
+            },
+            image: {
+              thumb_120: "null",
+            },
+          })),
       };
 
       return response.status(200).json(transformedResult);
