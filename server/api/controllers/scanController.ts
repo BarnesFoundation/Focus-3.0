@@ -56,10 +56,10 @@ interface VuforiaResponse {
 
 const vuforiaClient = vuforia.client({
   serverAccessKey: "",
-  serverSecretKey: "your server secret key",
+  serverSecretKey: "",
 
-  clientAccessKey: "f652ecc89752f6a7971bb6e739835266b36715ef",
-  clientSecretKey: "76f8402f08750f7ad0388030cbada12cd11c8783",
+  clientAccessKey: process.env.REACT_APP_VUFORIA_CLIENT_ACCESS_KEY,
+  clientSecretKey: process.env.REACT_APP_VUFORIA_CLIENT_SECRET_KEY,
 });
 
 class ScanController {
