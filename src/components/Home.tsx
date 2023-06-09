@@ -24,7 +24,6 @@ import withTranslation, { WithTranslationState } from "./withTranslation";
 
 export const HomeComponent: React.FC<WithTranslationState> = ({
   getTranslation,
-  selectedLanguage,
 }) => {
   const { resetLocalStorage } = useLocalStorage();
   const history = useHistory();
@@ -111,18 +110,12 @@ export const HomeComponent: React.FC<WithTranslationState> = ({
     <div className="home-wrapper" id="home-wrapper" style={homeContainerStyle}>
       {/* Show the unsupported browser dialog if the browser is not supported */}
       {unsupportedIOSBrowser ? (
-        <UnsupportedDialogue
-          unsupportedIOSBrowser={true}
-          selectedLanguage={selectedLanguage}
-        />
+        <UnsupportedDialogue unsupportedIOSBrowser={true} />
       ) : null}
 
       {/* Show the unsupported iOS version dialog if the iOS version is not supported */}
       {unsupportedIOSVersion ? (
-        <UnsupportedDialogue
-          unsupportedIOSVersion={true}
-          selectedLanguage={selectedLanguage}
-        />
+        <UnsupportedDialogue unsupportedIOSVersion={true} />
       ) : null}
 
       <img
