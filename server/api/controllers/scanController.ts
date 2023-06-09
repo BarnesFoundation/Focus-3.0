@@ -43,7 +43,14 @@ interface TypedRequest extends express.Request {
 
 interface VuforiaResponse {
   query_id: string;
-  results: Array<any>;
+  results: Array<{
+    target_id: string;
+    target_data: {
+      name: string;
+      application_metadata: any;
+      target_timestamp: number;
+    };
+  }>;
   result_code: string;
 }
 
