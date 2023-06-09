@@ -73,15 +73,18 @@ export class CameraContainerComponent extends Component<
     // Only process image capture when we haven't determined if session yielded a match
     if (this.state.sessionYieldedMatch === null && this.responseCounter <= 9) {
       // Prepare and send the request to Catchoom for a response
-      const imageSearchRequestConfig = this.sr.prepareRequest(
-        imageBlob,
-        this.state.scanSeqId
-      );
+      // const imageSearchRequestConfig = await this.sr.prepareRequest(
+      //   imageBlob,
+      //   this.state.scanSeqId
+      // );
+      // const imageSearchResponse = await this.sr.submitImageSearchRequest(
+      //   imageSearchRequestConfig
+      // );
       const imageSearchResponse = await this.sr.submitImageSearchRequest(
-        imageSearchRequestConfig
+        imageBlob
       );
 
-      const { data } = imageSearchRequestConfig;
+      // const { data } = imageSearchRequestConfig;
       const { searchWasSuccessful, searchTime } = imageSearchResponse;
       let searchResultToStore,
         elasticSearchResponse = null;
@@ -93,8 +96,9 @@ export class CameraContainerComponent extends Component<
       if (searchWasSuccessful && this.state.shouldBeScanning) {
         this.setState({ shouldBeScanning: false, sessionYieldedMatch: true });
 
-        // Get the identified image information
-        const identifiedItem = imageSearchResponse.responsePayload.results[0];
+        // Get the identified image
+        const identifiedItem =
+          imageSearchResponse.responsePayload.data.results[0];
 
         // Get language code
         const langPref = (await this.props.getSelectedLanguage())[0].code;
@@ -102,11 +106,9 @@ export class CameraContainerComponent extends Component<
           identifiedItem,
           langPref
         );
-
         const { esResponse, referenceImageUrl } = identifiedImageInformation;
-
         searchResultToStore = new StorableSearch(
-          data,
+          {},
           searchWasSuccessful,
           referenceImageUrl,
           esResponse,
@@ -117,7 +119,7 @@ export class CameraContainerComponent extends Component<
         if (elasticSearchResponse) {
           this.completeImageSearchRequest(elasticSearchResponse);
         } else {
-           // The ES response for special exhibition objects can be undefined if no content has bee added to Hygraph for the object,
+          // The ES response for special exhibition objects can be undefined if no content has bee added to Hygraph for the object,
           //  In that case we will want to end scanning by updating the state to show that the search did not yield a match
           this.setState({
             sessionYieldedMatch: false,
@@ -128,7 +130,8 @@ export class CameraContainerComponent extends Component<
       // Otherwise, when it's not successful
       else {
         searchResultToStore = new StorableSearch(
-          data,
+          // data,
+          {},
           searchWasSuccessful,
           null,
           elasticSearchResponse,

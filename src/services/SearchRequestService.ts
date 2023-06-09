@@ -1,23 +1,59 @@
 import * as constants from "../constants";
 import axios from "axios";
+import crypto from "crypto";
 import {
   IdentifiedImagePayload,
   ImageSearchResponse,
 } from "../classes/searchResponse";
+import {
+  generateAuthHeader,
+  generateWholeRequest,
+} from "../helpers/authHeaderHelpers";
 
 class SearchRequestService {
-  /** Prepares scan data for a request and returns a requetsConfig object with { url, data, config } */
-  prepareRequest(imageData, scanSeqId) {
+  /** Prepares scan data for a request and returns a requestConfig object with { url, data, config } */
+  async prepareRequest(imageData: Blob, scanSeqId) {
     // Configure the request
-    let token = constants.CATCHOOM_ACCESS_TOKEN;
-    let url = constants.CATCHOOM_REQUEST_URL;
-    let headers = { "Content-Type": "multipart/form-data" };
+    let url = process.env.REACT_APP_VUFORIA_REQUEST_URL;
+
+    // const form = new FormData();
+    // form.set("image", imageData, "temp_image.jpg");
+    // form.set("include_target_data", "top");
 
     // Set the form data
-    let data = new FormData();
-    data.set("token", token);
-    data.set("image", imageData, "temp_image.jpg");
-    data.set("scanSeqId", scanSeqId);
+    const boundary = window.btoa(Math.random().toString()).substring(0, 12);
+    const utf8Image = await imageData.text();
+    const formData = [
+      {
+        name: "image",
+        value: utf8Image,
+        type: "image/jpeg",
+        filename: "temp_image.jpg",
+      },
+      {
+        name: "include_target_data",
+        value: "top",
+      },
+    ];
+
+    const data = generateWholeRequest(formData, boundary);
+
+    const date = new Date().toUTCString();
+    const authHeader = generateAuthHeader(
+      "post",
+      date,
+      "/v1/query",
+      data,
+      "multipart/form-data"
+    );
+
+    let headers = {
+      // @ts-ignore
+      "Content-Type": `multipart/form-data; boundary=${boundary}`,
+      Accept: "application/json",
+      Date: date,
+      Authorization: `VWS ${process.env.REACT_APP_VUFORIA_CLIENT_ACCESS_KEY}:${authHeader}`,
+    };
 
     const axiosConfig = {
       method: "post",
@@ -122,13 +158,16 @@ class SearchRequestService {
   };
 
   /** Submits the image search request to Catchoom and returns and ImageSearchResponse object */
-  submitImageSearchRequest = async (requestConfig) => {
+  submitImageSearchRequest = async (imageData: Blob) => {
     try {
-      const response = (await axios(requestConfig)).data;
+      const formData = new FormData();
+      formData.set("image", imageData, "temp_image.jpg");
+
+      const response = await axios.post(constants.SCAN_SEARCH_URL, formData);
 
       // Get the search time and number of results
-      const searchTime = response.search_time;
-      const resultsCount = response.results.length;
+      const searchTime = response.data.search_time;
+      const resultsCount = response.data.results.length;
 
       // If a matching result was found, this image search was successful
       if (resultsCount > 0) {
@@ -140,6 +179,7 @@ class SearchRequestService {
         return new ImageSearchResponse(false, response, searchTime);
       }
     } catch (error) {
+      console.log(error);
       return new ImageSearchResponse(false, null, null);
     }
   };
