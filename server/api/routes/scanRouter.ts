@@ -10,4 +10,10 @@ ScanRouter.post(
   ScanController.saveScan
 );
 
+ScanRouter.post(
+  "/search",
+  uploadMiddleware.single(fieldName),
+  ScanController.searchScan
+);
+
 export default ScanRouter;
