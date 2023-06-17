@@ -143,7 +143,7 @@ class ScanController {
         }
       );
 
-      console.log(
+      console.debug(
         "Successful Vuforia API image search result",
         JSON.stringify(imageSearchResult)
       );
