@@ -1,70 +1,12 @@
 import * as constants from "../constants";
 import axios from "axios";
-import crypto from "crypto";
+
 import {
   IdentifiedImagePayload,
   ImageSearchResponse,
 } from "../classes/searchResponse";
-import {
-  generateAuthHeader,
-  generateWholeRequest,
-} from "../helpers/authHeaderHelpers";
 
 class SearchRequestService {
-  /** Prepares scan data for a request and returns a requestConfig object with { url, data, config } */
-  async prepareRequest(imageData: Blob, scanSeqId) {
-    // Configure the request
-    let url = process.env.REACT_APP_VUFORIA_REQUEST_URL;
-
-    // const form = new FormData();
-    // form.set("image", imageData, "temp_image.jpg");
-    // form.set("include_target_data", "top");
-
-    // Set the form data
-    const boundary = window.btoa(Math.random().toString()).substring(0, 12);
-    const utf8Image = await imageData.text();
-    const formData = [
-      {
-        name: "image",
-        value: utf8Image,
-        type: "image/jpeg",
-        filename: "temp_image.jpg",
-      },
-      {
-        name: "include_target_data",
-        value: "top",
-      },
-    ];
-
-    const data = generateWholeRequest(formData, boundary);
-
-    const date = new Date().toUTCString();
-    const authHeader = generateAuthHeader(
-      "post",
-      date,
-      "/v1/query",
-      data,
-      "multipart/form-data"
-    );
-
-    let headers = {
-      // @ts-ignore
-      "Content-Type": `multipart/form-data; boundary=${boundary}`,
-      Accept: "application/json",
-      Date: date,
-      Authorization: `VWS ${process.env.REACT_APP_VUFORIA_CLIENT_ACCESS_KEY}:${authHeader}`,
-    };
-
-    const axiosConfig = {
-      method: "post",
-      headers: headers,
-      url: url,
-      data: data,
-    };
-
-    return axiosConfig;
-  }
-
   /** Retrieves the art information for the provided image id */
   getArtworkInformation = async (imageId, lang) => {
     // get lang from local storage
@@ -157,11 +99,11 @@ class SearchRequestService {
     }
   };
 
-  /** Submits the image search request to Catchoom and returns and ImageSearchResponse object */
-  submitImageSearchRequest = async (imageData: Blob) => {
+  /** Submits the image search request to the backend and returns and ImageSearchResponse object */
+  public async submitImageSearchRequest(imageBlob: Blob) {
     try {
       const formData = new FormData();
-      formData.set("image", imageData, "temp_image.jpg");
+      formData.set("image", imageBlob, "temp_image.jpg");
 
       const response = await axios.post(constants.SCAN_SEARCH_URL, formData);
 
@@ -179,10 +121,10 @@ class SearchRequestService {
         return new ImageSearchResponse(false, response, searchTime);
       }
     } catch (error) {
-      console.log(error);
+      console.error(`An error occurred with the image search request`, error);
       return new ImageSearchResponse(false, null, null);
     }
-  };
+  }
 
   /** Retrieves special exhibition object details from Hygraph/GraphCMS */
   getSpecialExhibitionObject = async (objectId, lang) => {
