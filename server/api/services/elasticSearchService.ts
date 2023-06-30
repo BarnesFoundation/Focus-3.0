@@ -75,7 +75,17 @@ export default class ElasticSearchService {
 
     const esResponse = await esClient.search({
       index: applicationConfiguration.elasticSearch.collection,
-      body: fetchAllQuery(offset, limit),
+      body: {
+        ...fetchAllQuery(offset, limit),
+        // Add a sort to maintain cardinality in the query given the fact that we fetch using offsets
+        sort: [
+          {
+            id: {
+              order: "asc",
+            },
+          },
+        ],
+      },
     });
 
     if (

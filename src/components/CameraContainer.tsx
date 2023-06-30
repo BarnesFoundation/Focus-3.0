@@ -5,7 +5,7 @@ import { compose } from "redux";
 import posed from "react-pose";
 
 import Camera from "./Camera";
-import { StorableSearch, ImageSearchResponse } from "../classes/searchResponse";
+import { StorableSearch } from "../classes/searchResponse";
 import { SearchRequestService } from "../services/SearchRequestService";
 import { loadImage } from "./CameraHelper";
 import * as constants from "../constants";
@@ -72,14 +72,6 @@ export class CameraContainerComponent extends Component<
   processImageCapture = async (imageBlob) => {
     // Only process image capture when we haven't determined if session yielded a match
     if (this.state.sessionYieldedMatch === null && this.responseCounter <= 9) {
-      // Prepare and send the request to Catchoom for a response
-      // const imageSearchRequestConfig = await this.sr.prepareRequest(
-      //   imageBlob,
-      //   this.state.scanSeqId
-      // );
-      // const imageSearchResponse = await this.sr.submitImageSearchRequest(
-      //   imageSearchRequestConfig
-      // );
       const imageSearchResponse = await this.sr.submitImageSearchRequest(
         imageBlob
       );

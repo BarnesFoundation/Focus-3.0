@@ -61,11 +61,13 @@ set_env_prod:
 
 # Starts a local ngrok tunnel
 # connected to the React FE on localhost:3006
+# Ngrok had recent breaking changes in new releases, so hardcode old version until we upgrade
 ngrok-client:
 	npx ngrok@4.3.0 http 3006 --host-header=localhost:3006
 
 # Starts a local ngrok tunnel
 # connected to the Node BE on localhost:4006
+# Ngrok had recent breaking changes in new releases, so hardcode old version until we upgrade
 ngrok-server:
 	npx ngrok@4.3.0 http 4006 --host-header=localhost:4006
 
