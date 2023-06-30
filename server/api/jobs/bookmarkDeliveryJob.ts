@@ -9,6 +9,8 @@ const prisma = DatabaseService.instance;
 // email that occurred more than 3 hours ago
 const LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS = 3;
 
+const BOOKMARK_DELIVERY_LOG = `[BookmarkDeliveryJob]`;
+
 type DeliverableBookmarks = { [email: string]: bookmarks[] };
 type CollectedArtworks = {
   [artworkId: string]: {
@@ -26,7 +28,7 @@ class BookmarkDeliveryJob {
       await BookmarkDeliveryJob.getDeliverableBookmarks();
     const distinctEmailAddressCount = Object.keys(deliverableBookmarks).length;
     console.log(
-      `Identified ${distinctEmailAddressCount} email addresses that have bookmarks ready for delivery`
+      `${BOOKMARK_DELIVERY_LOG} Identified ${distinctEmailAddressCount} email addresses that have bookmarks ready for delivery`
     );
 
     // We'll pre-fetch all of the artworks associated with these bookmarks
@@ -69,7 +71,7 @@ class BookmarkDeliveryJob {
             acc[bookmark.image_id] = artworksForBookmarks[bookmark.image_id];
           } else {
             console.warn(
-              `Could not pull Artwork with Image ID ${bookmark.image_id} from the 'artworksForBookmarks' list`
+              `${BOOKMARK_DELIVERY_LOG} Could not pull Artwork with Image ID ${bookmark.image_id} from the 'artworksForBookmarks' list for Session ID ${sessionId}`
             );
           }
           return acc;
@@ -80,7 +82,7 @@ class BookmarkDeliveryJob {
       // Log some help debugging information about the bookmarks and artworks sent. Distinct in this case
       // means unique bookmarks, ignoring bookmarks that are duplicates for the same artkwork
       console.debug(
-        `For session id ${sessionId}, we identified ${distinctArtworkListForBookmarks.length} distinct bookmarks. We will deliver the following ${bookmarkArtworkList.length} artwork id's`,
+        `${BOOKMARK_DELIVERY_LOG} For session id ${sessionId}, we identified ${distinctArtworkListForBookmarks.length} distinct bookmarks. We will deliver the following ${bookmarkArtworkList.length} artwork id's`,
         bookmarkArtworkList.map((item) => item.image_id)
       );
       await MailService.send({
@@ -118,6 +120,7 @@ class BookmarkDeliveryJob {
       if (bookmarkArtworkList.length < distinctArtworkListForBookmarks.length) {
         console.warn(
           `
+		  ${BOOKMARK_DELIVERY_LOG}
 		  For session ID ${sessionId}, we were only able to retrieve ${bookmarkArtworkList.length} of the ${distinctArtworkListForBookmarks.length} artworks used by the bookmarks for the session.
 		  This will very likely result in discrepancies between the amount of artworks the user scanned, and the ones we send in
 		  the email for the BookmarkDeliveryJob
@@ -127,7 +130,7 @@ class BookmarkDeliveryJob {
     }
 
     console.log(
-      `Completed delivery of bookmark emails for ${distinctEmailAddressCount} email addresses`
+      `${BOOKMARK_DELIVERY_LOG} Completed delivery of bookmark emails for ${distinctEmailAddressCount} email addresses`
     );
   }
 
