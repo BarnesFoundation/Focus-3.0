@@ -9,14 +9,14 @@ class ElasticSearchSyncJob {
       `There are a total of ${totalRecords} in the ElasticSearch server`
     );
 
-    const recordBatchSize = 500;
+    const recordBatchSize = 250;
     const numberOfBatches = Math.ceil(totalRecords / recordBatchSize);
     console.debug(
       `Job will process ${recordBatchSize} in ${numberOfBatches} batches `
     );
 
-    for (let i = 0; i < numberOfBatches; i++) {
-      const offset = i * 500;
+    for (let i = 0; i <= numberOfBatches; i++) {
+      const offset = i * recordBatchSize;
       const records = await ElasticSearchService.getRecords(
         offset,
         recordBatchSize
