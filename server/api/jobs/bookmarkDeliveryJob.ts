@@ -44,7 +44,7 @@ class BookmarkDeliveryJob {
       const sessionId = firstBookmark.session_id;
 
       // Some possibly helpful debugging information
-      // Get bookmarks that are distinct by the artwork image they bookmark
+      // Get distinct artwork Image IDs that are used by the bookmarks
       const distinctArtworkListForBookmarks = bookmarkSet.reduce<Array<string>>(
         (distinctAcc, bookmark) => {
           if (distinctAcc.includes(bookmark.image_id) === false) {
@@ -63,20 +63,23 @@ class BookmarkDeliveryJob {
       );
 
       // Get the artworks needed for this email's set of bookmarks
-      const bookmarkArtworkList = Object.values(
-        bookmarkSet.reduce<CollectedArtworks>((acc, bookmark) => {
-          // The `artworksUsedInBookmarks` map should always have all of the artworks
-          // needed by the bookmark. It is a problem if this is not the case, and we want to know
+      const artworkHashMap = bookmarkSet.reduce<CollectedArtworks>(
+        (acc, bookmark) => {
           if (artworksForBookmarks[bookmark.image_id]) {
             acc[bookmark.image_id] = artworksForBookmarks[bookmark.image_id];
-          } else {
+          }
+          // The `artworksUsedInBookmarks` map should always have all of the artworks
+          // needed by the bookmark. It is a problem if this is not the case, and we want to know
+          else {
             console.warn(
               `${BOOKMARK_DELIVERY_LOG} Could not pull Artwork with Image ID ${bookmark.image_id} from the 'artworksForBookmarks' list for Session ID ${sessionId}`
             );
           }
           return acc;
-        }, {})
+        },
+        {}
       );
+      const bookmarkArtworkList = Object.values(artworkHashMap);
 
       // We can use this session id to identify a user because it's listed in their bookmark records
       // Log some help debugging information about the bookmarks and artworks sent. Distinct in this case
