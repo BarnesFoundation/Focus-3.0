@@ -4,9 +4,6 @@
  */
 import { browserName } from "react-device-detect";
 
-export const CATCHOOM_ACCESS_TOKEN =
-  process.env.REACT_APP_CATCHOOM_ACCESS_TOKEN;
-export const CATCHOOM_REQUEST_URL = process.env.REACT_APP_CATCHOOM_REQUEST_URL;
 export const APP_VERSION = process.env.APP_VERSION;
 export const UNSUPPORTED_ORIENTATION_ALERT_MESSAGE =
   "The digital guide is best viewed in Portrait mode.";
