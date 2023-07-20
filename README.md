@@ -32,7 +32,7 @@ To deploy this application, you'll need to
 
 1. Configure an AWS Remote Database Service instance on the PostgreSQL platform. You'll need to create the schema and tables.
 2. Configure an ElasticSearch database that is populated with artwork information
-3. Sign up for Catchoom account
+3. Sign up for Vuforia account and create a database
 
 ### Deploy from Command Line
 
@@ -60,7 +60,7 @@ Behind the scenes these two commands:
 
 Objects from special exhibitions can be added to the app by following these steps:
 
-1. Add a reference image for each object to [craftar](https://my.craftar.net/accounts/login/) and use the prefix `SPEX/` in the item name to denote that the object is part of a special exibition, eg: `SPEX/MOD-3-1-1`.
-2. Add content for each image in the "Focus" project in [Hygraph (formerly GraphCMS)](https://app.hygraph.com) and create a `SpecialExhibitionObject` entry for each object with the object id equaling the item name in craftar removing "SPEX/", eg: `MOD-3-1-1`.
+1. Add a reference image for each object to [Vuforia](https://developer.vuforia.com/) and use the prefix `SPEX/` in the item name to denote that the object is part of a special exibition, eg: `SPEX/MOD-3-1-1`.
+2. Add content for each image in the "Focus" project in [Hygraph (formerly GraphCMS)](https://app.hygraph.com) and create a `SpecialExhibitionObject` entry for each object with the object id equaling the item name in Vuforia removing "SPEX/", eg: `MOD-3-1-1`.
 
 <!-- TODO write more instructions as things are implemented -->
