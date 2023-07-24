@@ -214,8 +214,7 @@
                       <% const
                       imageSource=`https://barnes-images.imgix.net/${els_elem['id'].toString()}_${els_elem['imageSecret']}_n.jpg?crop=faces,entropy&fit=crop&w=200&h=200`
                       %> <% const imageAlt=els_elem['id'].toString() %>
-                      <img src="<%" ="imageSource" % />
-                      alt=<%=imageAlt %> />
+                      <img src="<%=imageSource %>" alt="<%=imageAlt %>" />
                     </td>
 
                     <td
@@ -232,9 +231,11 @@
                         <% const
                         objectHref=`https://collection.barnesfoundation.org/objects/${els_elem['id'].toString()}/${els_elem['title']}?utm_source=focus&utm_medium=email&utm_campaign=focus_scanned_object`
                         %>
-                        <a href="<%" ="objectHref" %>
-                          title="Barnes Collection" style="color: #D6421F
-                          !important;">
+                        <a
+                          href="<%=objectHref %>"
+                          title="Barnes Collection"
+                          style="color: #d6421f !important"
+                        >
                           <h3><%= els_elem['title'] %></h3>
                         </a>
                       </p>
