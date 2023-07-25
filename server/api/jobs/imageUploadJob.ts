@@ -46,7 +46,7 @@ class ImageUploadJob {
         data: {
           response_time: searchTime,
           result_image_url: referenceImageUrl,
-          search_engine: "Catchoom API",
+          search_engine: "Vuforia API",
 
           updated_at: now,
           created_at: now,
