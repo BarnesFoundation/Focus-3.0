@@ -8,11 +8,13 @@
 		"sourceMap": true,
 		"outDir": "../dist/server",
 		"baseUrl": "../server",
-		"esModuleInterop": true
+		"esModuleInterop": true,
+		"jsx": "react"
 	},
 	"compileOnSave": true,
 	"include": [
-		"**/*.ts"
+		"**/*.ts",
+		"**/*.tsx"
 	],
 	"exclude": [
 		"../server/test",
