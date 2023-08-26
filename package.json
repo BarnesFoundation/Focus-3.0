@@ -2,18 +2,17 @@
     "name": "barnes-focus-lambda",
     "version": "0.1.0",
     "private": true,
-    "type":"module",
     "prisma": {
         "seed": "npx ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seeds/translations/index.ts"
     },
     "dependencies": {
-        "@adminjs/express": "^6.0.0",
-        "@adminjs/prisma": "^5.0.1",
+        "@adminjs/express": "^5.1.0",
+        "@adminjs/prisma": "^3.0.1",
         "@aws-sdk/client-s3": "^3.131.0",
         "@aws-sdk/client-translate": "^3.159.0",
         "@elastic/elasticsearch": "^7.5.1",
         "@prisma/client": "^3.14.0",
-        "adminjs": "^7.2.1",
+        "adminjs": "^6.8.7",
         "axios": "^0.27.2",
         "connect-pg-simple": "^7.0.0",
         "cookie-parser": "^1.4.6",
