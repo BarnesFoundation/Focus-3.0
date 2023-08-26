@@ -2,8 +2,9 @@ import AdminJS from "adminjs";
 import AdminJSExpress from "@adminjs/express";
 import { Database, Resource } from "@adminjs/prisma";
 import { DMMFClass } from "@prisma/client/runtime";
-
 import { PrismaClient } from "@prisma/client";
+
+import { Components, componentLoader } from "./components";
 
 const prisma = new PrismaClient();
 const dmmf = (prisma as any)._dmmf as DMMFClass;
@@ -21,6 +22,8 @@ AdminJS.registerAdapter({ Database, Resource });
 const Admin = new AdminJS({
   databases: [],
   rootPath: "/admin",
+  componentLoader,
+
   resources: [
     {
       resource: { model: dmmf.modelMap.bookmarks, client: prisma },
@@ -32,7 +35,16 @@ const Admin = new AdminJS({
     },
     {
       resource: { model: dmmf.modelMap.photos, client: prisma },
-      options: {},
+      options: {
+        properties: {
+          searched_image_s3_url: {
+            type: "string",
+            components: {
+              list: Components.Image,
+            },
+          },
+        },
+      },
     },
     {
       resource: { model: dmmf.modelMap.stories, client: prisma },
@@ -49,5 +61,7 @@ const Admin = new AdminJS({
   ],
 });
 const AdminRouter = AdminJSExpress.buildRouter(Admin);
+
+Admin.watch();
 
 export { Admin, AdminRouter };
