@@ -7,6 +7,7 @@ import { ApplicationSessions } from "./utils";
 import { Admin, AdminRouter } from "./admin";
 import ApiRouter from "./api/routes";
 import { initializeSessionMiddlware } from "./api/middleware";
+import { adminAuthenticationMiddleware } from "./admin/adminAuthenticationMiddleware";
 
 const app = express();
 const build = join(__dirname, "../build");
@@ -22,8 +23,12 @@ app.use(express.static(build, { index: false, etag: false }));
 
 // Configure Express to use our session store and API
 app.use(ApplicationSessions);
-app.use(Admin.options.rootPath, AdminRouter);
 app.use("/api", initializeSessionMiddlware, ApiRouter);
+
+// Configure the AdminJS installation to run at the specified root path
+// We're protecting all routes associated with it using HTTP basic authentication right now
+// rather than the out-of-the-box authentication, until we can resolve dependency issues
+app.use(Admin.options.rootPath, adminAuthenticationMiddleware, AdminRouter);
 
 // Serve index on all requests to server.
 app.get("*", (request: express.Request, response: express.Response) => {
