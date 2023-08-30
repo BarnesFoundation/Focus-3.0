@@ -11,15 +11,51 @@ BigInt.prototype.toJSON = function () {
   return int ?? this.toString();
 };
 
+// TODO - uncomment once we're on React 18 as that's used by AdminJS
+/* const DEFAULT_ADMIN = {
+  email: "admin@example.com",
+  password: "somePassword",
+};
+
+const authenticate = async (email: string, password: string) => {
+  if (email === DEFAULT_ADMIN.email && password === DEFAULT_ADMIN.password) {
+    return Promise.resolve(DEFAULT_ADMIN);
+  }
+  return null;
+}; */
+
 // Configure AdminJS instance and register our database adapter
 AdminJS.registerAdapter({ Database, Resource });
 const Admin = new AdminJS({
   databases: [],
-  rootPath: "/admin",
+  rootPath: "/focus-backoffice",
   componentLoader,
   resources: resourceList,
 });
+
 const AdminRouter = AdminJSExpress.buildRouter(Admin);
+
+// TODO - uncomment once we're on React 18 as that's used by AdminJS
+/* const AdminRouter = AdminJSExpress.buildAuthenticatedRouter(
+  Admin,
+  {
+    authenticate,
+    cookieName: "adminjs",
+    cookiePassword: "sessionsecret",
+  },
+  null,
+  {
+    store: Store,
+    resave: true,
+    saveUninitialized: true,
+    secret: "sessionsecret",
+    cookie: {
+      httpOnly: process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === "production",
+    },
+    name: "adminjs",
+  }
+); */
 
 Admin.watch();
 
