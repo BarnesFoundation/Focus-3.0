@@ -53,6 +53,12 @@ const EnvironmentConfiguration = {
   imgix: {
     repo: process.env.IMGIX_REPO,
   },
+
+  /** Basic authentication configuration while we need it */
+  basicAuth: {
+    name: process.env.BASIC_AUTH_NAME,
+    password: process.env.BASIC_AUTH_PASSWORD,
+  },
 };
 
 export default EnvironmentConfiguration;

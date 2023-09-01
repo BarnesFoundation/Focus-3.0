@@ -4,8 +4,10 @@ import cookieParser from "cookie-parser";
 
 import Config, { EnvironmentStages } from "./config";
 import { ApplicationSessions } from "./utils";
+import { Admin, AdminRouter } from "./admin";
 import ApiRouter from "./api/routes";
 import { initializeSessionMiddlware } from "./api/middleware";
+import { adminAuthenticationMiddleware } from "./admin/adminAuthenticationMiddleware";
 
 const app = express();
 const build = join(__dirname, "../build");
@@ -23,6 +25,11 @@ app.use(express.static(build, { index: false, etag: false }));
 app.use(ApplicationSessions);
 app.use("/api", initializeSessionMiddlware, ApiRouter);
 
+// Configure the AdminJS installation to run at the specified root path
+// We're protecting all routes associated with it using HTTP basic authentication right now
+// rather than the out-of-the-box authentication, until we can resolve dependency issues
+app.use(Admin.options.rootPath, adminAuthenticationMiddleware, AdminRouter);
+
 // Serve index on all requests to server.
 app.get("*", (request: express.Request, response: express.Response) => {
   response.set({
@@ -36,8 +43,11 @@ app.get("*", (request: express.Request, response: express.Response) => {
 
 // We only need to start the local server when running locally
 if (Config.nodeEnv === EnvironmentStages.LOCAL)
-  app.listen(Config.port, () =>
-    console.log(`Server listening on port ${Config.port}`)
-  );
+  app.listen(Config.port, () => {
+    console.log(`Server listening on port ${Config.port}`);
+    console.log(
+      `AdminJS started on http://localhost:${Config.port}${Admin.options.rootPath}`
+    );
+  });
 
 export default app;

@@ -6,11 +6,15 @@
         "seed": "npx ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seeds/translations/index.ts"
     },
     "dependencies": {
+        "@adminjs/express": "^5.1.0",
+        "@adminjs/prisma": "^3.0.1",
         "@aws-sdk/client-s3": "^3.131.0",
         "@aws-sdk/client-translate": "^3.159.0",
         "@elastic/elasticsearch": "^7.5.1",
         "@prisma/client": "^3.14.0",
+        "adminjs": "^6.8.7",
         "axios": "^0.27.2",
+        "basic-auth": "^2.0.1",
         "connect-pg-simple": "^7.0.0",
         "cookie-parser": "^1.4.6",
         "dotenv": "^16.0.0",
@@ -18,6 +22,7 @@
         "email-templates": "^10.0.1",
         "email-validator": "^2.0.4",
         "express": "^4.18.1",
+        "express-formidable": "^1.2.0",
         "express-session": "^1.17.3",
         "multer": "^1.4.4",
         "nodemailer": "^6.7.7",
@@ -39,7 +44,8 @@
         "dev": " concurrently \"npm run watch-server\" \"npm run local-server\"",
         "deploy:dev": "npx serverless deploy --verbose --stage dev",
         "deploy:prod": "npx serverless deploy --verbose --stage prod",
-        "prisma:generate": "prisma generate"
+        "prisma:generate": "prisma generate",
+        "bundles": "node dist/server/bundle.js"
     },
     "eslintConfig": {
         "extends": [
@@ -60,6 +66,7 @@
         ]
     },
     "devDependencies": {
+        "@adminjs/bundler": "^2.0.0",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^12.1.5",
         "@types/connect-pg-simple": "^7.0.0",
@@ -135,6 +142,7 @@
         "slick-carousel": "1.8.1",
         "styled-components": "4.3.2",
         "ts-jest": "^29.0.3",
+        "tslib": "^2.6.2",
         "typescript": "^4.6.4"
     },
     "proxy": "http://localhost:4006"
