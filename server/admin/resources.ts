@@ -9,14 +9,27 @@ const dmmf = (prisma as any)._dmmf as DMMFClass;
 // @ts-ignore - This is necessary for @admin/prisma to work properly
 prisma._baseDmmf = dmmf;
 
+const disabledEditAction = {
+  edit: {
+    isAccessible: false,
+    isVisible: false,
+  },
+};
+const disabledDeleteAction = {
+  delete: {
+    isAccessible: false,
+    isVisible: false,
+  },
+};
+
 export const resourceList = [
   {
     resource: { model: dmmf.modelMap.bookmarks, client: prisma },
-    options: {},
+    options: { actions: { ...disabledEditAction, ...disabledDeleteAction } },
   },
   {
     resource: { model: dmmf.modelMap.albums, client: prisma },
-    options: {},
+    options: { actions: { ...disabledEditAction, ...disabledDeleteAction } },
   },
   {
     resource: { model: dmmf.modelMap.photos, client: prisma },
@@ -29,18 +42,19 @@ export const resourceList = [
           },
         },
       },
+      actions: { ...disabledEditAction, ...disabledDeleteAction },
     },
   },
   {
     resource: { model: dmmf.modelMap.stories, client: prisma },
-    options: {},
+    options: { actions: { ...disabledEditAction, ...disabledDeleteAction } },
   },
   {
     resource: { model: dmmf.modelMap.subscriptions, client: prisma },
-    options: {},
+    options: { actions: { ...disabledEditAction, ...disabledDeleteAction } },
   },
   {
     resource: { model: dmmf.modelMap.translations, client: prisma },
-    options: {},
+    options: { actions: { ...disabledEditAction, ...disabledDeleteAction } },
   },
 ];
