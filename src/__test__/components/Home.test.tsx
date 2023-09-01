@@ -22,6 +22,7 @@ describe("Home", () => {
         langOptions={[]}
         getSelectedLanguage={() => Promise.resolve([])}
         updateSelectedLanguage={(language) => null}
+        selectedLanguage={{ name: "English", code: "En", selected: true }}
       />
     );
 

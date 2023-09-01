@@ -36,6 +36,7 @@ describe("UnsupportedDialogue", () => {
         langOptions={[]}
         getSelectedLanguage={() => Promise.resolve([])}
         updateSelectedLanguage={(language) => null}
+        selectedLanguage={{ name: "English", code: "En", selected: true }}
       />,
       container
     );
@@ -57,6 +58,7 @@ describe("UnsupportedDialogue", () => {
         langOptions={[]}
         getSelectedLanguage={() => Promise.resolve([])}
         updateSelectedLanguage={(language) => null}
+        selectedLanguage={{ name: "English", code: "En", selected: true }}
       />,
       container
     );
