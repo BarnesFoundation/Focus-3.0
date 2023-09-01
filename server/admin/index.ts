@@ -4,6 +4,8 @@ import { Database, Resource } from "@adminjs/prisma";
 
 import { componentLoader } from "./components";
 import { resourceList } from "./resources";
+import { isDevelopment, isProduction } from "../config";
+import EnvironmentConfiguration from "../config";
 
 // @ts-ignore - Current version of Prisma doesn't know how to stringify BigInt type
 BigInt.prototype.toJSON = function () {
@@ -31,6 +33,12 @@ const Admin = new AdminJS({
   rootPath: "/focus-backoffice",
   componentLoader,
   resources: resourceList,
+
+  // When on Production or Development, we need the AdminJS frontend assets from host
+  assetsCDN:
+    isProduction || isDevelopment
+      ? EnvironmentConfiguration.assetHost
+      : undefined,
 });
 
 const AdminRouter = AdminJSExpress.buildRouter(Admin);
