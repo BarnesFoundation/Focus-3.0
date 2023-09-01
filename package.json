@@ -45,7 +45,7 @@
         "deploy:dev": "npx serverless deploy --verbose --stage dev",
         "deploy:prod": "npx serverless deploy --verbose --stage prod",
         "prisma:generate": "prisma generate",
-        "adminjs:bundle": "node dist/server/bundle.js"
+        "bundles": "node dist/server/bundle.js"
     },
     "eslintConfig": {
         "extends": [

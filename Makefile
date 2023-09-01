@@ -9,16 +9,16 @@ build:
 	# 1. Compiles the src and server directory and outputs them to dist
 	npm run build
 
-	# 5. Generate AdminJS frontend files and move them to `dist/build` where frontend assets are server from
- 	npm run adminjs:bundle
+	# 2. Generate AdminJS frontend files and move them to dist where frontend assets are server from
+	npm run bundles
 
-	# 2. Rename the development node_modules
+	# 3. Rename the development node_modules
 	mv node_modules dev_node_modules
 
-	# 3. Install the production node_modules
+	# 4. Install the production node_modules
 	npm ci --production
 
-	# 4. Generate prisma client
+	# 5. Generate prisma client
 	# TODO - Find out if there's anyway to not hardcode the prisma version
 	# and have it use the version as specified from package.json instead
 	npx prisma@^3.14.0 generate
