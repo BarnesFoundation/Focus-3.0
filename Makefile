@@ -23,7 +23,7 @@ build:
 	# and have it use the version as specified from package.json instead
 	npx prisma@^3.14.0 generate
 
-	# 6. Remove some remnants from node_modules related to AdminJS that shouldn't be needed
+	# 6. Remove some remnants from node_modules related to AdminJS that shouldn't be needed that are large
 	rm -rf ./node_modules/@babel ./node_modules/react-datepicker ./node_modules/@carbon
 
 # Removes the production node_modules and undoes the rename of development node_modules
