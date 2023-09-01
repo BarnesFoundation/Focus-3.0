@@ -7,7 +7,12 @@ afterEach(cleanup);
 
 describe("CameraContainer", () => {
   it("should match the snapshot", () => {
-    const { container } = render(<CameraContainerComponent history={null} />);
+    const { container } = render(
+      <CameraContainerComponent
+        history={null}
+        selectedLanguage={{ name: "English", code: "En", selected: true }}
+      />
+    );
 
     expect(container).toMatchSnapshot();
   });
