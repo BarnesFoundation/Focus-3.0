@@ -28,7 +28,6 @@
         "nodemailer": "^6.7.7",
         "pg": "^8.7.3",
         "serverless-http": "^3.0.1",
-        "tslib": "^2.6.2",
         "vuforia-api": "^0.3.2"
     },
     "scripts": {
@@ -45,7 +44,8 @@
         "dev": " concurrently \"npm run watch-server\" \"npm run local-server\"",
         "deploy:dev": "npx serverless deploy --verbose --stage dev",
         "deploy:prod": "npx serverless deploy --verbose --stage prod",
-        "prisma:generate": "prisma generate"
+        "prisma:generate": "prisma generate",
+        "adminjs:bundle": "node dist/server/bundle.js"
     },
     "eslintConfig": {
         "extends": [
@@ -66,6 +66,7 @@
         ]
     },
     "devDependencies": {
+        "@adminjs/bundler": "^2.0.0",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^12.1.5",
         "@types/connect-pg-simple": "^7.0.0",
@@ -141,6 +142,7 @@
         "slick-carousel": "1.8.1",
         "styled-components": "4.3.2",
         "ts-jest": "^29.0.3",
+        "tslib": "^2.6.2",
         "typescript": "^4.6.4"
     },
     "proxy": "http://localhost:4006"
