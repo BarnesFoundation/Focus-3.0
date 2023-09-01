@@ -9,6 +9,9 @@ build:
 	# 1. Compiles the src and server directory and outputs them to dist
 	npm run build
 
+	# 5. Generate AdminJS frontend files and move them to `dist/build` where frontend assets are server from
+ 	npm run adminjs:bundle
+
 	# 2. Rename the development node_modules
 	mv node_modules dev_node_modules
 
