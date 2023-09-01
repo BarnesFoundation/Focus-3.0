@@ -383,6 +383,10 @@ export class ArtworkWithStory extends Component<
     // Iterate through the available stories
     return stories.map((story, index) => {
       const storyIndex = index + 1;
+
+      // Return empty div if story details are not present to prevent errors
+      if (!story.detail) return <div key={`storyitem${storyIndex}`} />;
+
       const storyDuration = this.state.storyDurationsCurrent[index] * 5;
       const storySceneOffset =
         index > 0
