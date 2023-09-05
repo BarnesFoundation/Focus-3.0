@@ -23,8 +23,16 @@ build:
 	# and have it use the version as specified from package.json instead
 	npx prisma@^3.14.0 generate
 
-	# 6. Remove some remnants from node_modules related to AdminJS that shouldn't be needed that are large
-	rm -rf ./node_modules/@babel ./node_modules/react-datepicker ./node_modules/@carbon
+	# 6. Remove prisma unused client and unused modules to reduce node_modules size
+	# TODO - Find out how to reduce node_modules size packages in a more consistent manner
+	rm "./node_modules/.prisma/client/libquery_engine-debian-openssl-3.0.x.so.node"
+	rm -rf "node_modules/@adminjs/design-system/node_modules/"
+	rm -rf "node_modules/@types"
+	rm -rf "node_modules/@babel/plugin-transform-typescript" "node_modules/@babel/plugin-transform-classes" "node_modules/@babel/plugin-transform-modules-systemjs" "node_modules/@babel/helper-wrap-function" "node_modules/@babel/polyfill" "node_modules/@babel/preset-env"
+	rm "node_modules/@adminjs/design-system/bundle.development.js"
+	rm "node_modules/@adminjs/design-system/bundle.production.js"
+	rm -rf "node_modules/@carbon/icons-react/es"
+	rm -rf "node_modules/react-datepicker/node_modules/date-fns/esm"
 
 # Removes the production node_modules and undoes the rename of development node_modules
 reset_node:

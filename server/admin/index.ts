@@ -4,7 +4,7 @@ import { Database, Resource } from "@adminjs/prisma";
 
 import { componentLoader } from "./components";
 import { resourceList } from "./resources";
-import { isDevelopment, isProduction } from "../config";
+import { isDevelopment, isLocal, isProduction } from "../config";
 import EnvironmentConfiguration from "../config";
 
 // @ts-ignore - Current version of Prisma doesn't know how to stringify BigInt type
@@ -65,6 +65,9 @@ const AdminRouter = AdminJSExpress.buildRouter(Admin);
   }
 ); */
 
-Admin.watch();
+if (isLocal) {
+  console.log('Running `Admin.watch()`')
+  Admin.watch();
+}
 
 export { Admin, AdminRouter };

@@ -31,3 +31,4 @@ emailPreviews/*
 
 .serverless
 .adminjs
+dev_node_modules
