@@ -34,7 +34,7 @@ build:
 	rm -rf "node_modules/@carbon/icons-react/es"
 	rm -rf "node_modules/react-datepicker/node_modules/date-fns/esm"
 
-# Removes the production node_modules and undoes the rename of development node_modules
+# Removes the production node_modules and undoes the rename of the development node_modules
 reset_node:
 	rm -rf node_modules
 	mv dev_node_modules node_modules
