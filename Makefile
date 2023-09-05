@@ -25,7 +25,8 @@ build:
 
 	# 6. Remove prisma unused client and unused modules to reduce node_modules size
 	# TODO - Find out how to reduce node_modules size packages in a more consistent manner
-	rm "./node_modules/.prisma/client/libquery_engine-debian-openssl-3.0.x.so.node"
+	# rm "./node_modules/.prisma/client/libquery_engine-debian-openssl-3.0.x.so.node"
+	rm "./node_modules/.prisma/client/libquery_engine-debian-openssl-*"
 	rm -rf "node_modules/@adminjs/design-system/node_modules/"
 	rm -rf "node_modules/@types"
 	rm -rf "node_modules/@babel/plugin-transform-typescript" "node_modules/@babel/plugin-transform-classes" "node_modules/@babel/plugin-transform-modules-systemjs" "node_modules/@babel/helper-wrap-function" "node_modules/@babel/polyfill" "node_modules/@babel/preset-env"
