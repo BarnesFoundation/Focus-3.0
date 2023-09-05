@@ -56,6 +56,8 @@ const EnvironmentConfiguration = {
 
   /** Basic authentication configuration while we need it */
   basicAuth: {
+    // Basic Authentication should only be explicitly disabled
+    disabled: process.env.BASIC_AUTH_DISABLED?.toLowerCase() === 'true' ? true : false,
     name: process.env.BASIC_AUTH_NAME,
     password: process.env.BASIC_AUTH_PASSWORD,
   },

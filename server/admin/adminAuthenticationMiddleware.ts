@@ -13,6 +13,13 @@ export const adminAuthenticationMiddleware = (
   response: express.Response,
   next: express.NextFunction
 ) => {
+
+  // If basic authentication is disabled, just return immediately
+  if (Config.basicAuth.disabled) {
+    return next();
+  }
+
+
   const requestCredentials = basicAuthenticationLib(request);
 
   // If the credentials from the request don't match our configured
