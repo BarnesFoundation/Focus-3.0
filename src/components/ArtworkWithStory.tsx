@@ -380,13 +380,10 @@ export class ArtworkWithStory extends Component<
     const { stories, storyTitle } = this.state;
     const { showEmailForm } = this.props;
 
-    // Iterate through the available stories
-    return stories.map((story, index) => {
+    // Iterate through the available stories, removing any that don't include details
+    const storiesWithDetails = stories.filter((story) => story.detail);
+    return storiesWithDetails.map((story, index) => {
       const storyIndex = index + 1;
-
-      // Return empty div if story details are not present to prevent errors
-      if (!story.detail) return <div key={`storyitem${storyIndex}`} />;
-
       const storyDuration = this.state.storyDurationsCurrent[index] * 5;
       const storySceneOffset =
         index > 0
@@ -407,7 +404,7 @@ export class ArtworkWithStory extends Component<
 
       // When email form is not visible, set padding botttom to 200px on the last story card
       const emailCapturedBottomStyle =
-        stories.length === index + 1 && !showEmailForm
+        storiesWithDetails.length === index + 1 && !showEmailForm
           ? { paddingBottom: `200px` }
           : { paddingBottom: `0` };
 
@@ -452,7 +449,9 @@ export class ArtworkWithStory extends Component<
                   progress={progress}
                   sceneStatus={event}
                   storyIndex={index}
-                  isLastStoryItem={index === stories.length - 1 ? true : false}
+                  isLastStoryItem={
+                    index === storiesWithDetails.length - 1 ? true : false
+                  }
                   story={story}
                   storyTitle={storyTitle}
                   selectedLanguage={this.props.selectedLanguage}
