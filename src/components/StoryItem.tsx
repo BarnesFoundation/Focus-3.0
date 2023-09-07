@@ -257,7 +257,11 @@ class StoryItem extends React.Component<StoryItemProps, StoryItemState> {
 
   /** Generates the aria-label for the background image */
   generateImageAriaLabel = () => {
-    const { title, people, culture } = this.props.story.detail || {};
+    if (!this.props.story.detail) {
+      return "";
+    }
+
+    const { title, people, culture } = this.props.story.detail;
     return `${title} by ${people}${
       this.isUnidentifiedArtist() ? `, ${culture}` : ""
     } used as a background image`;
