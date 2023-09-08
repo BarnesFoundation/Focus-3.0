@@ -245,18 +245,22 @@ class StoryItem extends React.Component<StoryItemProps, StoryItemState> {
 
   /** Generates the url for retrieving the artwork with transformation parameters */
   getArtUrl = () => {
-    return `${this.props.story.detail.art_url}?crop=faces,entropy&fit=crop&w=${screen.width}&h=${screen.height}`;
+    return `${this.props.story.detail?.art_url}?crop=faces,entropy&fit=crop&w=${screen.width}&h=${screen.height}`;
   };
 
   /** Returns boolean whether or not the artist is unidentified */
   isUnidentifiedArtist = () => {
-    return this.props.story.detail.people
+    return this.props.story.detail?.people
       .toLowerCase()
       .includes("unidentified");
   };
 
   /** Generates the aria-label for the background image */
   generateImageAriaLabel = () => {
+    if (!this.props.story.detail) {
+      return "";
+    }
+
     const { title, people, culture } = this.props.story.detail;
     return `${title} by ${people}${
       this.isUnidentifiedArtist() ? `, ${culture}` : ""

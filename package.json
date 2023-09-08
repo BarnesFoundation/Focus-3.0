@@ -1,4 +1,4 @@
-{
+ {
     "name": "barnes-focus-lambda",
     "version": "0.1.0",
     "private": true,
@@ -6,11 +6,15 @@
         "seed": "npx ts-node --compiler-options {\"module\":\"CommonJS\"} ./prisma/seeds/translations/index.ts"
     },
     "dependencies": {
+        "@adminjs/express": "^5.1.0",
+        "@adminjs/prisma": "^3.0.1",
         "@aws-sdk/client-s3": "^3.131.0",
         "@aws-sdk/client-translate": "^3.159.0",
         "@elastic/elasticsearch": "^7.5.1",
         "@prisma/client": "^3.14.0",
+        "adminjs": "^6.8.7",
         "axios": "^0.27.2",
+        "basic-auth": "^2.0.1",
         "connect-pg-simple": "^7.0.0",
         "cookie-parser": "^1.4.6",
         "dotenv": "^16.0.0",
@@ -18,11 +22,16 @@
         "email-templates": "^10.0.1",
         "email-validator": "^2.0.4",
         "express": "^4.18.1",
+        "express-formidable": "^1.2.0",
         "express-session": "^1.17.3",
         "multer": "^1.4.4",
         "nodemailer": "^6.7.7",
         "pg": "^8.7.3",
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6",
+        "react-router-dom": "^5.1.2",
         "serverless-http": "^3.0.1",
+        "styled-components": "^4.3.2",
         "vuforia-api": "^0.3.2"
     },
     "scripts": {
@@ -39,7 +48,9 @@
         "dev": " concurrently \"npm run watch-server\" \"npm run local-server\"",
         "deploy:dev": "npx serverless deploy --verbose --stage dev",
         "deploy:prod": "npx serverless deploy --verbose --stage prod",
-        "prisma:generate": "prisma generate"
+        "prisma:generate": "prisma generate",
+        "bundles": "node dist/server/bundle.js",
+        "minify": "npx node-prune && npx modclean"
     },
     "eslintConfig": {
         "extends": [
@@ -60,6 +71,7 @@
         ]
     },
     "devDependencies": {
+        "@adminjs/bundler": "^2.0.0",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^12.1.5",
         "@types/connect-pg-simple": "^7.0.0",
@@ -106,19 +118,16 @@
         "prettier": "^2.6.2",
         "prisma": "^3.14.0",
         "query-string": "6.8.1",
-        "react": "^16.8.6",
         "react-addons-css-transition-group": "^15.6.2",
         "react-alice-carousel": "^2.7.0",
         "react-compare-slider": "^2.2.0",
         "react-crossfade-image": "^1.1.1",
         "react-device-detect": "^2.2.2",
-        "react-dom": "^16.8.6",
         "react-gsap": "1.2.0",
         "react-modal": "3.3.2",
         "react-player": "^2.11.0",
         "react-pose": "4.0.5",
         "react-progressive-image": "0.6.0",
-        "react-router-dom": "^5.1.2",
         "react-scripts": "5.0.1",
         "react-scrollmagic": "2.1.0",
         "react-slick": "0.23.2",
@@ -133,8 +142,8 @@
         "scrollmagic-plugin-gsap": "1.0.3",
         "serverless": "^3.22.0",
         "slick-carousel": "1.8.1",
-        "styled-components": "4.3.2",
         "ts-jest": "^29.0.3",
+        "tslib": "^2.6.2",
         "typescript": "^4.6.4"
     },
     "proxy": "http://localhost:4006"

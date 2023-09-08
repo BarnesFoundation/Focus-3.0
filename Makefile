@@ -9,18 +9,33 @@ build:
 	# 1. Compiles the src and server directory and outputs them to dist
 	npm run build
 
-	# 2. Rename the development node_modules
+	# 2. Generate AdminJS frontend files and move them to dist where frontend assets are server from
+	npm run bundles
+
+	# 3. Rename the development node_modules
 	mv node_modules dev_node_modules
 
-	# 3. Install the production node_modules
+	# 4. Install the production node_modules
 	npm ci --production
 
-	# 4. Generate prisma client
+	# 5. Generate prisma client
 	# TODO - Find out if there's anyway to not hardcode the prisma version
 	# and have it use the version as specified from package.json instead
 	npx prisma@^3.14.0 generate
 
-# Removes the production node_modules and undoes the rename of development node_modules
+	# 6. Remove prisma unused client and unused modules to reduce node_modules size
+	# TODO - Find out how to reduce node_modules size packages in a more consistent manner
+	# rm "./node_modules/.prisma/client/libquery_engine-debian-openssl-3.0.x.so.node"
+	rm "./node_modules/.prisma/client/libquery_engine-debian-openssl-*"
+	rm -rf "node_modules/@adminjs/design-system/node_modules/"
+	rm -rf "node_modules/@types"
+	rm -rf "node_modules/@babel/plugin-transform-typescript" "node_modules/@babel/plugin-transform-classes" "node_modules/@babel/plugin-transform-modules-systemjs" "node_modules/@babel/helper-wrap-function" "node_modules/@babel/polyfill" "node_modules/@babel/preset-env"
+	rm "node_modules/@adminjs/design-system/bundle.development.js"
+	rm "node_modules/@adminjs/design-system/bundle.production.js"
+	rm -rf "node_modules/@carbon/icons-react/es"
+	rm -rf "node_modules/react-datepicker/node_modules/date-fns/esm"
+
+# Removes the production node_modules and undoes the rename of the development node_modules
 reset_node:
 	rm -rf node_modules
 	mv dev_node_modules node_modules

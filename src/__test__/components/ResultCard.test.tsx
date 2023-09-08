@@ -1,4 +1,4 @@
-import React, { createRef } from "react";
+import React from "react";
 import { render, cleanup } from "@testing-library/react";
 import { ResultCard } from "../../components/ResultCard";
 
@@ -21,7 +21,6 @@ describe("ResultCard", () => {
         setArtworkRef={(element: any) => null}
         selectedLanguage={{ code: null, name: null, selected: true }}
         onSelectLanguage={() => null}
-        shortDescContainer={createRef()}
         specialExhibition={false}
       />
     );
@@ -45,7 +44,6 @@ describe("ResultCard", () => {
         setArtworkRef={(element: any) => null}
         selectedLanguage={{ code: null, name: null, selected: true }}
         onSelectLanguage={() => null}
-        shortDescContainer={createRef()}
         specialExhibition={false}
       />
     );
