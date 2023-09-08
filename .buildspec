@@ -6,7 +6,7 @@ phases:
       - npm ci
   build:
     commands:
-      - export PUBLIC_URL="https://focus-application-prod-serverlessdeploymentbucket-1b3ojh7lpevit.s3.amazonaws.com/build/"
+      - export PUBLIC_URL="<PUBLIC_URL>"
       - npm run build
       - npm run bundles
       - npm run prisma:generate
