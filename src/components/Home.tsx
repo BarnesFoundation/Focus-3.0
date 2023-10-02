@@ -59,19 +59,15 @@ export const HomeComponent: React.FC<WithTranslationState> = ({
 
   /** Determines if navigator.mediaDevices.getUserMedia() is available on the current iOS device */
   const checkForGetUserMedia = () => {
-    const iOSVersion = parseFloat(osVersion);
-
     // navigator.mediaDevices.getUserMedia() is only supported on iOS > 11.0 and only on Safari (not Chrome, Firefox, etc.)
-    if (iOSVersion >= parseFloat("11.0")) {
-      if (!isSafari && !isChrome && !isFirefox) {
-        setUnsupportedIOSBrowser(true);
-        setShowError(true);
-      }
-    }
-
-    // If they're not on iOS 11, it doesn't matter what browser they're using, navigator.mediaDevices.getUserMedia() will return undefined
-    else {
+    // at some point in 2022 not sure the version it became available for other browsers
+    const supportedIOS = navigator.mediaDevices.getUserMedia();
+    if (supportedIOS === undefined) {
       setUnsupportedIOSVersion(true);
+      setShowError(true);
+    }
+    if (!isSafari && !isChrome && !isFirefox) {
+      setUnsupportedIOSBrowser(true);
       setShowError(true);
     }
   };
