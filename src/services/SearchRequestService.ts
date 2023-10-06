@@ -147,8 +147,8 @@ class SearchRequestService {
     let data;
 
     // If it is a special exhibition object, get info from CMS
-    if (imageId.split("/")[0] === "SPEX") {
-      data = await this.getSpecialExhibitionObject(imageId.split("/")[1], lang);
+    if (imageId.split("_")[0] === "SPEX") {
+      data = await this.getSpecialExhibitionObject(imageId.split("_")[1], lang);
       // Otherwise search for item in ElasticSearch
     } else {
       // Retrieve artwork information
