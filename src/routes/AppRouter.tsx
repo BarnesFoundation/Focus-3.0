@@ -14,6 +14,8 @@ import {
 } from "../constants";
 import * as ROUTES from "../constants/routes";
 import { ArtworkWrapper } from "../components/ArtworkWrapper";
+import { BookmarkEmail } from "../components/BookmarkEmail";
+import { StoryEmail } from "../components/StoryEmail";
 
 const RouteContainer = posed.div({
   enter: { opacity: 1, delay: 0, beforeChildren: true },
@@ -54,6 +56,16 @@ const Routes = () => (
                 component={StoryPage}
                 exact={false}
                 key="story"
+              />
+              <Route
+                path={`${ROUTES.BOOKMARK_EMAIL}/:sessionId`}
+                component={BookmarkEmail}
+                key="bookmarkEmail"
+              />
+              <Route
+                path={`${ROUTES.STORY_EMAIL}/:sessionId`}
+                component={StoryEmail}
+                key="storyEmail"
               />
             </Switch>
           </RouteContainer>
