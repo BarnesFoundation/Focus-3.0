@@ -5,6 +5,7 @@ import BookmarkController from "./bookmarkController";
 import TranslationController from "./translationController";
 import StoryController from "./storyController";
 import ExhibitionController from "./exhibitionController";
+import EmailController from "./emailController";
 
 export { ScanController, fieldName, uploadMiddleware };
 export { ArtworkController };
@@ -13,3 +14,4 @@ export { BookmarkController };
 export { TranslationController };
 export { StoryController };
 export { ExhibitionController };
+export { EmailController };
