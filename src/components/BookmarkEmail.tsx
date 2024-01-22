@@ -55,6 +55,162 @@ export const BookmarkEmail: React.FC = () => {
           <div className="email__hero-banner__image__overlay"></div>
         </div>
       </div>
+
+      {/* Email content */}
+      <div className="email__content">
+        {/* TODO: see if this should be moved into hero banner */}
+        {/* Top Logo and social icons */}
+        <div className="email__content__social">
+          <div className="email__content__social__item">
+            <a
+              href="https://collection.barnesfoundation.org"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img src={barnesRedLogo} alt="Barnes" width="200px" />
+            </a>
+          </div>
+          <div className="email__content__social__item">
+            <a
+              href="https://www.facebook.com/barnesfoundation/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                src={facebookLogo}
+                alt="facebook"
+                width="20px"
+                height="20px"
+                style={{ padding: "20px 10px; opacity: 0.8" }}
+              />
+            </a>
+          </div>
+          <div className="email__content__social__item">
+            <a
+              href="https://www.instagram.com/barnesfoundation/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                src={instagramLogo}
+                alt="instagram"
+                width="20px"
+                height="20px"
+                style={{ padding: "20px 10px; opacity: 0.8" }}
+              />
+            </a>
+          </div>
+          <div className="email__content__social__item">
+            <a
+              href="https://www.linkedin.com/company/barnes-foundation"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                src={linkedinLogo}
+                alt="linkedin"
+                width="20px"
+                height="20px"
+                style={{ padding: "20px 10px; opacity: 0.8" }}
+              />
+            </a>
+          </div>
+          <div className="email__content__social__item">
+            <a
+              href="https://twitter.com/the_barnes"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                src={twitterLogo}
+                alt="twitter"
+                width="20px"
+                height="20px"
+                style={{ padding: "20px 10px; opacity: 0.8" }}
+              />
+            </a>
+          </div>
+          <div className="email__content__social__item">
+            <a
+              href="https://www.youtube.com/user/BarnesFoundation"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                src={youtubeLogo}
+                alt="Youtube"
+                width="20px"
+                height="20px"
+                style={{ padding: "20px 10px; opacity: 0.8" }}
+              />
+            </a>
+          </div>
+        </div>
+
+        {/* Welcome and bookmark message */}
+        <div className="email__content__message">
+          <h2 className="email__content__message__header">
+            {translations && translations["text_1"]["translated_content"]}
+          </h2>
+          <p className="email__content__message__text">
+            {translations && translations["text_2"]["translated_content"]}
+          </p>
+          <p className="email__content__message__text">
+            Get more art in your inbox.{" "}
+            <a href="http://www.pages03.net/thebarnesfoundation/EmailPreferences/curate_your_inbox">
+              Sign up for Barnes emails
+            </a>{" "}
+            to stay on top of special offers and happenings all year round.
+          </p>
+        </div>
+
+        {/* Bookmarks */}
+        <div className="email__content__bookmarks">
+          {bookmarks &&
+            bookmarks.map((bookmark, index) => (
+              <div key={index} className="email__content__bookmarks__item">
+                <img
+                  src={`https://barnes-images.imgix.net/${bookmark.id.toString()}_${bookmark.imageSecret.toString()}_n.jpg?crop=faces,entropy&fit=crop&w=200&h=200`}
+                  alt={bookmark.id.toString()}
+                />
+                <div className="email__content__bookmarks__item__text">
+                  <p>
+                    <a
+                      href={`https://collection.barnesfoundation.org/objects/${bookmark.id.toString()}/${bookmark.title
+                        }?utm_source=focus&utm_medium=email&utm_campaign=focus_scanned_object`}
+                      title="Barnes Collection"
+                      style={{ color: "#d6421f !important" }}
+                    >
+                      <h3>{bookmark.title}</h3>
+                    </a>
+                  </p>
+                  {bookmark["people"]}. {bookmark["title"]},
+                  {bookmark["displayDate"]}. {bookmark["medium"]},
+                  {bookmark["dimensions"]}. {bookmark["invno"]}
+                  {bookmark.objRightsTypeID && (
+                    <p>
+                      {["1", "3"].includes(bookmark["objRightsTypeID"]) ? (
+                        <Fragment>
+                          In Copyright. <br />
+                          {bookmark["creditLine"]}
+                        </Fragment>
+                      ) : ["4", "8", "10"].includes(
+                        bookmark["objRightsTypeID"]
+                      ) ? (
+                        <Fragment>Public domain.</Fragment>
+                      ) : ["2", "6"].includes(bookmark["objRightsTypeID"]) ? (
+                        <Fragment>Copyright Undetermined.</Fragment>
+                      ) : (
+                        <Fragment></Fragment>
+                      )}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
+
       <table
         border={0}
         // cellpadding="0"
@@ -79,287 +235,6 @@ export const BookmarkEmail: React.FC = () => {
               >
                 <tr>
                   <td>
-                    {/* Top Logo and social icons */}
-                    <table
-                      // cellpadding="0"
-                      // cellspacing="0"
-                      border={0}
-                      style={{ width: "100%" }}
-                    >
-                      <tr>
-                        <td>
-                          <p style={{ padding: "20px 0" }}>&nbsp;</p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style={{ borderTop: "1px solid #eeeeee" }}></td>
-                      </tr>
-                    </table>
-
-                    <table
-                      dir="ltr"
-                      // cellpadding="0"
-                      // cellspacing="0"
-                      border={0}
-                      style={{ width: "100%" }}
-                      className="logos"
-                    >
-                      <tr>
-                        <td
-                          width="50%"
-                          dir="ltr"
-                          className="w100 text-center logos__barnes-logo"
-                          style={{ textAlign: "left", padding: "20px 0" }}
-                        >
-                          <a
-                            href="https://collection.barnesfoundation.org"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <img
-                              src={barnesRedLogo}
-                              alt="Barnes"
-                              width="200px"
-                            />
-                          </a>
-                        </td>
-                        <td
-                          width="50%"
-                          dir="ltr"
-                          className="w100 text-center logos__social-icons"
-                          style={{ textAlign: "right" }}
-                        >
-                          <a
-                            href="https://www.facebook.com/barnesfoundation/"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <img
-                              src={facebookLogo}
-                              alt="facebook"
-                              width="20px"
-                              height="20px"
-                              style={{ padding: "20px 10px; opacity: 0.8" }}
-                            />
-                          </a>
-                          <a
-                            href="https://www.instagram.com/barnesfoundation/"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <img
-                              src={instagramLogo}
-                              alt="instagram"
-                              width="20px"
-                              height="20px"
-                              style={{ padding: "20px 10px; opacity: 0.8" }}
-                            />
-                          </a>
-                          <a
-                            href="https://www.linkedin.com/company/barnes-foundation"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <img
-                              src={linkedinLogo}
-                              alt="linkedin"
-                              width="20px"
-                              height="20px"
-                              style={{ padding: "20px 10px; opacity: 0.8" }}
-                            />
-                          </a>
-                          <a
-                            href="https://twitter.com/the_barnes"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <img
-                              src={twitterLogo}
-                              alt="twitter"
-                              width="20px"
-                              height="20px"
-                              style={{ padding: "20px 10px; opacity: 0.8" }}
-                            />
-                          </a>
-                          <a
-                            href="https://www.youtube.com/user/BarnesFoundation"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <img
-                              src={youtubeLogo}
-                              alt="Youtube"
-                              width="20px"
-                              height="20px"
-                              style={{ padding: "20px 10px; opacity: 0.8" }}
-                            />
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td
-                          // colspan="2"
-                          style={{ borderTop: "1px solid #eeeeee" }}
-                        ></td>
-                      </tr>
-                    </table>
-
-                    {/* Welcome and bookmark message */}
-                    <table
-                      // cellpadding="0"
-                      // cellspacing="0"
-                      border={0}
-                      style={{ width: "100%" }}
-                    >
-                      <tr>
-                        <td
-                          align="left"
-                          style={{ textAlign: "left", padding: "20px 0" }}
-                        >
-                          <p
-                            className="header"
-                            style={{
-                              fontSize: "40px",
-                              margin: "10px 0",
-                              color: "#282828",
-                            }}
-                          >
-                            {translations &&
-                              translations["text_1"]["translated_content"]}
-                          </p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td
-                          align="left"
-                          style={{ textAlign: "left", padding: "20px 0" }}
-                        >
-                          <p
-                            style={{
-                              fontSize: "22px",
-                              color: "#b6b6b6",
-                              margin: "10px 0",
-                            }}
-                          >
-                            {translations &&
-                              translations["text_2"]["translated_content"]}
-                          </p>
-                          <p
-                            style={{
-                              fontSize: "22px",
-                              color: "#b6b6b6",
-                              margin: "10px 0",
-                            }}
-                          >
-                            Get more art in your inbox.{" "}
-                            <a href="http://www.pages03.net/thebarnesfoundation/EmailPreferences/curate_your_inbox">
-                              Sign up for Barnes emails
-                            </a>{" "}
-                            to stay on top of special offers and happenings all
-                            year round.
-                          </p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style={{ borderTop: "1px solid #eeeeee" }}></td>
-                      </tr>
-                    </table>
-
-                    {/* Bookmarks */}
-                    <table
-                      dir="ltr"
-                      // cellpadding="0"
-                      // cellspacing="0"
-                      border={0}
-                      style={{
-                        width: "100%",
-                        maxWidth: "800px",
-                        color: "#282828",
-                        fontSize: "18px",
-                      }}
-                      className="bookmarks-table"
-                    >
-                      {/* <% els_arr.forEach((bookmark) => { %> */}
-                      {bookmarks &&
-                        bookmarks.map((bookmark, index) => (
-                          <Fragment key={index}>
-                            <tr>
-                              <td
-                                width="30%"
-                                dir="ltr"
-                                className="w100 spacer"
-                                style={{
-                                  color: "#282828",
-                                  verticalAlign: "top",
-                                  padding: "40px 0",
-                                }}
-                              >
-                                <img
-                                  src={`https://barnes-images.imgix.net/${bookmark.id.toString()}_${bookmark.imageSecret.toString()}_n.jpg?crop=faces,entropy&fit=crop&w=200&h=200`}
-                                  alt={bookmark.id.toString()}
-                                />
-                              </td>
-
-                              <td
-                                width="65%"
-                                dir="ltr"
-                                className="w100"
-                                style={{
-                                  color: "#282828",
-                                  verticalAlign: "top",
-                                  padding: "18px 0 40px 0",
-                                }}
-                              >
-                                <p>
-                                  <a
-                                    href={`https://collection.barnesfoundation.org/objects/${bookmark.id.toString()}/${
-                                      bookmark.title
-                                    }?utm_source=focus&utm_medium=email&utm_campaign=focus_scanned_object`}
-                                    title="Barnes Collection"
-                                    style={{ color: "#d6421f !important" }}
-                                  >
-                                    <h3>{bookmark.title}</h3>
-                                  </a>
-                                </p>
-                                {bookmark["people"]}. {bookmark["title"]},
-                                {bookmark["displayDate"]}. {bookmark["medium"]},
-                                {bookmark["dimensions"]}. {bookmark["invno"]}
-                                {bookmark.objRightsTypeID && (
-                                  <p>
-                                    {["1", "3"].includes(
-                                      bookmark["objRightsTypeID"]
-                                    ) ? (
-                                      <Fragment>
-                                        In Copyright. <br />
-                                        {bookmark["creditLine"]}
-                                      </Fragment>
-                                    ) : ["4", "8", "10"].includes(
-                                        bookmark["objRightsTypeID"]
-                                      ) ? (
-                                      <Fragment>Public domain.</Fragment>
-                                    ) : ["2", "6"].includes(
-                                        bookmark["objRightsTypeID"]
-                                      ) ? (
-                                      <Fragment>
-                                        Copyright Undetermined.
-                                      </Fragment>
-                                    ) : (
-                                      <Fragment></Fragment>
-                                    )}
-                                  </p>
-                                )}
-                              </td>
-                            </tr>
-                            <tr>
-                              <td
-                                // colspan="2"
-                                style={{ borderTop: "1px solid #eeeeee" }}
-                              ></td>
-                            </tr>
-                          </Fragment>
-                        ))}
-                    </table>
-
                     {/* Footer Spacer */}
                     <table
                       // cellpadding="0"
