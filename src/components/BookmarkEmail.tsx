@@ -32,20 +32,110 @@ export const BookmarkEmail: React.FC = () => {
     <div className="email">
       {/* Hero banner header */}
       <div className="email__hero-banner">
-        <a href="https://barnesfoundation.org" target="_blank" rel="noreferrer">
-          <img
-            src={barnesLogo}
-            alt="barnes_logo"
-            className="email__hero-banner__logo"
-            role="img"
-            aria-label="Welcome to the Barnes Focus Digital Guide"
-          />
-        </a>
-        <div className="email__hero-banner__header">
-          <h1 className="email__hero-banner__header__h1">
-            Thank you for visiting the Barnes today!
-          </h1>
+        <div className="email__hero-banner__content">
+          {/* Logo and social icons */}
+          <div className="email__hero-banner__content__row">
+            <a
+              href="https://collection.barnesfoundation.org"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <img
+                src={barnesLogo}
+                alt="barnes_logo"
+                className="email__hero-banner__logo"
+                role="img"
+                aria-label="Welcome to the Barnes Focus Digital Guide"
+              />
+            </a>
+            <div className="email__content__social">
+              <div className="email__content__social__item">
+                <a
+                  href="https://www.facebook.com/barnesfoundation/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    src={facebookLogo}
+                    alt="facebook"
+                    width="20px"
+                    height="20px"
+                    style={{ padding: "20px 10px; opacity: 0.8" }}
+                  />
+                </a>
+              </div>
+              <div className="email__content__social__item">
+                <a
+                  href="https://www.instagram.com/barnesfoundation/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    src={instagramLogo}
+                    alt="instagram"
+                    width="20px"
+                    height="20px"
+                    style={{ padding: "20px 10px; opacity: 0.8" }}
+                  />
+                </a>
+              </div>
+              <div className="email__content__social__item">
+                <a
+                  href="https://www.linkedin.com/company/barnes-foundation"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    src={linkedinLogo}
+                    alt="linkedin"
+                    width="20px"
+                    height="20px"
+                    style={{ padding: "20px 10px; opacity: 0.8" }}
+                  />
+                </a>
+              </div>
+              <div className="email__content__social__item">
+                <a
+                  href="https://twitter.com/the_barnes"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    src={twitterLogo}
+                    alt="twitter"
+                    width="20px"
+                    height="20px"
+                    style={{ padding: "20px 10px; opacity: 0.8" }}
+                  />
+                </a>
+              </div>
+              <div className="email__content__social__item">
+                <a
+                  href="https://www.youtube.com/user/BarnesFoundation"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <img
+                    src={youtubeLogo}
+                    alt="Youtube"
+                    width="20px"
+                    height="20px"
+                    style={{ padding: "20px 10px; opacity: 0.8" }}
+                  />
+                </a>
+              </div>
+            </div>
+          </div>
+
+
+          {/* Email subject */}
+          <div className="email__hero-banner__header">
+            <h1 className="email__hero-banner__header__h1">
+              Thank you for visiting the Barnes today!
+            </h1>
+          </div>
         </div>
+
         <div className="email__hero-banner__image">
           <img
             className="email__hero-banner__image__content"
@@ -59,95 +149,6 @@ export const BookmarkEmail: React.FC = () => {
       <div className="email__body">
         {/* Email content */}
         <div className="email__content">
-          {/* TODO: see if this should be moved into hero banner */}
-          {/* Top Logo and social icons */}
-          <div className="email__content__social">
-            <div className="email__content__social__item">
-              <a
-                href="https://collection.barnesfoundation.org"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <img src={barnesRedLogo} alt="Barnes" width="200px" />
-              </a>
-            </div>
-            <div className="email__content__social__item">
-              <a
-                href="https://www.facebook.com/barnesfoundation/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <img
-                  src={facebookLogo}
-                  alt="facebook"
-                  width="20px"
-                  height="20px"
-                  style={{ padding: "20px 10px; opacity: 0.8" }}
-                />
-              </a>
-            </div>
-            <div className="email__content__social__item">
-              <a
-                href="https://www.instagram.com/barnesfoundation/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <img
-                  src={instagramLogo}
-                  alt="instagram"
-                  width="20px"
-                  height="20px"
-                  style={{ padding: "20px 10px; opacity: 0.8" }}
-                />
-              </a>
-            </div>
-            <div className="email__content__social__item">
-              <a
-                href="https://www.linkedin.com/company/barnes-foundation"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <img
-                  src={linkedinLogo}
-                  alt="linkedin"
-                  width="20px"
-                  height="20px"
-                  style={{ padding: "20px 10px; opacity: 0.8" }}
-                />
-              </a>
-            </div>
-            <div className="email__content__social__item">
-              <a
-                href="https://twitter.com/the_barnes"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <img
-                  src={twitterLogo}
-                  alt="twitter"
-                  width="20px"
-                  height="20px"
-                  style={{ padding: "20px 10px; opacity: 0.8" }}
-                />
-              </a>
-            </div>
-            <div className="email__content__social__item">
-              <a
-                href="https://www.youtube.com/user/BarnesFoundation"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <img
-                  src={youtubeLogo}
-                  alt="Youtube"
-                  width="20px"
-                  height="20px"
-                  style={{ padding: "20px 10px; opacity: 0.8" }}
-                />
-              </a>
-            </div>
-          </div>
-
           {/* Welcome and bookmark message */}
           <div className="email__content__message bottom-border">
             <h2 className="email__content__message__header">
@@ -180,9 +181,8 @@ export const BookmarkEmail: React.FC = () => {
                   <div className="email__content__bookmarks__item__text">
                     <p>
                       <a
-                        href={`https://collection.barnesfoundation.org/objects/${bookmark.id.toString()}/${
-                          bookmark.title
-                        }?utm_source=focus&utm_medium=email&utm_campaign=focus_scanned_object`}
+                        href={`https://collection.barnesfoundation.org/objects/${bookmark.id.toString()}/${bookmark.title
+                          }?utm_source=focus&utm_medium=email&utm_campaign=focus_scanned_object`}
                         title="Barnes Collection"
                         style={{ color: "#d6421f !important" }}
                       >
@@ -200,8 +200,8 @@ export const BookmarkEmail: React.FC = () => {
                             {bookmark["creditLine"]}
                           </Fragment>
                         ) : ["4", "8", "10"].includes(
-                            bookmark["objRightsTypeID"]
-                          ) ? (
+                          bookmark["objRightsTypeID"]
+                        ) ? (
                           <Fragment>Public domain.</Fragment>
                         ) : ["2", "6"].includes(bookmark["objRightsTypeID"]) ? (
                           <Fragment>Copyright Undetermined.</Fragment>
