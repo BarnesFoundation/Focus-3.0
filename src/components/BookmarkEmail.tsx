@@ -29,7 +29,8 @@ export const BookmarkEmail: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div className="email">
+      {/* Hero banner header */}
       <div className="email__hero-banner">
         <a href="https://barnesfoundation.org" target="_blank" rel="noreferrer">
           <img
@@ -40,18 +41,18 @@ export const BookmarkEmail: React.FC = () => {
             aria-label="Welcome to the Barnes Focus Digital Guide"
           />
         </a>
-        <div className="email__hero-banner__header-wrapper">
-          <h1 className="email__hero-banner__header">
+        <div className="email__hero-banner__header">
+          <h1 className="email__hero-banner__header__h1">
             Thank you for visiting the Barnes today!
           </h1>
         </div>
-        <div className="email__hero-banner__image-wrapper">
+        <div className="email__hero-banner__image">
           <img
-            className="email__hero-banner__image"
+            className="email__hero-banner__image__content"
             src={bannerImage}
             alt="Thank you for visiting the Barnes today"
           />
-          <div className="email__hero-banner__image-overlay"></div>
+          <div className="email__hero-banner__image__overlay"></div>
         </div>
       </div>
       <table
