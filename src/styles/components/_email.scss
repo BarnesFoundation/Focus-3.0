@@ -9,6 +9,11 @@
       position: absolute;
       left: 40px;
       top: 20px;
+
+      @media (max-width: 645px) {
+        width: 100px;
+        left: 30px
+      }
     }
   
     &__header-wrapper {
@@ -30,6 +35,15 @@
       color: #fff;
       width: 100%;
       opacity: 1;
+      margin-top: 16px;
+
+      @media (max-width: 645px) {
+        margin-top: 48px;
+      }
+
+      @media (max-width: 375px) {
+        margin-top: 60px;
+      }
     }
   
     &__image-wrapper {
