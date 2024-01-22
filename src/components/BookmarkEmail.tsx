@@ -1,6 +1,14 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { SearchRequestService } from "../services/SearchRequestService";
+import bannerImage from "../images/barnes-v2-landing.png";
+import barnesLogo from "../images/Barnes_logo.svg";
+import facebookLogo from "../images/mailer/social_facebook.png";
+import instagramLogo from "../images/mailer/social_instagram.png";
+import linkedinLogo from "../images/mailer/social_linkedin.png";
+import twitterLogo from "../images/mailer/social_twitter.png";
+import youtubeLogo from "../images/mailer/social_youtube.png";
+import barnesRedLogo from "../images/mailer/barnes_email_logo_red.png";
 
 export const BookmarkEmail: React.FC = () => {
   const [bookmarks, setBookmarks] = useState<any[]>();
@@ -22,6 +30,30 @@ export const BookmarkEmail: React.FC = () => {
 
   return (
     <div>
+      <div className="email__hero-banner">
+        <a href="https://barnesfoundation.org" target="_blank" rel="noreferrer">
+          <img
+            src={barnesLogo}
+            alt="barnes_logo"
+            className="email__hero-banner__logo"
+            role="img"
+            aria-label="Welcome to the Barnes Focus Digital Guide"
+          />
+        </a>
+        <div className="email__hero-banner__header-wrapper">
+          <h1 className="email__hero-banner__header">
+            Thank you for visiting the Barnes today!
+          </h1>
+        </div>
+        <div className="email__hero-banner__image-wrapper">
+          <img
+            className="email__hero-banner__image"
+            src={bannerImage}
+            alt="Thank you for visiting the Barnes today"
+          />
+          <div className="email__hero-banner__image-overlay"></div>
+        </div>
+      </div>
       <table
         border={0}
         // cellpadding="0"
@@ -46,7 +78,7 @@ export const BookmarkEmail: React.FC = () => {
               >
                 <tr>
                   <td>
-                    {/* Top Spacer */}
+                    {/* Top Logo and social icons */}
                     <table
                       // cellpadding="0"
                       // cellspacing="0"
@@ -63,7 +95,6 @@ export const BookmarkEmail: React.FC = () => {
                       </tr>
                     </table>
 
-                    {/* Top Logo and social icons */}
                     <table
                       dir="ltr"
                       // cellpadding="0"
@@ -85,7 +116,7 @@ export const BookmarkEmail: React.FC = () => {
                             rel="noreferrer"
                           >
                             <img
-                              src="mailer/barnes_email_logo_red.png"
+                              src={barnesRedLogo}
                               alt="Barnes"
                               width="200px"
                             />
@@ -103,7 +134,7 @@ export const BookmarkEmail: React.FC = () => {
                             rel="noreferrer"
                           >
                             <img
-                              src="mailer/social_facebook.png"
+                              src={facebookLogo}
                               alt="facebook"
                               width="20px"
                               height="20px"
@@ -116,7 +147,7 @@ export const BookmarkEmail: React.FC = () => {
                             rel="noreferrer"
                           >
                             <img
-                              src="mailer/social_instagram.png"
+                              src={instagramLogo}
                               alt="instagram"
                               width="20px"
                               height="20px"
@@ -129,7 +160,7 @@ export const BookmarkEmail: React.FC = () => {
                             rel="noreferrer"
                           >
                             <img
-                              src="mailer/social_linkedin.png"
+                              src={linkedinLogo}
                               alt="linkedin"
                               width="20px"
                               height="20px"
@@ -142,7 +173,7 @@ export const BookmarkEmail: React.FC = () => {
                             rel="noreferrer"
                           >
                             <img
-                              src="mailer/social_twitter.png"
+                              src={twitterLogo}
                               alt="twitter"
                               width="20px"
                               height="20px"
@@ -155,7 +186,7 @@ export const BookmarkEmail: React.FC = () => {
                             rel="noreferrer"
                           >
                             <img
-                              src="mailer/social_youtube.png"
+                              src={youtubeLogo}
                               alt="Youtube"
                               width="20px"
                               height="20px"
@@ -219,10 +250,10 @@ export const BookmarkEmail: React.FC = () => {
                               margin: "10px 0",
                             }}
                           >
-                            Get more art in your inbox.
+                            Get more art in your inbox.{" "}
                             <a href="http://www.pages03.net/thebarnesfoundation/EmailPreferences/curate_your_inbox">
                               Sign up for Barnes emails
-                            </a>
+                            </a>{" "}
                             to stay on top of special offers and happenings all
                             year round.
                           </p>
@@ -344,28 +375,31 @@ export const BookmarkEmail: React.FC = () => {
 
                     {/* Footer Social Icons */}
                     <table
+                      dir="ltr"
                       // cellpadding="0"
                       // cellspacing="0"
                       border={0}
                       style={{ width: "100%" }}
-                      className="footer-social"
+                      className="logos"
                     >
                       <tr>
-                        <td>
-                          <p style={{ padding: "20px 0" }}>&nbsp;</p>
-                        </td>
-                        <td align="center">
+                        <td
+                          width="50%"
+                          dir="ltr"
+                          className="w100 text-center logos__social-icons"
+                          style={{ textAlign: "right" }}
+                        >
                           <a
                             href="https://www.facebook.com/barnesfoundation/"
                             target="_blank"
                             rel="noreferrer"
                           >
                             <img
-                              src="mailer/social_facebook.png"
+                              src={facebookLogo}
                               alt="facebook"
                               width="20px"
                               height="20px"
-                              style={{ padding: "20px 10px", opacity: "0.8" }}
+                              style={{ padding: "20px 10px; opacity: 0.8" }}
                             />
                           </a>
                           <a
@@ -374,11 +408,11 @@ export const BookmarkEmail: React.FC = () => {
                             rel="noreferrer"
                           >
                             <img
-                              src="mailer/social_instagram.png"
+                              src={instagramLogo}
                               alt="instagram"
                               width="20px"
                               height="20px"
-                              style={{ padding: "20px 10px", opacity: "0.8" }}
+                              style={{ padding: "20px 10px; opacity: 0.8" }}
                             />
                           </a>
                           <a
@@ -387,11 +421,11 @@ export const BookmarkEmail: React.FC = () => {
                             rel="noreferrer"
                           >
                             <img
-                              src="mailer/social_linkedin.png"
+                              src={linkedinLogo}
                               alt="linkedin"
                               width="20px"
                               height="20px"
-                              style={{ padding: "20px 10px", opacity: "0.8" }}
+                              style={{ padding: "20px 10px; opacity: 0.8" }}
                             />
                           </a>
                           <a
@@ -400,11 +434,11 @@ export const BookmarkEmail: React.FC = () => {
                             rel="noreferrer"
                           >
                             <img
-                              src="mailer/social_twitter.png"
+                              src={twitterLogo}
                               alt="twitter"
                               width="20px"
                               height="20px"
-                              style={{ padding: "20px 10px", opacity: "0.8" }}
+                              style={{ padding: "20px 10px; opacity: 0.8" }}
                             />
                           </a>
                           <a
@@ -413,17 +447,20 @@ export const BookmarkEmail: React.FC = () => {
                             rel="noreferrer"
                           >
                             <img
-                              src="mailer/social_youtube.png"
+                              src={youtubeLogo}
                               alt="Youtube"
                               width="20px"
                               height="20px"
-                              style={{ padding: "20px 10px", opacity: "0.8" }}
+                              style={{ padding: "20px 10px; opacity: 0.8" }}
                             />
                           </a>
                         </td>
-                        <td>
-                          <p style={{ padding: "20px 0" }}>&nbsp;</p>
-                        </td>
+                      </tr>
+                      <tr>
+                        <td
+                          // colspan="2"
+                          style={{ borderTop: "1px solid #eeeeee" }}
+                        ></td>
                       </tr>
                     </table>
 
