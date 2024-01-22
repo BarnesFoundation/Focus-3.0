@@ -178,7 +178,7 @@ class SearchRequestService {
         "An error occurrent while retrieving bookmark email from the server"
       );
     }
-  };
+  }
 }
 
 export { SearchRequestService };
