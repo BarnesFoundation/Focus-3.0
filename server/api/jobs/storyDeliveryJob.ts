@@ -166,7 +166,7 @@ class StoryDeliveryJob {
    * With this logic above, we prevent reaching out to GraphCMS more than once for a story content
    * and prevent reaching out to AWS Translate to translate the same story content more than once
    */
-  private static async retrieveStoriesForBookmarks(
+  public static async retrieveStoriesForBookmarks(
     deliverableStoryBookmarks: DeliverableStoryBookmarks
   ): Promise<LanguageWithStory> {
     const distinctStoryArtworksAndLanguages = await Object.values(

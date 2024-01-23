@@ -179,6 +179,17 @@ class SearchRequestService {
       );
     }
   }
+
+  public async getStoryEmail(sessionId: string) {
+    try {
+      const response = await axios.get(constants.STORY_EMAIL_URL(sessionId));
+      return response.data;
+    } catch (e) {
+      console.log(
+        "An error occurrent while retrieving bookmark email from the server"
+      );
+    }
+  }
 }
 
 export { SearchRequestService };
