@@ -53,9 +53,12 @@ class EmailController {
     );
     const bookmarkArtworkList = Object.values(artworkHashMap);
 
-    return response
-      .status(200)
-      .json({ bookmarkArtworkList, translations: translations.Email });
+    return (
+      response
+        .status(200)
+        // @ts-ignore
+        .json({ bookmarkArtworkList, translations: translations.Email })
+    );
   }
 
   public static async getStoryEmail(
@@ -99,6 +102,7 @@ class EmailController {
 
     return response.status(200).json({
       bookmarkStoryList,
+      // @ts-ignore
       translations: translations.Email,
       preferredLanguage,
     });
