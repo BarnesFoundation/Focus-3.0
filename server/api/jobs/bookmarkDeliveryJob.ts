@@ -2,7 +2,7 @@ import { bookmarks, es_cached_records } from "@prisma/client";
 
 import { groupBy, generateTimeAgo } from "../utils";
 import { MailService, TranslateService, DatabaseService } from "../services";
-import { isLocal } from "../../config";
+import { isLocal, environmentConfiguration } from "../../config";
 const prisma = DatabaseService.instance;
 
 // When this bookmark delivery job runs, we will collect bookmarks for each
@@ -94,6 +94,7 @@ class BookmarkDeliveryJob {
         locals: {
           translations,
           els_arr: bookmarkArtworkList,
+          browserLink: `${environmentConfiguration.assetHost}/email/bookmark/${sessionId}`,
         },
       });
 

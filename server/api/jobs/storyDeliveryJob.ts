@@ -8,7 +8,7 @@ import {
   ParsedRelatedStory,
   DatabaseService,
 } from "../services";
-import { isLocal } from "../../config";
+import { isLocal, environmentConfiguration } from "../../config";
 
 const prisma = DatabaseService.instance;
 
@@ -45,6 +45,7 @@ class StoryDeliveryJob {
 
     for (const email in deliverableStoryBookmarks) {
       const bookmarkSet = deliverableStoryBookmarks[email];
+      const sessionId = bookmarkSet[0].session_id;
 
       // Identify the preferred language for this user
       // and pull translations for them in that language
@@ -76,6 +77,7 @@ class StoryDeliveryJob {
           translations,
           stories: bookmarkStoryList,
           lang: preferredLanguage,
+          browserLink: `${environmentConfiguration.assetHost}/email/story/${sessionId}`,
         },
       });
 
