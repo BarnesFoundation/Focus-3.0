@@ -15,7 +15,7 @@ export const StoryEmail: React.FC = () => {
     const fetchBookmarkEmailData = async () => {
       const data = await sr.getStoryEmail(sessionId);
       console.log(data);
-      setStories(data.bookmarkArtworkList);
+      setStories(data.bookmarkStoryList);
       setTranslations(data.translations);
       setLoading(false);
     };
@@ -28,8 +28,11 @@ export const StoryEmail: React.FC = () => {
       {!loading && (
         <Email
           subject="Stories you've unlocked at the Barnes today!"
-          messageHeader={translations["text_1"]["translated_content"]}
-          messageText={translations["text_2"]["translated_content"]}
+          messageHeader={translations["text_3"]["translated_content"]}
+          messageText={translations["text_4"]["translated_content"]}
+          promoText={translations["text_5"]["translated_content"]}
+          promoLinkText={translations["text_6"]["translated_content"]}
+          stories={stories}
         />
       )}
     </Suspense>

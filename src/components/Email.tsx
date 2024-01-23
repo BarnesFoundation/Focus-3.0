@@ -154,27 +154,14 @@ export const Email: React.FC<EmailProps> = ({
           {/* Promo code and tickets link */}
           {promoText && promoLinkText && (
             <div className="email__content__message__promo">
-              <div>
+              <div className="email__content__message__promo__item">
                 {promoText} <strong>FOCUS</strong>
               </div>
               <a
                 href="https://tickets.barnesfoundation.org/orders/316/calendar?eventId=59288c7aca6afe2b653a4757&cart&pc=20OFF&utm_source=focus-stories-mailer&utm_medium=email&coupon=focus"
-                style={{
-                  border: "none",
-                  height: "25px",
-                  width: "275px",
-                  backgroundColor: "#D6431F",
-                  color: "#FFFFFF",
-                  fontSize: "18px",
-                  padding: "20px 34px",
-                  textAlign: "center",
-                  textDecoration: "none",
-                  display: "inline-block",
-                  margin: "4px 2px",
-                  cursor: "pointer",
-                }}
                 target="_blank"
                 rel="noreferrer"
+                className="email__content__message__promo__item email__content__message__promo__item--link"
               >
                 {promoLinkText}
               </a>

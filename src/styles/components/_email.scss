@@ -137,6 +137,40 @@
         margin: 10px 0;
         max-width: 620px;
       }
+
+      &__promo {
+        margin-top: 32px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        @media (max-width: 675px) {
+          justify-content: center;
+          flex-direction: column-reverse;
+          gap: 8px;
+        }
+
+        &__item {
+          font-size: 22px;
+          color: #b6b6b6;
+
+          &--link {
+            border: none;
+            height: 25px;
+            line-height: 0px;
+            width: 275px;
+            background-color: #D6431F;
+            color: #FFFFFF;
+            font-size: 18px;
+            padding: 20px 34px;
+            text-align: center;
+            text-decoration: none !important;
+            display: inline-block;
+            margin: 4px 2px;
+          }
+        }
+      }
     }
 
     &__bookmarks {
