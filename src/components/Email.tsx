@@ -201,9 +201,9 @@ export const Email: React.FC<EmailProps> = ({
                         bookmark.title
                       }?utm_source=focus&utm_medium=email&utm_campaign=focus_scanned_object`}
                       title="Barnes Collection"
-                      style={{ color: "#d6421f !important" }}
+                      className="email__content__bookmarks__item__title"
                     >
-                      <h3>{bookmark.title}</h3>
+                      {bookmark.title}
                     </a>
                   </p>
                   {bookmark["people"]}. {bookmark["title"]},
