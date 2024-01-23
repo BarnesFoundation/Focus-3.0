@@ -47,85 +47,74 @@ export const BookmarkEmail: React.FC = () => {
                 aria-label="Welcome to the Barnes Focus Digital Guide"
               />
             </a>
-            <div className="email__content__social">
-              <div className="email__content__social__item">
-                <a
-                  href="https://www.facebook.com/barnesfoundation/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <img
-                    src={facebookLogo}
-                    alt="facebook"
-                    width="20px"
-                    height="20px"
-                    style={{ padding: "20px 10px; opacity: 0.8" }}
-                  />
-                </a>
-              </div>
-              <div className="email__content__social__item">
-                <a
-                  href="https://www.instagram.com/barnesfoundation/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <img
-                    src={instagramLogo}
-                    alt="instagram"
-                    width="20px"
-                    height="20px"
-                    style={{ padding: "20px 10px; opacity: 0.8" }}
-                  />
-                </a>
-              </div>
-              <div className="email__content__social__item">
-                <a
-                  href="https://www.linkedin.com/company/barnes-foundation"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <img
-                    src={linkedinLogo}
-                    alt="linkedin"
-                    width="20px"
-                    height="20px"
-                    style={{ padding: "20px 10px; opacity: 0.8" }}
-                  />
-                </a>
-              </div>
-              <div className="email__content__social__item">
-                <a
-                  href="https://twitter.com/the_barnes"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <img
-                    src={twitterLogo}
-                    alt="twitter"
-                    width="20px"
-                    height="20px"
-                    style={{ padding: "20px 10px; opacity: 0.8" }}
-                  />
-                </a>
-              </div>
-              <div className="email__content__social__item">
-                <a
-                  href="https://www.youtube.com/user/BarnesFoundation"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <img
-                    src={youtubeLogo}
-                    alt="Youtube"
-                    width="20px"
-                    height="20px"
-                    style={{ padding: "20px 10px; opacity: 0.8" }}
-                  />
-                </a>
-              </div>
+            <div className="email__hero-banner__social">
+              <a
+                href="https://www.facebook.com/barnesfoundation/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  src={facebookLogo}
+                  alt="facebook"
+                  width="20px"
+                  height="20px"
+                  style={{ padding: "20px 10px; opacity: 0.8" }}
+                />
+              </a>
+              <a
+                href="https://www.instagram.com/barnesfoundation/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  src={instagramLogo}
+                  alt="instagram"
+                  width="20px"
+                  height="20px"
+                  style={{ padding: "20px 10px; opacity: 0.8" }}
+                />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/barnes-foundation"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  src={linkedinLogo}
+                  alt="linkedin"
+                  width="20px"
+                  height="20px"
+                  style={{ padding: "20px 10px; opacity: 0.8" }}
+                />
+              </a>
+              <a
+                href="https://twitter.com/the_barnes"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  src={twitterLogo}
+                  alt="twitter"
+                  width="20px"
+                  height="20px"
+                  style={{ padding: "20px 10px; opacity: 0.8" }}
+                />
+              </a>
+              <a
+                href="https://www.youtube.com/user/BarnesFoundation"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  src={youtubeLogo}
+                  alt="Youtube"
+                  width="20px"
+                  height="20px"
+                  style={{ padding: "20px 10px; opacity: 0.8" }}
+                />
+              </a>
             </div>
           </div>
-
 
           {/* Email subject */}
           <div className="email__hero-banner__header">
@@ -218,81 +207,71 @@ export const BookmarkEmail: React.FC = () => {
       <div className="email__footer">
         {/* Footer Social Icons */}
         <div className="email__footer__social">
-          <div className="email__footer__social__item">
-            <a
-              href="https://www.facebook.com/barnesfoundation/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                src={facebookLogo}
-                alt="facebook"
-                width="20px"
-                height="20px"
-                style={{ padding: "20px 10px; opacity: 0.8" }}
-              />
-            </a>
-          </div>
-          <div className="email__footer__social__item">
-            <a
-              href="https://www.instagram.com/barnesfoundation/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                src={instagramLogo}
-                alt="instagram"
-                width="20px"
-                height="20px"
-                style={{ padding: "20px 10px; opacity: 0.8" }}
-              />
-            </a>
-          </div>
-          <div className="email__footer__social__item">
-            <a
-              href="https://www.linkedin.com/company/barnes-foundation"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                src={linkedinLogo}
-                alt="linkedin"
-                width="20px"
-                height="20px"
-                style={{ padding: "20px 10px; opacity: 0.8" }}
-              />
-            </a>
-          </div>
-          <div className="email__footer__social__item">
-            <a
-              href="https://twitter.com/the_barnes"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                src={twitterLogo}
-                alt="twitter"
-                width="20px"
-                height="20px"
-                style={{ padding: "20px 10px; opacity: 0.8" }}
-              />
-            </a>
-          </div>
-          <div className="email__footer__social__item">
-            <a
-              href="https://www.youtube.com/user/BarnesFoundation"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <img
-                src={youtubeLogo}
-                alt="Youtube"
-                width="20px"
-                height="20px"
-                style={{ padding: "20px 10px; opacity: 0.8" }}
-              />
-            </a>
-          </div>
+          <a
+            href="https://www.facebook.com/barnesfoundation/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img
+              src={facebookLogo}
+              alt="facebook"
+              width="20px"
+              height="20px"
+              style={{ padding: "20px 10px; opacity: 0.8" }}
+            />
+          </a>
+          <a
+            href="https://www.instagram.com/barnesfoundation/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img
+              src={instagramLogo}
+              alt="instagram"
+              width="20px"
+              height="20px"
+              style={{ padding: "20px 10px; opacity: 0.8" }}
+            />
+          </a>
+          <a
+            href="https://www.linkedin.com/company/barnes-foundation"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img
+              src={linkedinLogo}
+              alt="linkedin"
+              width="20px"
+              height="20px"
+              style={{ padding: "20px 10px; opacity: 0.8" }}
+            />
+          </a>
+          <a
+            href="https://twitter.com/the_barnes"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img
+              src={twitterLogo}
+              alt="twitter"
+              width="20px"
+              height="20px"
+              style={{ padding: "20px 10px; opacity: 0.8" }}
+            />
+          </a>
+          <a
+            href="https://www.youtube.com/user/BarnesFoundation"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <img
+              src={youtubeLogo}
+              alt="Youtube"
+              width="20px"
+              height="20px"
+              style={{ padding: "20px 10px; opacity: 0.8" }}
+            />
+          </a>
         </div>
 
         {/* Footer links */}

@@ -42,6 +42,13 @@
       }
     }
 
+    &__social {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      gap: 12px;
+    }
+
     &__header {
       text-align: center;
       z-index: 2;
@@ -105,13 +112,6 @@
     margin: 40px;
     width: 80%;
     max-width: 800px;
-
-    &__social {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-      gap: 12px;
-    }
 
     &__message {
       &__header {
