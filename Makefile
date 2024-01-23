@@ -94,6 +94,10 @@ ngrok-server:
 views:
 	cp -r ./server/api/views dist/server/api
 
+# Create email preview directory
+email-previews:
+	mkdir emailPreviews
+
 init-dev: 
 	echo "Compiling backend server code 🔨"
 	npm run build-server
@@ -108,6 +112,8 @@ init-dev:
 	make elastic-sync
 	echo "Copying over email templates to the server directory 📧"
 	make views
+	echo "Creating folder to hold emails for local development"
+	make email-previews
 
 elastic-sync:
 	node -e 'require("./dist/server/api/jobs/elasticSearchSyncJob.js").main()'
