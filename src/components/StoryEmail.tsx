@@ -6,6 +6,7 @@ import { Email } from "./Email";
 export const StoryEmail: React.FC = () => {
   const [stories, setStories] = useState<any[]>([]);
   const [translations, setTranslations] = useState({});
+  const [preferredLanguage, setPreferredLanguage] = useState("en");
   const [loading, setLoading] = useState(true);
   const location = useLocation();
   const sr = new SearchRequestService();
@@ -17,6 +18,7 @@ export const StoryEmail: React.FC = () => {
       console.log(data);
       setStories(data.bookmarkStoryList);
       setTranslations(data.translations);
+      setPreferredLanguage(data.preferredLanguage);
       setLoading(false);
     };
 
@@ -33,6 +35,7 @@ export const StoryEmail: React.FC = () => {
           promoText={translations["text_5"]["translated_content"]}
           promoLinkText={translations["text_6"]["translated_content"]}
           stories={stories}
+          preferredLanguage={preferredLanguage}
         />
       )}
     </Suspense>

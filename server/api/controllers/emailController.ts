@@ -97,9 +97,11 @@ class EmailController {
       }, {})
     );
 
-    return response
-      .status(200)
-      .json({ bookmarkStoryList, translations: translations.Email });
+    return response.status(200).json({
+      bookmarkStoryList,
+      translations: translations.Email,
+      preferredLanguage,
+    });
   }
 }
 

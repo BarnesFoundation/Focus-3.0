@@ -6,6 +6,7 @@ import instagramLogo from "../images/mailer/social_instagram.png";
 import linkedinLogo from "../images/mailer/social_linkedin.png";
 import twitterLogo from "../images/mailer/social_twitter.png";
 import youtubeLogo from "../images/mailer/social_youtube.png";
+import { formatHtml } from "../helpers/artWorkHelper";
 
 type EmailProps = {
   bookmarks?: any[];
@@ -15,6 +16,7 @@ type EmailProps = {
   messageText: string;
   promoText?: string;
   promoLinkText?: string;
+  preferredLanguage?: string;
 };
 
 export const Email: React.FC<EmailProps> = ({
@@ -25,6 +27,7 @@ export const Email: React.FC<EmailProps> = ({
   messageText,
   promoText,
   promoLinkText,
+  preferredLanguage,
 }) => {
   return (
     <div className="email">
@@ -169,8 +172,8 @@ export const Email: React.FC<EmailProps> = ({
           )}
         </div>
 
-        {/* Bookmarks */}
         <div className="email__content__bookmarks">
+          {/* Bookmarks */}
           {bookmarks &&
             bookmarks.map((bookmark, index) => (
               <div
@@ -193,9 +196,11 @@ export const Email: React.FC<EmailProps> = ({
                       {bookmark.title}
                     </a>
                   </p>
-                  {bookmark["people"]}. {bookmark["title"]},
-                  {bookmark["displayDate"]}. {bookmark["medium"]},
-                  {bookmark["dimensions"]}. {bookmark["invno"]}
+                  <p>
+                    {bookmark["people"]}. {bookmark["title"]},
+                    {bookmark["displayDate"]}. {bookmark["medium"]},
+                    {bookmark["dimensions"]}. {bookmark["invno"]}
+                  </p>
                   {bookmark.objRightsTypeID && (
                     <p>
                       {["1", "3"].includes(bookmark["objRightsTypeID"]) ? (
@@ -217,49 +222,38 @@ export const Email: React.FC<EmailProps> = ({
                 </div>
               </div>
             ))}
-        </div>
 
-        {/* Stories */}
-        <div className="email__content__bookmarks">
-        {/* <table dir="ltr" cellpadding="0" cellspacing="0" border="0"
-								style="width:100%; color: #282828;font-size: 18px;" class="bookmarks-table">
-								<% stories.forEach((story)=> { %>
-									<% const story_content=story['content']['stories'][0] %>
-										<tr>
-											<td width="30%" dir="ltr" class="w100 spacer"
-												style="color: #282828; vertical-align: top; padding: 40px 0;">
-												<% const
-													imageSource=`https://barnes-images.imgix.net/${story_content['detail']['id'].toString()}_${story_content['detail']['imageSecret']}_n.jpg?crop=faces,entropy&fit=crop&w=200&h=200`
-													%>
-													<% const imageAlt=story_content['detail']['id'].toString() %>
-														<img src=<%=imageSource %> alt=<%=imageAlt %>/>
-											</td>
+          {/* Stories */}
+          {stories &&
+            stories.map((story, index) => (
+              <div
+                key={index}
+                className="email__content__bookmarks__item bottom-border"
+              >
+                <img
+                  src={`https://barnes-images.imgix.net/${story["content"]["stories"][0]["image_id"]}_${story["content"]["stories"][0]["detail"]["imageSecret"]}_n.jpg?crop=faces,entropy&fit=crop&w=200&h=200`}
+                  alt={story["content"]["stories"][0]["detail"][
+                    "id"
+                  ].toString()}
+                />
 
-											<td width="65%" dir="ltr" class="w100"
-												style="color: #282828; vertical-align: top; padding: 18px 0 40px 0;">
-												<p>
-													<% const
-														storyHref=`${story['link']}?utm_source=focus&utm_medium=email&utm_campaign=focus_story&coupon=focus&lang=${lang}`
-														%>
-														<a href=<%=storyHref %> title="barnes collection" style="color:
-															#FFFFFF
-															!important;">
-															<h3>
-																<%= story['translated_title'] %>
-															</h3>
-														</a>
-												</p>
+                <div className="email__content__bookmarks__item__text">
+                  <p>
+                    <a
+                      href={`${story["link"]}?utm_source=focus&utm_medium=email&utm_campaign=focus_story&coupon=focus&lang=${preferredLanguage}`}
+                      title="barnes collection"
+                      className="email__content__bookmarks__item__title"
+                    >
+                      {story["translated_title"]}
+                    </a>
+                  </p>
 
-												<div style="color: #FFFFFF;">
-													<%- story_content['short_paragraph']['html'] %>
-												</div>
-											</td>
-										</tr>
-										<tr>
-											<td colspan="2" style="border-top: 1px solid #454545;"></td>
-										</tr>
-										<% }) %>
-							</table> */}
+                  {formatHtml(
+                    story["content"]["stories"][0]["short_paragraph"]["html"]
+                  )}
+                </div>
+              </div>
+            ))}
         </div>
       </div>
 
