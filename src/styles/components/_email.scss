@@ -22,7 +22,7 @@
       padding: 20px 40px;
 
       @media (max-width: 375px) {
-        padding: 20px;
+        padding: 16px;
       }
 
       &__row {
@@ -101,13 +101,11 @@
     }
   }
 
-  &__body {
+  &__content {
     margin: 40px;
     width: 80%;
     max-width: 800px;
-  }
 
-  &__content {
     &__social {
       display: flex;
       flex-direction: row;
@@ -161,8 +159,8 @@
   }
 
   &__footer {
-    max-width: 800px;
     width: 100%;
+    margin-bottom: 56px;
 
     &__social {
       display: flex;
