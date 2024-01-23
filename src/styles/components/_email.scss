@@ -47,6 +47,14 @@
       flex-direction: row;
       justify-content: space-around;
       gap: 12px;
+
+      @media (max-width: 375px) {
+        gap: 10px;
+      }
+
+      &__item {
+        filter: brightness(3);
+      }
     }
 
     &__header {
@@ -109,9 +117,10 @@
   }
 
   &__content {
-    margin: 40px;
+    margin: 16px auto;
     width: 80%;
     max-width: 800px;
+    padding: 24px;
 
     &__message {
       &__header {

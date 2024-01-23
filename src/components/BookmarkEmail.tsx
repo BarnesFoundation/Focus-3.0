@@ -38,6 +38,7 @@ export const BookmarkEmail: React.FC = () => {
               href="https://collection.barnesfoundation.org"
               target="_blank"
               rel="noreferrer"
+              className="email__hero-banner__social__item"
             >
               <img
                 src={barnesLogo}
@@ -52,6 +53,7 @@ export const BookmarkEmail: React.FC = () => {
                 href="https://www.facebook.com/barnesfoundation/"
                 target="_blank"
                 rel="noreferrer"
+                className="email__hero-banner__social__item"
               >
                 <img
                   src={facebookLogo}
@@ -65,6 +67,7 @@ export const BookmarkEmail: React.FC = () => {
                 href="https://www.instagram.com/barnesfoundation/"
                 target="_blank"
                 rel="noreferrer"
+                className="email__hero-banner__social__item"
               >
                 <img
                   src={instagramLogo}
@@ -78,6 +81,7 @@ export const BookmarkEmail: React.FC = () => {
                 href="https://www.linkedin.com/company/barnes-foundation"
                 target="_blank"
                 rel="noreferrer"
+                className="email__hero-banner__social__item"
               >
                 <img
                   src={linkedinLogo}
@@ -91,6 +95,7 @@ export const BookmarkEmail: React.FC = () => {
                 href="https://twitter.com/the_barnes"
                 target="_blank"
                 rel="noreferrer"
+                className="email__hero-banner__social__item"
               >
                 <img
                   src={twitterLogo}
@@ -104,6 +109,7 @@ export const BookmarkEmail: React.FC = () => {
                 href="https://www.youtube.com/user/BarnesFoundation"
                 target="_blank"
                 rel="noreferrer"
+                className="email__hero-banner__social__item"
               >
                 <img
                   src={youtubeLogo}
