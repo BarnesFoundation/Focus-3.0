@@ -15,7 +15,6 @@ export const StoryEmail: React.FC = () => {
     const [_, _email, _type, sessionId] = location.pathname.split("/");
     const fetchBookmarkEmailData = async () => {
       const data = await sr.getStoryEmail(sessionId);
-      console.log(data);
       setStories(data.bookmarkStoryList);
       setTranslations(data.translations);
       setPreferredLanguage(data.preferredLanguage);

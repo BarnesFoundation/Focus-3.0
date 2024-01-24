@@ -175,7 +175,7 @@ class SearchRequestService {
       return response.data;
     } catch (e) {
       console.log(
-        "An error occurrent while retrieving bookmark email from the server"
+        "An error occurred while retrieving bookmark email from the server"
       );
     }
   }
@@ -186,7 +186,7 @@ class SearchRequestService {
       return response.data;
     } catch (e) {
       console.log(
-        "An error occurrent while retrieving bookmark email from the server"
+        "An error occurred while retrieving story email from the server"
       );
     }
   }
