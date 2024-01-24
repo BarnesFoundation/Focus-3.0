@@ -27,6 +27,37 @@ const LANGUAGE_SHORT_CODE_COLUMN_MAP = {
   es: "spanish_translation",
 };
 
+type StoredTranslation = { [uniqueIdentifier: string]: string };
+type StoredTranslationsByScreen = {
+  Welcome_screen: {
+    StoredTranslation;
+  };
+  Visit_soon: {
+    StoredTranslation;
+  };
+  Result_page: {
+    StoredTranslation;
+  };
+  Result_page_Language_Selector: {
+    StoredTranslation;
+  };
+  No_Result_page: {
+    StoredTranslation;
+  };
+  Bookmark_capture: {
+    StoredTranslation;
+  };
+  Email: {
+    StoredTranslation;
+  };
+  About: {
+    StoredTranslation;
+  };
+  UnSupported_OS_Browser_Screen: {
+    StoredTranslation;
+  };
+};
+
 export default class TranslateService {
   public static async awsTranslate(
     originalText: string,
@@ -71,7 +102,9 @@ export default class TranslateService {
    * These stored translations are for our static (and manually-entered) text
    * used throughout the Focus UI, and not dynamic on-the-fly content
    */
-  public static async retrieveStoredTranslations(languageShortcode: string) {
+  public static async retrieveStoredTranslations(
+    languageShortcode: string
+  ): Promise<StoredTranslationsByScreen> {
     const translations = {};
     const languageColumnName =
       LANGUAGE_SHORT_CODE_COLUMN_MAP[languageShortcode];
