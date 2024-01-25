@@ -21,6 +21,10 @@ export const SUBMIT_BOOKMARKS_EMAIL_URL = "/api/bookmark/submit";
 export const SAVE_LANGUAGE_PREFERENCE_URL = "/api/bookmark/set-language";
 export const APP_TRANSLATIONS_URL = "/api/translation";
 export const VALIDATE_EMAIL_URL = "/api/bookmark/validate-email";
+export const BOOKMARK_EMAIL_URL = (sessionId: string) =>
+  `/api/email/bookmark/${sessionId}`;
+export const STORY_EMAIL_URL = (sessionId: string) =>
+  `/api/email/story/${sessionId}`;
 export const KNIGHT_FOUNDATION_CREDIT_TEXT =
   "Barnes Focus was created by the Knight Center for Digital Innovation in Audience Engagement at the Barnes.";
 export const GET_USER_MEDIA_ERROR_IOS =

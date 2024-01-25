@@ -168,6 +168,28 @@ class SearchRequestService {
       console.log("An error occurred while validating email");
     }
   };
+
+  public async getBookmarkEmail(sessionId: string) {
+    try {
+      const response = await axios.get(constants.BOOKMARK_EMAIL_URL(sessionId));
+      return response.data;
+    } catch (e) {
+      console.log(
+        "An error occurred while retrieving bookmark email from the server"
+      );
+    }
+  }
+
+  public async getStoryEmail(sessionId: string) {
+    try {
+      const response = await axios.get(constants.STORY_EMAIL_URL(sessionId));
+      return response.data;
+    } catch (e) {
+      console.log(
+        "An error occurred while retrieving story email from the server"
+      );
+    }
+  }
 }
 
 export { SearchRequestService };
