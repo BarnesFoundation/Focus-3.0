@@ -7,6 +7,7 @@ import BookmarkRouter from "./bookmarkRouter";
 import TranslationRouter from "./translationsRouter";
 import StoryRouter from "./storyRouter";
 import ExhibitionRouter from "./exhibitionRouter";
+import EmailRouter from "./emailRouter";
 
 const ApiRouter = Router();
 
@@ -17,5 +18,6 @@ ApiRouter.use("/bookmark", BookmarkRouter);
 ApiRouter.use("/translation", TranslationRouter);
 ApiRouter.use("/stories", StoryRouter);
 ApiRouter.use("/exhibition", ExhibitionRouter);
+ApiRouter.use("/email", EmailRouter);
 
 export default ApiRouter;

@@ -2,7 +2,7 @@ import { bookmarks, es_cached_records } from "@prisma/client";
 
 import { groupBy, generateTimeAgo } from "../utils";
 import { MailService, TranslateService, DatabaseService } from "../services";
-import { isLocal } from "../../config";
+import { isLocal, environmentConfiguration } from "../../config";
 const prisma = DatabaseService.instance;
 
 // When this bookmark delivery job runs, we will collect bookmarks for each
@@ -12,7 +12,7 @@ const LATEST_BOOKMARK_ENTRY_THRESHOLD_HOURS = 3;
 const BOOKMARK_DELIVERY_LOG = `[BookmarkDeliveryJob]`;
 
 type DeliverableBookmarks = { [email: string]: bookmarks[] };
-type CollectedArtworks = {
+export type CollectedArtworks = {
   [artworkId: string]: {
     id: string;
     image_id: number;
@@ -94,6 +94,7 @@ class BookmarkDeliveryJob {
         locals: {
           translations,
           els_arr: bookmarkArtworkList,
+          browserLink: `${environmentConfiguration.assetHost}/email/bookmark/${sessionId}`,
         },
       });
 
@@ -189,7 +190,7 @@ class BookmarkDeliveryJob {
   /** Fetches the artworks information from the database that are
    * are associated with these bookmark entries
    */
-  private static async retrieveArtworksForBookmarks(
+  public static async retrieveArtworksForBookmarks(
     deliverableBookmarks: DeliverableBookmarks
   ) {
     const distinctArtworkIds = Object.values(deliverableBookmarks)
