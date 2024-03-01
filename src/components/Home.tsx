@@ -14,7 +14,6 @@ import { UnsupportedDialogue } from "./UnsupportedDialogue";
 import * as constants from "../constants";
 import home_background from "../images/barnes-v2-landing.png";
 import barnes_logo from "../images/Barnes_logo.svg";
-import barnes_100_logo from "../images/Barnes_100_logo.svg";
 import close_icon from "../images/cross.svg";
 import kf_logo from "../images/knight-foundation-logo.svg";
 
@@ -33,10 +32,7 @@ export const HomeComponent: React.FC<WithTranslationState> = ({
   const [unsupportedIOSBrowser, setUnsupportedIOSBrowser] = useState(null);
   const [cameraAccessible, setCameraAccessible] = useState(null);
   const [showError, setShowError] = useState(false);
-  // Get year to determine whether to use centennial logo or original logo
-  const today = new Date();
-  const isCentennial = true;
-  // const isCentennial = today.getFullYear() === 2022;
+
   // Styles
   let homeContainerStyle =
     unsupportedIOSBrowser || unsupportedIOSVersion
@@ -131,23 +127,13 @@ export const HomeComponent: React.FC<WithTranslationState> = ({
       {userAtBarnes == null && !showError && (
         <div className="landing-screen">
           {/* logo */}
-          {isCentennial ? (
-            <img
-              src={barnes_100_logo}
-              alt="barnes_logo"
-              className="logo-center centennial-logo"
-              role="img"
-              aria-label="Welcome to the Barnes Focus Digital Guide"
-            />
-          ) : (
-            <img
-              src={barnes_logo}
-              alt="barnes_logo"
-              className="logo-center"
-              role="img"
-              aria-label="Welcome to the Barnes Focus Digital Guide"
-            />
-          )}
+          <img
+            src={barnes_logo}
+            alt="barnes_logo"
+            className="logo-center"
+            role="img"
+            aria-label="Welcome to the Barnes Focus Digital Guide"
+          />
           <div className="user-loc-prompt">
             {getTranslation("Welcome_screen", "text_1")}{" "}
             <br aria-hidden={true} />
