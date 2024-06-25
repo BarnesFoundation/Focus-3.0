@@ -133,19 +133,22 @@ export const ArtworkWrapperComponent: React.FC<WithTranslationState> = ({
         artwork &&
         imageId &&
         (result.data.showStory ? (
-          <ArtworkWithStory
-            artwork={artwork}
-            result={result}
-            imageId={imageId}
-            onSelectLanguage={onSelectLanguage}
-            selectedLanguage={selectedLanguage}
-            emailCaptured={emailCaptured}
-            showEmailForm={showEmailForm}
-            emailCaptureAck={emailCaptureAck}
-            onSubmitEmail={onSubmitEmail}
-            langOptions={langOptions}
-            getTranslation={getTranslation}
-          />
+          <Fragment>
+            {/* @ts-ignore */}
+            <ArtworkWithStory
+              artwork={artwork}
+              result={result}
+              imageId={imageId}
+              onSelectLanguage={onSelectLanguage}
+              selectedLanguage={selectedLanguage}
+              emailCaptured={emailCaptured}
+              showEmailForm={showEmailForm}
+              emailCaptureAck={emailCaptureAck}
+              onSubmitEmail={onSubmitEmail}
+              langOptions={langOptions}
+              getTranslation={getTranslation}
+            />
+          </Fragment>
         ) : (
           <ArtworkDefault
             artwork={artwork}
