@@ -1,0 +1,30 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - npm install serverless -g
+      - npm ci
+  build:
+    commands:
+      - export PUBLIC_URL="<PUBLIC_URL>"
+      - npm run build
+      - npm run bundles
+      - npm run prisma:generate
+  post_build:
+    commands: 
+      - npm ci --production
+      - ls "./node_modules/.prisma/client"
+      - rm "./node_modules/.prisma/client/libquery_engine-debian-openssl-1.1.x.so.node"
+      - rm -rf "node_modules/@adminjs/design-system/node_modules/"
+      - rm -rf "node_modules/@types"
+      - rm -rf "node_modules/@babel/plugin-transform-typescript" "node_modules/@babel/plugin-transform-classes" "node_modules/@babel/plugin-transform-modules-systemjs" "node_modules/@babel/helper-wrap-function" "node_modules/@babel/polyfill" "node_modules/@babel/preset-env"
+      - rm "node_modules/@adminjs/design-system/bundle.development.js"
+      - rm "node_modules/@adminjs/design-system/bundle.production.js"
+      - rm -rf "node_modules/@carbon/icons-react/es"
+      - rm -rf "node_modules/react-datepicker/node_modules/date-fns/esm"
+      - npm run deploy:prod
+      - aws s3 sync ./dist/build s3://focus-application-prod-serverlessdeploymentbucket-1b3ojh7lpevit/build/ --delete --acl=public-read
+artifacts:
+  files:
+    - '**/*'
+  base-directory: dist
