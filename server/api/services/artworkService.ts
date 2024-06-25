@@ -230,7 +230,7 @@ export default class ArtworkService {
         for (const block of cb["contentBlock"]) {
           const translatedBlock = { ...block };
 
-          switch (block.type) {
+          switch (block.__typename) {
             case "Image":
               if (translatedBlock["caption"]) {
                 translatedBlock["caption"]["html"] =
